@@ -20,6 +20,9 @@ export default {
     *token({ payload }, { call, put }) {
       return yield call(service.token, payload);
     },
+    *loadUserByUserName({ payload }, { call, put }) {
+      return yield call(service.loadUserByUserName, payload);
+    },
   },
   reducers: {
     save(state, action) {

@@ -20,3 +20,15 @@ export async function token (params) {
     })),
   })
 }
+
+
+/**
+ * 课程列表
+ * @param {*} params 
+ */
+export async function loadUserByUserName (params) {
+  return request('/api/sys/loadUserByUserName',{
+    method: 'POST',
+    data: params,
+  })
+}

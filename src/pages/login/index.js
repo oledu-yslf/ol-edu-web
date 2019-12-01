@@ -26,11 +26,21 @@ class NormalLoginForm extends React.Component {
             ...values,
           },
         }).then(res => {
-          if (prerouter) {
-            router.push(prerouter);
-          } else {
-            router.push('/');
-          }
+          dispatch({
+            type: 'login/loadUserByUserName',
+            payload: {
+              staffNo:values.username,
+            },
+          }).then(res=>{
+            const roleInfo = res.data;
+            localStorage.setItem('roleInfo',JSON.stringify(roleInfo));
+            if (prerouter) {
+              router.push(prerouter);
+            } else {
+              router.push('/');
+            }
+          })
+          
         });
       }
     });

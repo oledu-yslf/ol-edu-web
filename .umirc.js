@@ -27,11 +27,16 @@ export default {
     ],
   ],
   proxy: {
-    "/api": {
-      "target": "http://39.107.41.56:8005/",
-      "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
-    }
-  }
+    '/api': {
+      target: 'http://39.107.41.56:8005/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': '',
+      },
+    },
+  },
+  targets: {
+    ie: 9,
+  },
 };
 
