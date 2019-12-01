@@ -1,26 +1,48 @@
 import * as service from '../services/index';
-const pageSize = 20;
 
 export default {
   namespace: 'index',
   state: {
-    total:99,
     recentList: [],
-    treeData:[]
+    newList: [],
+    hotList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/') {
+          const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+          const staffNo = roleInfo.staffNo;
           dispatch({
             type: 'listRecent',
-            payload:{
+            payload: {
+              createStaffId: staffNo,
               page: {
-                pageSize:4,
+                pageSize: 4,
                 pageNum: 1,
               },
-            }
-          })
+            },
+          });
+          dispatch({
+            type: 'courseListpage',
+            payload: {
+              orderBy: 'create_date desc',
+              page: {
+                pageSize: 4,
+                pageNum: 1,
+              },
+            },
+          });
+          dispatch({
+            type: 'courseListpage',
+            payload: {
+              orderBy: 'count_study desc',
+              page: {
+                pageSize: 4,
+                pageNum: 1,
+              },
+            },
+          });
         }
       });
     },
@@ -32,9 +54,30 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          list: result,
+          recentList: result,
         },
       });
+    },
+    *courseListpage({ payload }, { call, put }) {
+      const { data } = yield call(service.courseListpage, payload);
+      const { result } = data;
+      if(payload.orderBy === 'create_date desc'){
+        yield put({
+          type: 'save',
+          payload: {
+            newList: result,
+          },
+        });
+      }else{
+        yield put({
+          type: 'save',
+          payload: {
+            hotList: result,
+          },
+        });
+      }
+      
+      
     },
     // *listRecent({ payload }, { call, put }) {
     //   const { data } = yield call(service.listRecent, payload);

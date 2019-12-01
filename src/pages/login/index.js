@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import request from '@/utils/request';
-// import axios from 'axios';
 
 
 import { Form, Icon, Input, Button, Row, Col } from 'antd';

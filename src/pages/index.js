@@ -1,20 +1,33 @@
 import style from './index.css';
 import { Card, Divider, Icon, Col, Row } from 'antd';
 import Link from 'umi/link';
+import { connect } from 'dva';
+import router from 'umi/router';
 
-export default function(props) {
-  return (
-    <div className={style.box}>
+function index(props) {
+  const { recentList, newList, hotList } = props;
+  const handleClick = (item, e) => {
+    console.log(item);
+    router.push({
+      pathname: '/course/coursePlay',
+      query: {
+        courseId: item.courseId,
+      },
+    });
+  };
+  const ListNode = type => {
+    const list = type === 1 ? recentList : type === 2 ? newList : hotList;
+    return (
       <Card
         title={
           <div>
             <Divider type="vertical" className={style.divider} />
-            最近学习课程
+            {type === 1 ? '最近学习课程' : type === 2 ? '最新课程' : '热门课程'}
           </div>
         }
         bordered={false}
         extra={
-          <Link to="/www.baidu.com">
+          <Link to="/course">
             更多课程
             <Icon type="right" />
           </Link>
@@ -22,61 +35,50 @@ export default function(props) {
         className={style.card}
       >
         <Row gutter={16}>
-          <Col span={6}>
-            <Card
-              hoverable
-              cover={
-                <img
-                  alt="example"
-                  src="//img1.mukewang.com/szimg/5da13cab09466e9105400306-360-202.png"
-                />
-              }
-            >
-              <Card.Meta title="初一语文学习课程" description="www.instagram.com" />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card
-              hoverable
-              cover={
-                <img
-                  alt="example"
-                  src="//img1.mukewang.com/szimg/5da13cab09466e9105400306-360-202.png"
-                />
-              }
-            >
-              <Card.Meta title="初一语文学习课程" description="www.instagram.com" />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card
-              hoverable
-              cover={
-                <img
-                  alt="example"
-                  src="//img1.mukewang.com/szimg/5da13cab09466e9105400306-360-202.png"
-                />
-              }
-            >
-              <Card.Meta title="初一语文学习课程" description="www.instagram.com" />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card
-              hoverable
-              cover={
-                <img
-                  alt="example"
-                  src="//img1.mukewang.com/szimg/5da13cab09466e9105400306-360-202.png"
-                />
-              }
-            >
-              <Card.Meta title="初一语文学习课程" description="www.instagram.com" />
-            </Card>
-          </Col>
+          {list.length > 0
+            ? list.map(item => (
+                <Col span={6} key={item.courseId} onClick={e => handleClick(item, e)}>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        style={{ width: '100%', height: '160px' }}
+                        alt="logo"
+                        src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                      />
+                    }
+                  >
+                    <Card.Meta title={item.courseName} />
+                  </Card>
+                </Col>
+              ))
+            : ''}
+          {/* {list.length>0?(list.map(item => (
+            <Col span={6} key={item.courseId}>
+              <Card
+                hoverable
+                cover={
+                  <img
+                    style={{ width: '100%', height: '160px' }}
+                    alt="logo"
+                    src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                  />
+                }
+              >
+                <Card.Meta title={item.courseName} />
+              </Card>
+            </Col>
+          )))):''} */}
         </Row>
       </Card>
-      <Card
+    );
+  };
+  return (
+    <div className={style.box}>
+      {recentList.length > 0 ? ListNode(1) : ''}
+      {newList.length > 0 ? ListNode(2) : ''}
+      {hotList.length > 0 ? ListNode(2) : ''}
+      {/* <Card
         title={
           <div>
             <Divider type="vertical" className={style.divider} />
@@ -217,7 +219,9 @@ export default function(props) {
             </Card>
           </Col>
         </Row>
-      </Card>
+      </Card> */}
     </div>
   );
 }
+
+export default connect(state => ({ ...state.index, loading: state.loading.models.index }))(index);

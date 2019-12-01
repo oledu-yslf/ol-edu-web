@@ -1,8 +1,20 @@
-import { Menu, Button } from 'antd';
+import { Menu, Button,Avatar } from 'antd';
 import styles from './minHeader.css';
 import Link from 'umi/link';
+import router from 'umi/router';
+
 function OMinHeader(props) {
   const handleClick = e => {};
+  const handleAvatarClick = e =>{
+    console.log(roleInfo);
+    if(roleInfo.staffType == 0 || roleInfo.staffType == 1){
+      router.push('/teacher')
+    }else{
+      router.push('/student')
+    }
+    
+  }
+  const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
   return (
     <div className={styles.box}>
       <div className={styles.left}>
@@ -26,9 +38,15 @@ function OMinHeader(props) {
         </Menu>
       </div>
     
-      <Button type="link" className={styles.right}>
-        <Link to="/login">登录</Link>
-      </Button>
+      {roleInfo ? (
+        <Button type="link" className={styles.right} onClick={handleAvatarClick}>
+          <Avatar  icon="user" />
+        </Button>
+      ) : (
+        <Button type="link" className={styles.right}>
+          <Link to="/login">登录</Link>
+        </Button>
+      )}
       
     </div>
   );

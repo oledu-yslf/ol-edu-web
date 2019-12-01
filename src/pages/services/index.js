@@ -17,8 +17,8 @@ export async function listRecent (params) {
  * 课程列表
  * @param {*} params 
  */
-export async function studySave (params) {
-  return request('/api/course/study/save',{
+export async function courseListpage (params) {
+  return request('/api/course/listpage',{
     method: 'POST',
     data: params,
   })
