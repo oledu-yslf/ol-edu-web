@@ -66,26 +66,29 @@ function coursePlay(props) {
   return (
     <div className={styles.box}>
       {/* <Bread/> */}
-
-      <ReactPlayer
-        // ref={this.ref}
-        width="960px"
-        height="540px"
-        style={{ margin: '20px auto' }}
-        url="/api/fileserver/video/20191120/c632b414b3cf48899f73d32e11eed760/c632b414b3cf48899f73d32e11eed760.m3u8"
-        playing
-        config={{
-          file: {
-            hlsOptions: {
-              forceHLS: true,
-              debug: false,
-              xhrSetup: function(xhr, url) {
-                xhr.setRequestHeader('Authorization', checkToken());
+      <div className={styles.video}>
+        <ReactPlayer
+          // ref={this.ref}
+          width="960px"
+          height="540px"
+          style={{ margin: '20px auto' }}
+          url="/api/fileserver/video/20191120/c632b414b3cf48899f73d32e11eed760/c632b414b3cf48899f73d32e11eed760.m3u8"
+          playing
+          controls={true}
+          config={{
+            file: {
+              hlsOptions: {
+                forceHLS: true,
+                debug: false,
+                xhrSetup: function(xhr, url) {
+                  xhr.setRequestHeader('Authorization', checkToken());
+                },
               },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
+
       <Tree
         // checkable
         // onExpand={this.onExpand}
