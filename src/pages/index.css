@@ -1,0 +1,10 @@
+
+.box {
+  font-family: Georgia, sans-serif;
+  width:1200px;
+  margin:0 auto;
+}
+.divider{
+  width:2px;
+  background:#000;
+}

@@ -1,0 +1,35 @@
+.box{
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+  line-height: 80px;
+}
+
+.left{
+  display: flex;
+}
+.logo{
+  width: 120px;
+  height: 30px;
+  background: rgb(192, 96, 96);
+  margin: 25px 24px;
+}
+
+.menu{
+  line-height: 80px;
+}
+
+
+.right{
+  line-height: 80px;
+}
+/* .login-btn{
+  margin: 0 144px;
+  line-height: 80px;
+}
+
+.small-login-btn{
+  margin: 0px 144px;
+  float: right;
+  line-height: 40px;
+} */ 

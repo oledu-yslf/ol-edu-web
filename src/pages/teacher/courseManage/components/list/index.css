@@ -1,0 +1,10 @@
+.margin-20{
+  margin:20px;
+}
+
+.cell-center{
+  text-align:left;
+  flex-direction: column;
+  /* align-items: flex-start; */
+  justify-content: space-around;
+}

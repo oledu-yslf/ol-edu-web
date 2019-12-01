@@ -1,0 +1,17 @@
+.box{
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+  line-height: 40px;
+}
+.left{
+  width: 120px;
+  height: 30px;
+  background: rgb(192, 96, 96);
+  margin: 5px 24px;
+}
+
+
+.right{
+  line-height: 40px;
+}
