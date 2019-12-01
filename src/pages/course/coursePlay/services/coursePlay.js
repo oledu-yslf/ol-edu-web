@@ -10,3 +10,15 @@ export function courseDetail (data) {
     data
   })
 }
+
+/**
+ * 课程详情
+ * @param {*} params 
+ */
+export function favoriteSave (data) {
+  return request('../api//course/favorite/save',
+  {
+    method: 'POST',
+    data
+  })
+}

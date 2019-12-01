@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-
-
 const checkToken = url => {
   let token;
   if (url.indexOf('/oauth/token') === -1) {
@@ -9,23 +7,20 @@ const checkToken = url => {
     if (jwToken) {
       token = `${jwToken.token_type} ${jwToken.access_token}`;
     }
-  }else{
-    token = ''
+  } else {
+    token = '';
   }
   return token;
 };
 
-const setToken = (url,data) => {
-  if (url.indexOf('/oauth/token') !== -1) {
-    localStorage.setItem('jwToken', JSON.stringify(data));
-  }
+const setToken = (url, data) => {
+  localStorage.setItem('jwToken', JSON.stringify(data));
 };
-
 
 const request = axios.create({
   headers: {
-    'Content-Type': 'application/json;charset=utf-8'
-  }
+    'Content-Type': 'application/json;charset=utf-8',
+  },
 });
 
 request.interceptors.request.use(
@@ -40,11 +35,15 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   function(response) {
-    const { data,config } = response;
-    setToken(config.url,data);
+    console.log(response)
+    const { data, config } = response;
+    if (config.url('/oauth/token') !== -1) {
+      setToken(config.url, data);
+    }
     return data;
   },
   function(error) {
+    console.log(error)
     return Promise.reject(error);
   },
 );

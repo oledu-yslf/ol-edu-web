@@ -3,58 +3,59 @@ import styles from './index.less';
 import ReactPlayer from 'react-player';
 import router from 'umi/router';
 import Link from 'umi/link';
-import { Tree, Row, Col } from 'antd';
-// import Bread from './components/Bread'
+import { Row, Col, Rate } from 'antd';
 
 const checkToken = url => {
   const jwToken = JSON.parse(localStorage.getItem('jwToken'));
   let token = `${jwToken.token_type} ${jwToken.access_token}`;
   return token;
 };
-const { TreeNode } = Tree;
 
 function coursePlay(props) {
-  const { courseDetail } = props;
+  const { courseDetail, url } = props;
   const { chapterVOList } = courseDetail;
-  const renderTreeNodes = data => {
-    if (data) {
-      return data.map(item => {
-        if (item.periodVOList) {
-          return (
-            <TreeNode title={item.chapterName} key={item.chapterId} dataRef={item}>
-              {renderTreeNodes(item.periodVOList)}
-            </TreeNode>
-          );
-        }
-        return (
-          <TreeNode
-            title={periodsTitleNode(item)}
-            key={`${item.chapterId}-${item.periodId}`}
-            dataRef={item}
-            isLeaf={true}
-          />
-        );
-      });
-    }
-    return <TreeNode />;
-  };
-
-  const periodsTitleNode = item => {
-    console.log(item);
+  console.log(url);
+  const chapterNode = item => {
     return (
-      <Row>
-        <Col span={4}>
-          <Link
-            to={`/course/coursePlay?courseId=${item.courseId}&chapterId=${item.chapterId}&periodId=${item.periodId}`}
-          >
+      <div className={styles.cell} key={item.chapterId}>
+        <div className="cell-title">
+          <span>{item.chapterName}</span>
+        </div>
+        <div className="cell-body">{item.periodVOList.map(item => periodNode(item))}</div>
+      </div>
+    );
+  };
+  const handleClick = (item, e) => {
+    const { dispatch } = props;
+    dispatch({
+      type: 'coursePlay/save',
+      payload: {
+        url: `/api${item.videoFileInfo.url}/${item.videoFileInfo.convertFileName}`,
+      },
+    });
+  };
+  const handleFavorite = ()=>{
+    const { dispatch } = props;
+    dispatch({
+      type: 'coursePlay/favoriteSave',
+    }).then(res=>{
+
+    });
+  }
+
+  const periodNode = item => {
+    return (
+      <Row key={item.periodId} style={{ paddingLeft: '30px', height: '30px' }}>
+        <Col span={20}>
+          <span onClick={e => handleClick(item, e)} style={{ color: '#1890ff', cursor: 'pointer' }}>
             {item.periodName}
-          </Link>
+          </span>
         </Col>
-        <Col offset={16} span={4}>
+        <Col span={4}>
           {item.attachFileInfo ? (
-            <div>
-              <span>{item.attachFileInfo.fileName}</span>
-            </div>
+            <span style={{ color: '#1890ff', cursor: 'pointer' }}>
+              {item.attachFileInfo.fileName}
+            </span>
           ) : (
             ''
           )}
@@ -65,14 +66,24 @@ function coursePlay(props) {
 
   return (
     <div className={styles.box}>
-      {/* <Bread/> */}
+      <Row className={styles.nav}>
+        <Col span={22}>
+          <span>课程名称：{courseDetail.courseName}</span>
+        </Col>
+        <Col span={2}>
+          <span style={{ fontSize: '16px' }}>
+            收藏: <Rate allowHalf={false} count={1} onChange={handleFavorite}/>
+          </span>
+        </Col>
+      </Row>
+
+
       <div className={styles.video}>
         <ReactPlayer
           // ref={this.ref}
-          width="960px"
+          width="100%"
           height="540px"
-          style={{ margin: '20px auto' }}
-          url="/api/fileserver/video/20191120/c632b414b3cf48899f73d32e11eed760/c632b414b3cf48899f73d32e11eed760.m3u8"
+          url={url}
           playing
           controls={true}
           config={{
@@ -88,20 +99,13 @@ function coursePlay(props) {
           }}
         />
       </div>
+      <div className={styles.cell}>
+        <div className="cell-title">
+          <span>课程简介:{courseDetail.introduce}</span>
+        </div>
+      </div>
 
-      <Tree
-        // checkable
-        // onExpand={this.onExpand}
-        // expandedKeys={this.state.expandedKeys}
-        // autoExpandParent={this.state.autoExpandParent}
-        // onCheck={this.onCheck}
-        // checkedKeys={this.state.checkedKeys}
-        // onSelect={this.onSelect}
-        // selectedKeys={this.state.selectedKeys}
-        showLine
-      >
-        {renderTreeNodes(chapterVOList)}
-      </Tree>
+      {chapterVOList ? chapterVOList.map(item => chapterNode(item)) : ''}
     </div>
   );
 }

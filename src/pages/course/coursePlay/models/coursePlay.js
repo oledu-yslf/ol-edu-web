@@ -2,6 +2,8 @@ import * as service from '../services/coursePlay';
 export default {
   namespace: 'coursePlay',
   state: {
+    courseId:'',
+    url:'',
     courseDetail: {},
   },
   subscriptions: {
@@ -14,19 +16,34 @@ export default {
               courseId:query.courseId
             },
           });
+          dispatch({
+            type: 'save',
+            payload: {
+              courseId:query.courseId
+            },
+          });
         }
       });
     },
   },
   effects: {
-    *courseDetail({ payload }, { call, put }) {
+    *courseDetail({ payload }, { call, put ,select}) {
       const { data } = yield call(service.courseDetail, payload);
+      let url = yield select(state=>state.coursePlay.url);
+      const { videoFileInfo } = data.chapterVOList[0].periodVOList[0];
+      url = url?url:`/api${videoFileInfo.url}/${videoFileInfo.convertFileName}`;
+      
       yield put({
         type: 'save',
         payload: {
           courseDetail: data,
+          url
         },
       });
+    },
+    *favoriteSave({ payload }, { call, put ,select}) {
+      let courseId = yield select(state=>state.coursePlay.courseId);
+      return yield call(service.favoriteSave, {courseId});
     },
   },
   reducers: {
