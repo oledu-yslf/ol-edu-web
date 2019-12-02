@@ -42,8 +42,8 @@ export default {
       });
     },
     *favoriteSave({ payload }, { call, put ,select}) {
-      let courseId = yield select(state=>state.coursePlay.courseId);
-      return yield call(service.favoriteSave, {courseId});
+      // let courseId = yield select(state=>state.coursePlay.courseId);
+      return yield call(service.favoriteSave,payload);
     },
   },
   reducers: {

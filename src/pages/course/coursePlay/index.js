@@ -34,14 +34,20 @@ function coursePlay(props) {
       },
     });
   };
-  const handleFavorite = ()=>{
-    const { dispatch } = props;
+  const handleFavorite = () => {
+    const { dispatch, courseId } = props;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
     dispatch({
       type: 'coursePlay/favoriteSave',
-    }).then(res=>{
-
+      payload: {
+        courseId,
+        staffId: roleInfo.staffId,
+        createStaffId: roleInfo.createStaffId,
+      },
+    }).then(res => {
+      
     });
-  }
+  };
 
   const periodNode = item => {
     return (
@@ -72,11 +78,10 @@ function coursePlay(props) {
         </Col>
         <Col span={2}>
           <span style={{ fontSize: '16px' }}>
-            收藏: <Rate allowHalf={false} count={1} onChange={handleFavorite}/>
+            收藏: <Rate allowHalf={false} count={1} onChange={handleFavorite} />
           </span>
         </Col>
       </Row>
-
 
       <div className={styles.video}>
         <ReactPlayer
