@@ -9,7 +9,7 @@ import styles from './index.css';
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
-class NormalLoginForm extends React.Component {
+class LoginForm extends React.Component {
   componentDidMount() {
     this.props.form.validateFields();
   }
@@ -38,12 +38,10 @@ class NormalLoginForm extends React.Component {
               router.push('/');
             }
           })
-          
         });
       }
     });
   };
-
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
     const usernameError = isFieldTouched('username') && getFieldError('username');
@@ -74,18 +72,6 @@ class NormalLoginForm extends React.Component {
                   />,
                 )}
               </Form.Item>
-              {/* <Form.Item   validateStatus={captchaError ? 'error' : ''} help={captchaError || ''}>
-          <Row gutter={8}>
-            <Col span={12}>
-              {getFieldDecorator('captcha', {
-                rules: [{ required: true, message: '请输入验证码!' }],
-              })(<Input style={{ color: 'rgba(0,0,0,.25)' }} placeholder="验证码"/>)}
-            </Col>
-            <Col span={12}>
-              <Button>Get captcha</Button>
-            </Col>
-          </Row>
-        </Form.Item> */}
               <Form.Item>
                 <Button
                   type="primary"
@@ -104,7 +90,5 @@ class NormalLoginForm extends React.Component {
   }
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);
-export default connect(state => ({ ...state.login, loading: state.loading.models.login }))(
-  WrappedNormalLoginForm,
-);
+const WrappedLoginForm = Form.create({ name: 'login_from' })(LoginForm);
+export default connect(state => ({ ...state.login, loading: state.loading.models.login }))(WrappedLoginForm);
