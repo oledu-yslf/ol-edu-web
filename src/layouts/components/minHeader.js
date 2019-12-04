@@ -1,13 +1,20 @@
-import { Menu, Button, Avatar, Row, Col } from 'antd';
+import React from 'react';
+import { Menu, Button, Avatar } from 'antd';
 import styles from './minHeader.css';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { connect } from 'dva';
 import avtor from '@/assets/avtor.jpeg';
 
-function OMinHeader(props) {
-  const { dispatch, selectedMenu } = props;
-  const handleClick = e => {
+class OMinHeader extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      roleInfo: {},
+    };
+  }
+  handleClick = e => {
+    const {dispatch} = this.props;
     dispatch({
       type: 'global/save',
       payload: {
@@ -15,22 +22,43 @@ function OMinHeader(props) {
       },
     });
   };
-  const handleAvatarClick = e => {
+  
+  handleAvatarClick = e => {
+    const {roleInfo} = this.state;
     if (roleInfo.staffType === '0' || roleInfo.staffType === '1') {
       router.push('/teacher');
     } else {
       router.push('/student');
     }
   };
-  const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-  return (
-    <Row className={styles.box}>
-      <Col span={3}>
+
+  handleLogoutClick = e => {
+    localStorage.setItem('roleInfo', '');
+    localStorage.setItem('jwToken', '');
+    this.setState({
+      roleInfo: '',
+    });
+  };
+  componentWillMount() {
+    let roleInfo = '';
+    if (localStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    } else {
+      roleInfo = '';
+    }
+    this.setState({
+      roleInfo,
+    });
+  }
+
+  render(){
+    const { roleInfo } = this.state;
+    const {selectedMenu} = this.props;
+    return (
+      <div className={[styles.box,'clearfix'].join(' ')}>
         <div className={styles.logo} />
-      </Col>
-      <Col span={18}>
         <Menu
-          onClick={handleClick}
+          onClick={this.handleClick}
           mode="horizontal"
           className={styles.menu}
           selectedKeys={selectedMenu}
@@ -51,23 +79,25 @@ function OMinHeader(props) {
             <Link to="/task">作业中心</Link>
           </Menu.Item>
         </Menu>
-      </Col>
-      <Col span={3}>
         {roleInfo ? (
-          <div>
+          <div className={styles.pullright}>
             <span style={{ marginRight: '10px' }}>Hi,{roleInfo.staffName}</span>
-            <Button type="link" className={styles.right} onClick={handleAvatarClick}>
+            <Button type="link" onClick={this.handleLogoutClick}>
+                退出
+              </Button>
+            <Button type="link" className={styles.right} onClick={this.handleAvatarClick}>
               <Avatar icon="user" src={avtor} />
             </Button>
           </div>
         ) : (
-          <Button type="link" className={styles.right}>
+          <Button type="link" className={styles.pullright}>
             <Link to="/login">登录</Link>
           </Button>
         )}
-      </Col>
-    </Row>
-  );
+      </div>
+    );
+  }
+  
 }
 
 export default connect(state => ({ ...state.global }))(OMinHeader);

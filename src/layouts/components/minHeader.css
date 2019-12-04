@@ -1,5 +1,4 @@
 .box{
-
   width:100%;
   line-height: 40px;
 }
@@ -9,13 +8,16 @@
   height: 30px;
   background: rgb(192, 96, 96);
   margin: 5px 24px;
+  float: left;
 }
 
 .menu{
   line-height: 40px;
+  float: left;
 }
 
 
-.right{
-  line-height: 40px;
+.pullright{
+  float: right;
+  margin: 0px 24px;
 }
