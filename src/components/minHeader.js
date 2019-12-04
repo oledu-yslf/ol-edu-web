@@ -40,17 +40,17 @@ class OMinHeader extends React.Component{
       roleInfo: '',
     });
   };
-  // componentWillMount() {
-  //   let roleInfo = '';
-  //   if (localStorage.getItem('roleInfo')) {
-  //     roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-  //   } else {
-  //     roleInfo = '';
-  //   }
-  //   this.setState({
-  //     roleInfo,
-  //   });
-  // }
+  componentWillMount() {
+    let roleInfo = '';
+    if (localStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    } else {
+      roleInfo = '';
+    }
+    this.setState({
+      roleInfo,
+    });
+  }
 
   render(){
     const { roleInfo } = this.state;
@@ -64,7 +64,7 @@ class OMinHeader extends React.Component{
           className={styles.menu}
           selectedKeys={selectedMenu}
         >
-          <Menu.Item key="index">首页</Menu.Item>
+          <Menu.Item key="/">首页</Menu.Item>
           <Menu.Item key="/course">课程中心</Menu.Item>
           <Menu.Item key="/question">试题中心</Menu.Item>
           <Menu.Item key="/result">成绩中心</Menu.Item>

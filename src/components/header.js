@@ -13,44 +13,43 @@ class OHeader extends React.Component {
       roleInfo: '',
     };
   }
-  handleClick(e) {
-    const { dispatch } = this.props;
-    console.log(e.keyPath);
+  handleClick = e => {
+    const {dispatch} = this.props;
     dispatch({
       type: 'global/save',
       payload: {
         selectedMenu: e.keyPath,
       },
     });
-    router.push(e.keyPath[0]);
-  }
+    router.push(e.keyPath[0])
+  };
 
-  handleAvatarClick(e) {
-    const { roleInfo } = this.state;
+  handleAvatarClick = e => {
+    const {roleInfo} = this.state;
     if (roleInfo.staffType === '0' || roleInfo.staffType === '1') {
       router.push('/teacher');
     } else {
       router.push('/student');
     }
-  }
-  handleLogoutClick(e) {
-    localStorage.removeItem('roleInfo');
-    localStorage.removeItem('jwToken');
+  };
+  handleLogoutClick = e => {
+    localStorage.setItem('roleInfo', '');
+    localStorage.setItem('jwToken', '');
     this.setState({
       roleInfo: '',
     });
+  };
+  componentWillMount() {
+    let roleInfo = '';
+    if (localStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    } else {
+      roleInfo = '';
+    }
+    this.setState({
+      roleInfo,
+    });
   }
-  // componentWillMount() {
-  //   let roleInfo = '';
-  //   if (localStorage.getItem('roleInfo')) {
-  //     roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-  //   } else {
-  //     roleInfo = '';
-  //   }
-  //   this.setState({
-  //     roleInfo,
-  //   });
-  // }
 
   render() {
     const { roleInfo } = this.state;
@@ -64,7 +63,7 @@ class OHeader extends React.Component {
           className={styles.menu}
           selectedKeys={selectedMenu}
         >
-          <Menu.Item key="index">首页</Menu.Item>
+          <Menu.Item key="/">首页</Menu.Item>
           <Menu.Item key="/course">课程中心</Menu.Item>
           <Menu.Item key="/question">试题中心</Menu.Item>
           <Menu.Item key="/result">成绩中心</Menu.Item>
@@ -91,5 +90,6 @@ class OHeader extends React.Component {
     );
   }
 }
+
 
 export default connect(state => ({ ...state.global }))(OHeader);
