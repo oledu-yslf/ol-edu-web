@@ -14,7 +14,6 @@ const checkToken = url => {
 function coursePlay(props) {
   const { courseDetail, url } = props;
   const { chapterVOList } = courseDetail;
-  console.log(url);
   const chapterNode = item => {
     return (
       <div className={styles.cell} key={item.chapterId}>

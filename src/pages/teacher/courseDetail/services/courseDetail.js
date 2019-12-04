@@ -50,8 +50,6 @@ export function chapterUpdate (data) {
  * @param {*} params 
  */
 export function chapterDetail (params) {
-  // const id = data.id;
-  // console.log(data);
   return request('../api/course/chapter/detail',{
     method: 'POST',
     data:{chapterId:params.id}
@@ -63,8 +61,6 @@ export function chapterDetail (params) {
  * @param {*} params 
  */
 export function chapterDelete (params) {
-  // const id = data.id;
-  // console.log(data);
   return request('../api/course/chapter/delete',{
     method: 'POST',
     data:params.id

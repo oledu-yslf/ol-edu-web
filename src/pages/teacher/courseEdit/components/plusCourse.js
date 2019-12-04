@@ -50,8 +50,6 @@ class PlusCourse extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, courseId } = this.props;
-    console.log(courseId);
-
     this.props.form.validateFields((err, values) => {
       if (!err) {
         if (!courseId) {

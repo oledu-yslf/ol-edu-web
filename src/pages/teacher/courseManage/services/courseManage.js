@@ -40,7 +40,6 @@ export function categoryUpdate (params) {
  * @param {*} params 
  */
 export function categoryDelete (params) {
-  console.log(params.categoryId);
   return request('../api/course/category/delete',{
     method: 'POST',
     data: params

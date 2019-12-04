@@ -1,9 +1,9 @@
 import styles from './index.css';
 import { Layout } from 'antd';
-import OHeader from './components/header';
-import OMinHeader from './components/minHeader';
-import OLoginHeader from './components/loginHeader';
-import OMinLoginHeader from './components/minLoginHeader';
+import OHeader from '@/components/header';
+import OMinHeader from '@/components/minHeader';
+import OLoginHeader from '@/components/loginHeader';
+import OMinLoginHeader from '@/components/minLoginHeader';
 const { Header, Content } = Layout;
 
 function BasicLayout(props) {

@@ -45,15 +45,26 @@ export default {
           },
         }),
       ];
-      console.log(rencentResult);
-      yield put({
-        type: 'save',
-        payload: {
-          recentList:rencentResult.data.result,
-          newList:newResult.data.result,
-          hotList:hotResult.data.result
-        },
-      });
+      console.log(rencentResult,newResult,hotResult);
+      if(rencentResult.data){
+        yield put({
+          type: 'save',
+          payload: {
+            recentList:rencentResult.data.result,
+            newList:newResult.data.result,
+            hotList:hotResult.data.result
+          },
+        });
+      }else{
+        yield put({
+          type: 'save',
+          payload: {
+            newList:newResult.data.result,
+            hotList:hotResult.data.result
+          },
+        });
+      }
+      
     }
   },
   reducers: {

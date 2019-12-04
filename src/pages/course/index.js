@@ -13,7 +13,6 @@ const pageSize = 20;
 function course(props) {
   const { list,total,dispatch,loading} = props;
   const searchCourse = value => {
-    console.log(value);
     dispatch({
       type: 'course/save',
       payload: {
@@ -50,7 +49,6 @@ function course(props) {
     });
   }
   const handleClick = (item,e)=>{
-    console.log(item);
     router.push({
       pathname:'/course/coursePlay',
       query:{

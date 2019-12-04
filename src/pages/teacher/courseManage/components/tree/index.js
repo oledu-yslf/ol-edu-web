@@ -45,7 +45,6 @@ class OTree extends React.Component {
    */
   onSelect = (selectedKeys, info) => {
     const { dispatch } = this.props;
-    console.log(selectedKeys,info);
     if (selectedKeys.length > 0) {
       this.setState({ selectedKeys });
       dispatch({

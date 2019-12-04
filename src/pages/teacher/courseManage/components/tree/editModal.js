@@ -22,7 +22,6 @@ const EditModal = Form.create({
 
     render() {
       const { visible, onCancel, form } = this.props;
-      // console.log(selectedName);
       const { getFieldDecorator } = form;
       return (
         <Modal

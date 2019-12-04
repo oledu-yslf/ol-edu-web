@@ -1,20 +1,7 @@
-
 export default {
   namespace: 'global',
   state: {
-    selectedMenu:['']
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/') {
-          
-        }
-      });
-    },
-  },
-  effects: {
-    
+    selectedMenu:['/']
   },
   reducers: {
     save(state, action) {
