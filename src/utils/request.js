@@ -35,7 +35,6 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   function(response) {
-    console.log(response)
     const { data, config } = response;
     if (config.url.indexOf('/oauth/token') !== -1) {
       setToken(config.url, data);
@@ -43,7 +42,6 @@ request.interceptors.response.use(
     return data;
   },
   function(error) {
-    console.log(error)
     return Promise.reject(error);
   },
 );

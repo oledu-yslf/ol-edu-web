@@ -2,7 +2,7 @@
 export default {
   namespace: 'global',
   state: {
-    selectedMenu:[]
+    selectedMenu:['']
   },
   subscriptions: {
     setup({ dispatch, history }) {

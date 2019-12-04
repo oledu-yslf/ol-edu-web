@@ -1,13 +1,9 @@
 .box{
-  display: flex;
-  justify-content: space-between;
+
   width:100%;
   line-height: 40px;
 }
 
-.left{
-  display: flex;
-}
 .logo{
   width: 120px;
   height: 30px;

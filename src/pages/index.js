@@ -1,4 +1,4 @@
-import style from './index.css';
+import style from './index.less';
 import { Card, Divider, Icon, Col, Row } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -7,7 +7,6 @@ import router from 'umi/router';
 function index(props) {
   const { recentList, newList, hotList } = props;
   const handleClick = (item, e) => {
-    console.log(item);
     router.push({
       pathname: '/course/coursePlay',
       query: {

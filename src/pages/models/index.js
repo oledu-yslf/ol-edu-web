@@ -11,94 +11,50 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/') {
-          const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-          const staffNo = roleInfo.staffNo;
           dispatch({
-            type: 'listRecent',
-            payload: {
-              createStaffId: staffNo,
-              page: {
-                pageSize: 4,
-                pageNum: 1,
-              },
-            },
-          });
-          dispatch({
-            type: 'courseListpage',
-            payload: {
-              orderBy: 'create_date desc',
-              page: {
-                pageSize: 4,
-                pageNum: 1,
-              },
-            },
-          });
-          dispatch({
-            type: 'courseListpage',
-            payload: {
-              orderBy: 'count_study desc',
-              page: {
-                pageSize: 4,
-                pageNum: 1,
-              },
-            },
-          });
+            type:'init'
+          })
         }
       });
     },
   },
   effects: {
-    *listRecent({ payload }, { call, put }) {
-      const { data } = yield call(service.listRecent, payload);
-      const { result } = data;
+    *init({ payload }, { call, put }) {
+      const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+      const staffNo = roleInfo?roleInfo.staffNo :'';
+      const [rencentResult,newResult,hotResult] = yield [
+        call(service.listRecent, {
+          createStaffId: staffNo,
+          page: {
+            pageSize: 4,
+            pageNum: 1,
+          },
+        }),
+        call(service.courseListpage, {
+          orderBy: 'create_date desc',
+          page: {
+            pageSize: 4,
+            pageNum: 1,
+          },
+        }),
+        call(service.courseListpage, {
+          orderBy: 'count_study desc',
+          page: {
+            pageSize: 4,
+            pageNum: 1,
+          },
+        }),
+      ];
+      console.log(rencentResult);
       yield put({
         type: 'save',
         payload: {
-          recentList: result,
+          recentList:rencentResult.data.result,
+          newList:newResult.data.result,
+          hotList:hotResult.data.result
         },
       });
-    },
-    *courseListpage({ payload }, { call, put }) {
-      const { data } = yield call(service.courseListpage, payload);
-      const { result } = data;
-      if(payload.orderBy === 'create_date desc'){
-        yield put({
-          type: 'save',
-          payload: {
-            newList: result,
-          },
-        });
-      }else{
-        yield put({
-          type: 'save',
-          payload: {
-            hotList: result,
-          },
-        });
-      }
-      
-      
-    },
-    // *listRecent({ payload }, { call, put }) {
-    //   const { data } = yield call(service.listRecent, payload);
-    //   const { result } = data;
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       list: result,
-    //     },
-    //   });
-    // },
-    // *listRecent({ payload }, { call, put }) {
-    //   const { data } = yield call(service.listRecent, payload);
-    //   const { result } = data;
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       list: result,
-    //     },
-    //   });
-    // }
+    }
   },
   reducers: {
     save(state, action) {
