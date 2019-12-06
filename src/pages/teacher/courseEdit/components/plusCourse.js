@@ -69,8 +69,8 @@ class PlusCourse extends React.Component {
               isPutaway: 0,
               totalChapter: 0,
               totalPeriod: 0,
-              teacherStaffId: '',
-              createStaffId: '',
+              teacherStaffId: '2',
+              createStaffId: '2',
             },
           });
         }else{
@@ -84,13 +84,7 @@ class PlusCourse extends React.Component {
               categoryId,
               introduce,
               courseLogoUrl,
-              state: 1,
-              isFree: 1,
-              isPutaway: 0,
-              totalChapter: 0,
-              totalPeriod: 0,
-              teacherStaffId: '',
-              createStaffId: '',
+              modifyStaffId: '2',
             },
           });
         }
@@ -165,7 +159,7 @@ class PlusCourse extends React.Component {
             rules: [{ required: true, message: '请上传课程logo!' }],
           })(
             <Upload
-              action="../api/fileserver/upLoad"
+              action="../api/zuul/fileserver/upLoad"
               beforeUpload={beforeUpload}
               data={{
                 fileType: 'other',
