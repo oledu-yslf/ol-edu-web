@@ -23,28 +23,30 @@ class PlusCourse extends React.Component {
   };
 
   renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.courseCategoryVOList) {
+    if(data){
+      return data.map(item => {
+        if (item.courseCategoryVOList) {
+          return (
+            <TreeNode
+              value={item.categoryId}
+              title={item.categoryName}
+              key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
+              c={item}
+            >
+              {this.renderTreeNodes(item.courseCategoryVOList)}
+            </TreeNode>
+          );
+        }
         return (
           <TreeNode
             value={item.categoryId}
             title={item.categoryName}
             key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
-            c={item}
-          >
-            {this.renderTreeNodes(item.courseCategoryVOList)}
-          </TreeNode>
+            dataRef={item}
+          />
         );
-      }
-      return (
-        <TreeNode
-          value={item.categoryId}
-          title={item.categoryName}
-          key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
-          dataRef={item}
-        />
-      );
-    });
+      });
+    }
   };
 
   handleSubmit = e => {

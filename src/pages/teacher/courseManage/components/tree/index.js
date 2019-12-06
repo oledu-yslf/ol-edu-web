@@ -18,26 +18,28 @@ class OTree extends React.Component {
   }
 
   renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.courseCategoryVOList) {
+    if(data){
+      return data.map(item => {
+        if (item.courseCategoryVOList) {
+          return (
+            <TreeNode
+              title={item.categoryName}
+              key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
+              dataRef={item}
+            >
+              {this.renderTreeNodes(item.courseCategoryVOList)}
+            </TreeNode>
+          );
+        }
         return (
           <TreeNode
             title={item.categoryName}
             key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
             dataRef={item}
-          >
-            {this.renderTreeNodes(item.courseCategoryVOList)}
-          </TreeNode>
+          />
         );
-      }
-      return (
-        <TreeNode
-          title={item.categoryName}
-          key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
-          dataRef={item}
-        />
-      );
-    });
+      });
+    }
   };
 
   /**
@@ -62,7 +64,7 @@ class OTree extends React.Component {
         }
       })
     }
-    
+
   };
 
   /**
