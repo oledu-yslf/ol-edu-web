@@ -3,7 +3,7 @@ import qs from 'qs';
 
 /**
  * 课程详情
- * @param {*} params 
+ * @param {*} params
  */
 export function courseDetail (params) {
   return request('../api/course/detail',{
@@ -14,7 +14,7 @@ export function courseDetail (params) {
 
 /**
  * 章节列表
- * @param {*} params 
+ * @param {*} params
  */
 export function chapterList (params) {
   return request('../api/course/chapter/list',{
@@ -25,7 +25,7 @@ export function chapterList (params) {
 
 /**
  * 章节新增
- * @param {*} params 
+ * @param {*} params
  */
 export function chapterSave (data) {
   return request('../api/course/chapter/save',{
@@ -36,7 +36,7 @@ export function chapterSave (data) {
 
 /**
  * 章节更新
- * @param {*} params 
+ * @param {*} params
  */
 export function chapterUpdate (data) {
   return request('../api/course/chapter/update',{
@@ -47,7 +47,7 @@ export function chapterUpdate (data) {
 
 /**
  * 章节详情
- * @param {*} params 
+ * @param {*} params
  */
 export function chapterDetail (params) {
   return request('../api/course/chapter/detail',{
@@ -58,7 +58,7 @@ export function chapterDetail (params) {
 
 /**
  * 章节删除
- * @param {*} params 
+ * @param {*} params
  */
 export function chapterDelete (params) {
   return request('../api/course/chapter/delete',{
@@ -71,7 +71,7 @@ export function chapterDelete (params) {
 
 /**
  * 课时列表
- * @param {*} params 
+ * @param {*} params
  */
 export async function periodList (data) {
   return request('../api/course/chapter/period/list',{
@@ -83,7 +83,7 @@ export async function periodList (data) {
 
 /**
  * 课时新增
- * @param {*} params 
+ * @param {*} params
  */
 export async function periodSave (data) {
   return request('../api/course/chapter/period/save',{
@@ -94,7 +94,7 @@ export async function periodSave (data) {
 
 /**
  * 课时更新
- * @param {*} params 
+ * @param {*} params
  */
 export async function periodUpdate (data) {
   return request('../api/course/chapter/period/update',{
@@ -105,23 +105,23 @@ export async function periodUpdate (data) {
 
 /**
  * 课时更新
- * @param {*} params 
+ * @param {*} params
  */
 export async function periodDetail (data) {
   return request('../api/course/chapter/period/detail',{
     method: 'POST',
-    data:data.id
+    data:{periodId:data.id}
   })
 }
 
 /**
  * 课时更新
- * @param {*} params 
+ * @param {*} params
  */
 export async function periodDelete (data) {
   return request('../api/course/chapter/period/delete',{
     method: 'POST',
-    data:data.id
+    data:{ periodId : data.id}
   })
 }
 
