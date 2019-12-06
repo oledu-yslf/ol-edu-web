@@ -19,7 +19,7 @@ export function courseDetail (params) {
 export function chapterList (params) {
   return request('../api/course/chapter/list',{
     method: 'POST',
-    data:params.id
+    data:{courseId:params.id}
   })
 }
 
@@ -63,7 +63,7 @@ export function chapterDetail (params) {
 export function chapterDelete (params) {
   return request('../api/course/chapter/delete',{
     method: 'POST',
-    data:params.id
+    data:{chapterId: params.id}
   })
 }
 
@@ -76,7 +76,7 @@ export function chapterDelete (params) {
 export async function periodList (data) {
   return request('../api/course/chapter/period/list',{
     method: 'POST',
-    data:data.chapterId
+    data:{chapterId:data.chapterId}
   })
 }
 
