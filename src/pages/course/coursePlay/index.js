@@ -1,8 +1,6 @@
 import { connect } from 'dva';
 import styles from './index.less';
 import ReactPlayer from 'react-player';
-import router from 'umi/router';
-import Link from 'umi/link';
 import { Row, Col, Rate } from 'antd';
 
 const checkToken = url => {
@@ -84,7 +82,6 @@ function coursePlay(props) {
 
       <div className={styles.video}>
         <ReactPlayer
-          // ref={this.ref}
           width="100%"
           height="540px"
           url={url}

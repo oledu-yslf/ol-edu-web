@@ -115,7 +115,8 @@ class OTree extends React.Component {
    */
   handleCreate = value => {
     const { dispatch } = this.props;
-
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     if (this.state.selectedKeys[0]) {
       var parentId = this.state.selectedKeys[0].split('-')[1];
       var floor = this.state.selectedKeys[0].split('-')[2];
@@ -125,7 +126,7 @@ class OTree extends React.Component {
       payload: {
         categoryName: value.categoryName,
         parentId: parentId || '',
-        createStaffId: '0001',
+        createStaffId,
         floor: parseInt(floor) + 1 || 1,
       },
     });
@@ -136,12 +137,14 @@ class OTree extends React.Component {
       var categoryId = this.state.selectedKeys[0].split('-')[1];
     }
     const { dispatch } = this.props;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const modifyStaffId = roleInfo.staffNo;
     dispatch({
       type: 'courseManage/categoryUpdate',
       payload: {
         categoryName: value.categoryName,
         categoryId,
-        modifyStaffId: '',
+        modifyStaffId,
       },
     });
     this.setState({

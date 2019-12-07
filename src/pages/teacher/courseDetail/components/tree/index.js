@@ -265,7 +265,7 @@ class OTree extends React.Component {
       dispatch({
         type: 'courseDetail/chapterDelete',
         payload: {
-          id: chapterDetail.chapterId,
+          chapterId: chapterDetail.chapterId,
         },
       });
     } else if (isSelectedNode && isLeaf) {

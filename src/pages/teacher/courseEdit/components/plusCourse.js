@@ -50,6 +50,8 @@ class PlusCourse extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, courseId } = this.props;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     this.props.form.validateFields((err, values) => {
       if (!err) {
         if (!courseId) {
@@ -67,8 +69,8 @@ class PlusCourse extends React.Component {
               isPutaway: 0,
               totalChapter: 0,
               totalPeriod: 0,
-              teacherStaffId: '',
-              createStaffId: '',
+              teacherStaffId:createStaffId,
+              createStaffId,
             },
           });
         }else{
@@ -87,8 +89,8 @@ class PlusCourse extends React.Component {
               isPutaway: 0,
               totalChapter: 0,
               totalPeriod: 0,
-              teacherStaffId: '',
-              createStaffId: '',
+              teacherStaffId: createStaffId,
+              modifyStaffId:createStaffId
             },
           });
         }

@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { notification } from 'antd';
+import * as service from '@/services/index';
+
 
 const checkToken = url => {
   let token;
@@ -13,7 +16,7 @@ const checkToken = url => {
   return token;
 };
 
-const setToken = (url, data) => {
+const setToken = (data) => {
   localStorage.setItem('jwToken', JSON.stringify(data));
 };
 
@@ -37,7 +40,28 @@ request.interceptors.response.use(
   function(response) {
     const { data, config } = response;
     if (config.url.indexOf('/oauth/token') !== -1) {
-      setToken(config.url, data);
+      setToken(data);
+    }
+    if(data.code === 401){
+      return service.refreshToken().then(res => {
+        const { token } = res.data
+        setToken(token)
+        const config = response.config
+        config.headers['X-Token'] = token
+        config.baseURL = '' // url已经带上了/api，避免出现/api/api的情况
+        return request(config)
+      }).catch(res => {
+        console.error('refreshtoken error =>', res)
+        //刷新token失败，神仙也救不了了，跳转到首页重新登录吧
+        // window.location.href = '/login'
+      })
+    }
+    if (data.code !== 200 && data.code !== 401) {
+      const { msg } = data;
+      notification.error({
+        message: `请求错误`,
+        description: msg,
+      });
     }
     return data;
   },

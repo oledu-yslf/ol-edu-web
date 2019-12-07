@@ -7,7 +7,6 @@ import styles from './index.less';
 
 const pageSize = 20;
 
-// import ReactPlayer from 'react-player';
 function course(props) {
   const { list, total, dispatch, loading } = props;
   const searchCourse = value => {
@@ -21,7 +20,6 @@ function course(props) {
       type: 'course/courseListpage',
       payload: {
         ...value,
-        // categoryId:selectedNodes.categoryId || '',
         page: {
           pageSize,
           pageNum: 1,
@@ -54,55 +52,7 @@ function course(props) {
       },
     });
   };
-  // const List = () => {
-  //   return list.map(item => {
-  //     return (
-  //       <Col
-  //         span={6}
-  //         key={item.courseId}
-  //         onClick={e => handleClick(item, e)}
-  //         style={{ marginBottom: '20px' }}
-  //       >
-  //         {item.logoFile ? (
-  //           <Card
-  //             hoverable
-  //             cover={
-  //               <img
-  //                 style={{ width: '100%', height: '160px' }}
-  //                 alt="logo"
-  //                 src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
-  //               />
-  //             }
-  //           >
-  //             <Card.Meta title={item.courseName} />
-  //           </Card>
-  //         ) : (
-  //           <Card
-  //             hoverable
-  //             cover={
-  //               <img
-  //                 style={{ width: '100%', height: '160px' }}
-  //                 alt="logo"
-  //                 src="//img1.mukewang.com/szimg/5da13cab09466e9105400306-360-202.png"
-  //               />
-  //             }
-  //           >
-  //             <Card.Meta title={item.courseName} />
-  //           </Card>
-  //         )}
-  //       </Col>
-  //     );
-  //   });
-  // };
-  // if (!loading && total === 0) {
-  //   return (
-  //     <div className={styles.box}>
-  //       <OSearchBar onSearch={searchCourse} />
-  //       <Divider />
-  //       <Empty />
-  //     </div>
-  //   );
-  // }
+  
   return (
     <div className={styles.box}>
       <OSearchBar onSearch={searchCourse} />
@@ -119,6 +69,7 @@ function course(props) {
           <List.Item>
             <Card
               hoverable
+              onClick={e=>handleClick(item,e)}
               cover={
                 <img
                   style={{ width: '100%', height: '160px' }}
@@ -133,18 +84,7 @@ function course(props) {
         )}
       />
 
-      {/* <Row gutter={16}>
-        <List />
-      </Row> */}
-      {/* <ReactPlayer
-        url="api/fileserver/video/20191108/8086cefbb32147f897c33099c2ffa0a3/8086cefbb32147f897c33099c2ffa0a3.m3u8"
-        playing
-      /> */}
-      {/* {loading ? (
-        ''
-      ) : (
-        <Pagination defaultCurrent={1} total={total} pageSize={pageSize} onChange={pageChange} />
-      )} */}
+  
     </div>
   );
 }

@@ -63,7 +63,7 @@ export function chapterDetail (params) {
 export function chapterDelete (params) {
   return request('../api/course/chapter/delete',{
     method: 'POST',
-    data:params.id
+    data:params
   })
 }
 
