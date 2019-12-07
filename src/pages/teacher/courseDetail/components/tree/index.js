@@ -15,23 +15,26 @@ class OTree extends React.Component {
   }
 
   renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.periodVOList) {
+    if (data){
+      return data.map(item => {
+        if (item.periodVOList) {
+          return (
+            <TreeNode title={item.chapterName} key={`章节-${item.chapterId}`} dataRef={item}>
+              {this.renderTreeNodes(item.periodVOList)}
+            </TreeNode>
+          );
+        }
         return (
-          <TreeNode title={item.chapterName} key={`章节-${item.chapterId}`} dataRef={item}>
-            {this.renderTreeNodes(item.periodVOList)}
-          </TreeNode>
+          <TreeNode
+            title={item.periodName}
+            key={`课时-${item.periodId}`}
+            dataRef={item}
+            isLeaf={true}
+          />
         );
-      }
-      return (
-        <TreeNode
-          title={item.periodName}
-          key={`课时-${item.periodId}`}
-          dataRef={item}
-          isLeaf={true}
-        />
-      );
-    });
+      });
+    }
+
   };
 
   /**

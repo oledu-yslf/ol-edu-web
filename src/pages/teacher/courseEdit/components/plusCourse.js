@@ -23,28 +23,30 @@ class PlusCourse extends React.Component {
   };
 
   renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.courseCategoryVOList) {
+    if(data){
+      return data.map(item => {
+        if (item.courseCategoryVOList) {
+          return (
+            <TreeNode
+              value={item.categoryId}
+              title={item.categoryName}
+              key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
+              c={item}
+            >
+              {this.renderTreeNodes(item.courseCategoryVOList)}
+            </TreeNode>
+          );
+        }
         return (
           <TreeNode
             value={item.categoryId}
             title={item.categoryName}
             key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
-            c={item}
-          >
-            {this.renderTreeNodes(item.courseCategoryVOList)}
-          </TreeNode>
+            dataRef={item}
+          />
         );
-      }
-      return (
-        <TreeNode
-          value={item.categoryId}
-          title={item.categoryName}
-          key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
-          dataRef={item}
-        />
-      );
-    });
+      });
+    }
   };
 
   handleSubmit = e => {
@@ -71,6 +73,7 @@ class PlusCourse extends React.Component {
               totalPeriod: 0,
               teacherStaffId:createStaffId,
               createStaffId,
+
             },
           });
         }else{
@@ -91,6 +94,7 @@ class PlusCourse extends React.Component {
               totalPeriod: 0,
               teacherStaffId: createStaffId,
               modifyStaffId:createStaffId
+
             },
           });
         }
@@ -165,7 +169,7 @@ class PlusCourse extends React.Component {
             rules: [{ required: true, message: '请上传课程logo!' }],
           })(
             <Upload
-              action="../api/fileserver/upLoad"
+              action="../api/zuul/fileserver/upLoad"
               beforeUpload={beforeUpload}
               data={{
                 fileType: 'other',

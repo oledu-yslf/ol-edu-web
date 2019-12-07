@@ -140,7 +140,7 @@ const EditPeriodModal = Form.create({
                 rules: [{ required: true, message: '请上传课时视频!' }],
               })(
                 <Upload
-                  action="../api/fileserver/upLoad"
+                  action="../api/zuul/fileserver/upLoad"
                   data={{
                     fileType: 'video',
                     createStaffId: '0001',
@@ -166,7 +166,7 @@ const EditPeriodModal = Form.create({
                 rules: [{ required: true, message: '请上传课时附件!' }],
               })(
                 <Upload
-                  action="../api/fileserver/upLoad"
+                  action="../api/zuul/fileserver/upLoad"
                   data={{
                     fileType: 'attach',
                     createStaffId: '0001',
