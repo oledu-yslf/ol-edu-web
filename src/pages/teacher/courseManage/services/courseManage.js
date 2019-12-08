@@ -58,6 +58,17 @@ export async function courseListpage (params) {
 }
 
 /**
+ * 课程编辑
+ * @param {*} params 
+ */
+export function courseUpdate (params) {
+  return request('../api/course/update',{
+    method: 'POST',
+    data: params,
+  })
+}
+
+/**
  * 删除课程
  * @param {*} params 
  */

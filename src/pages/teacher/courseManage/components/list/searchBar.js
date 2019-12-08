@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import Link from 'umi/link';
+import router from 'umi/router';
 
 class OSearchBar extends React.Component {
   handleSubmit = e => {
@@ -9,6 +10,10 @@ class OSearchBar extends React.Component {
     const value = this.props.form.getFieldsValue();
     onSearch(value);
   };
+
+  handlePlusClick = e =>{
+    router.push('/teacher/courseEdit');
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -27,7 +32,7 @@ class OSearchBar extends React.Component {
           </Button>
         </Col>
         <Col span={3}>
-          <Button type="primary" icon="edit">
+          <Button type="primary" icon="edit" onClick={this.handlePlusClick}>
             <Link to="/teacher/courseEdit" style={{color:'#fff'}}>添加</Link>
           </Button>
         </Col>

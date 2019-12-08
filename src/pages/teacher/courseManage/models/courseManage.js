@@ -9,13 +9,14 @@ export default {
     deleteVisible: false,
     editVisible: false,
     courseName: '',
-    userName:'',
+    // userName:'',
     pageNum: 1,
     list: [],
     total: 0,
     optionCourseName:'',
     optionCourseId:'',
     deleteCourseVisible: false,
+    putawayVisible:false,
     selectedNodes:{}
   },
   subscriptions: {
@@ -132,6 +133,10 @@ export default {
           },
         },
       });
+    },
+    *courseUpdate({ payload }, { call, put ,select}){
+      return yield call(service.courseUpdate, payload);
+      // yield put(routerRedux.push(`/teacher/courseDetail?id=${courseId}`));/
     },
   },
   reducers: {

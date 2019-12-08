@@ -5,7 +5,7 @@ import * as service from '@/services/index';
 
 const checkToken = url => {
   let token;
-  if (url.indexOf('/oauth/token') === -1) {
+  if (url.indexOf('/oauth/token') === -1 && localStorage.getItem('jwToken')) {
     const jwToken = JSON.parse(localStorage.getItem('jwToken'));
     if (jwToken) {
       token = `${jwToken.token_type} ${jwToken.access_token}`;
@@ -59,7 +59,7 @@ request.interceptors.response.use(
     if (data.code !== 200 && data.code !== 401) {
       const { msg } = data;
       notification.error({
-        message: `请求错误`,
+        message: `请求错误${config.url}`,
         description: msg,
       });
     }

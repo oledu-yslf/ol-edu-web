@@ -9,7 +9,8 @@ export default {
     categoryId:'',
     courseId:'',
     courseName:'',
-    file_ID:[],introduce:''
+    file_ID:[],
+    introduce:''
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -18,12 +19,12 @@ export default {
           dispatch({
             type: 'categoryListAll',
           });
-        }
-        if (query.id) {
-          dispatch({
-            type: 'courseDetail',
-            payload:{courseId:query.id}
-          });
+          if (query.id) {
+            dispatch({
+              type: 'courseDetail',
+              payload:{courseId:query.id}
+            });
+          }
         }
       });
     },
@@ -68,6 +69,8 @@ export default {
   },
   reducers: {
     save(state, action) {
+      console.log(action);
+
       return { ...state, ...action.payload };
     },
   },

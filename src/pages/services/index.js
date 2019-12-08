@@ -18,6 +18,7 @@ export async function listRecent (params) {
  * @param {*} params 
  */
 export async function courseListpage (params) {
+  console.log(params);
   return request('/api/course/listpage',{
     method: 'POST',
     data: params,

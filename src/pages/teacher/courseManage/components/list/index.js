@@ -1,45 +1,100 @@
+import React from 'react';
 import { connect } from 'dva';
-import router from 'umi/router'
-import { Pagination, Divider, Empty, Modal } from 'antd';
+import router from 'umi/router';
+import { Divider, Modal, List, notification } from 'antd';
 import OSearchBar from './searchBar';
 import OCell from './cell';
 
 const pageSize = 5;
-function OList({ total, list, courseName, optionCourseId, optionCourseName, deleteCourseVisible,selectedNodes, loading, dispatch }) {
-
-  const handleEdit = (id) => {
-    router.push(`/teacher/courseEdit?id=${id}`)
+class OList extends React.Component {
+  handleEdit = id => {
+    router.push(`/teacher/courseEdit?id=${id}`);
   };
-  const handleDelete = (optionCourseName,optionCourseId) => {
+  handleDelete = (optionCourseName, optionCourseId) => {
+    console.log(1);
+    const { dispatch } = this.props;
     dispatch({
       type: 'courseManage/save',
       payload: {
         optionCourseName,
         optionCourseId,
-        deleteCourseVisible: true
+        deleteCourseVisible: true,
       },
     });
   };
 
-  const HandleDeleteCourse = () => {
+  HandleDeleteCourse = () => {
+    const { dispatch, optionCourseId } = this.props;
+
     dispatch({
       type: 'courseManage/courseDelete',
       payload: {
         courseId: optionCourseId,
       },
     });
-  }
-
-  const handleCancel = () => {
+  };
+  handleSwitchClick = (optionCourseName, optionCourseId, isPutaway) => {
+    const { dispatch } = this.props;
     dispatch({
-      type:'courseManage/save',
-      payload:{
-        deleteCourseVisible:false
-      }
-    })
+      type: 'courseManage/save',
+      payload: {
+        optionCourseName,
+        optionCourseId,
+        isPutaway,
+        putawayVisible: true,
+      },
+    });
+  };
+  handlePutawayCourse = () => {
+    const { dispatch, optionCourseId, isPutaway,courseName,selectedNodes } = this.props;
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const modifyStaffId = roleInfo.staffNo || '';
+    dispatch({
+      type: 'courseManage/courseUpdate',
+      payload: {
+        courseId: optionCourseId,
+        isPutaway,
+        modifyStaffId,
+      },
+    }).then(res => {
+      notification.success({
+        message: '成功'
+      });
+      this.handleCancel();
+      dispatch({
+        type: 'courseManage/courseListpage',
+        payload: {
+          courseName,
+          categoryId: selectedNodes.categoryId || '',
+          page: {
+            pageSize,
+            pageNum: 1,
+          },
+        },
+      });
+    });
   };
 
-  const searchCourse = value => {
+  handleCancel = () => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'courseManage/save',
+      payload: {
+        deleteCourseVisible: false,
+        putawayVisible: false,
+        optionCourseName: '',
+        optionCourseId: '',
+        isPutaway: '',
+      },
+    });
+  };
+
+  searchCourse = value => {
+    const { dispatch, selectedNodes } = this.props;
+
     dispatch({
       type: 'courseManage/save',
       payload: {
@@ -50,7 +105,7 @@ function OList({ total, list, courseName, optionCourseId, optionCourseName, dele
       type: 'courseManage/courseListpage',
       payload: {
         ...value,
-        categoryId:selectedNodes.categoryId || '',
+        categoryId: selectedNodes.categoryId || '',
         page: {
           pageSize,
           pageNum: 1,
@@ -58,7 +113,9 @@ function OList({ total, list, courseName, optionCourseId, optionCourseName, dele
       },
     });
   };
-  const pageChange = (page, pageSize) => {
+  pageChange = (page, pageSize) => {
+    const { courseName, dispatch, selectedNodes } = this.props;
+
     dispatch({
       type: 'courseManage/save',
       payload: {
@@ -69,49 +126,64 @@ function OList({ total, list, courseName, optionCourseId, optionCourseName, dele
       type: 'courseManage/courseListpage',
       payload: {
         courseName,
-        categoryId:selectedNodes.categoryId || '',
+        categoryId: selectedNodes.categoryId || '',
         page: {
           pageSize,
           pageNum: page,
         },
       },
     });
-  }
-  if (!loading && total === 0) {
+  };
+  render() {
+    const { list, optionCourseName, putawayVisible, deleteCourseVisible, loading } = this.props;
     return (
       <div>
-        <OSearchBar onSearch={searchCourse} />
+        <OSearchBar onSearch={this.searchCourse} />
         <Divider />
-        <Empty />
+
+        <List
+          dataSource={list}
+          pagination={{
+            onChange: page => {
+              this.pageChange(page);
+            },
+          }}
+          renderItem={item => (
+            <List.Item>
+              <OCell
+                {...item}
+                key={item.courseId}
+                handleEdit={this.handleEdit}
+                handleDelete={this.handleDelete}
+                handleSwitchClick={this.handleSwitchClick}
+              />
+            </List.Item>
+          )}
+        />
+        <Modal
+          title="删除课程提示"
+          visible={deleteCourseVisible}
+          onOk={this.HandleDeleteCourse}
+          onCancel={this.handleCancel}
+          confirmLoading={loading}
+        >
+          <p>确定删除{optionCourseName}课程吗？</p>
+        </Modal>
+        <Modal
+          title="提示"
+          visible={putawayVisible}
+          onOk={this.handlePutawayCourse}
+          onCancel={this.handleCancel}
+          confirmLoading={loading}
+        >
+          <p>确定删除{optionCourseName}课程吗？</p>
+        </Modal>
       </div>
     );
   }
-  return (
-    <div>
-      <OSearchBar onSearch={searchCourse} />
-      <Divider />
-      {list.map(item => {
-        return (
-          <OCell
-            {...item}
-            key={item.courseId}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        );
-      })}
-      <Pagination defaultCurrent={1} total={total} pageSize={pageSize} onChange={pageChange} />
-      <Modal
-        title="删除课程提示"
-        visible={deleteCourseVisible}
-        onOk={HandleDeleteCourse}
-        onCancel={handleCancel}
-        confirmLoading={loading}
-      >
-        <p>确定删除{optionCourseName}课程吗？</p>
-      </Modal>
-    </div>
-  );
 }
 
-export default connect((state) => ({ ...state.courseManage, loading: state.loading.models.courseManage }))(OList);
+export default connect(state => ({
+  ...state.courseManage,
+  loading: state.loading.models.courseManage,
+}))(OList);
