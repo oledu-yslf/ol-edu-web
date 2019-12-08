@@ -84,7 +84,7 @@ class Index extends React.Component {
         ) : (
           ''
         )}
-        {loading ? (
+        {!loading ? (
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={hotList}

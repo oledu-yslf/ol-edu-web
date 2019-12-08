@@ -182,6 +182,8 @@ class OTree extends React.Component {
   handleCreate = value => {
     const { dispatch, courseDetail } = this.props;
     const { chapterName, chapterDesc, sort } = value;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     dispatch({
       type: 'courseDetail/chapterSave',
       payload: {
@@ -192,7 +194,7 @@ class OTree extends React.Component {
         chapterDesc,
         totalPeriod: 0, //课时个数，新增时候填0
         sort, //排序，课程下面章节的排序
-        createStaffId: '0001',
+        createStaffId
       },
     });
   };
@@ -202,6 +204,8 @@ class OTree extends React.Component {
     const { dispatch, chapterDetail, courseDetail } = this.props;
     const chapterId = chapterDetail.chapterId;
     const courseId = courseDetail.courseId;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     dispatch({
       type: 'courseDetail/chapterUpdate',
       payload: {
@@ -211,28 +215,26 @@ class OTree extends React.Component {
         chapterName,
         chapterDesc,
         sort, //排序，课程下面章节的排序
-        createStaffId: '0001',
+        createStaffId
       },
     });
   };
   handleCreatePeriod = value => {
-    console.log(value);
     const { periodName, periodDesc, sort } = value;
     const { dispatch, chapterDetail, courseDetail } = this.props;
     const chapterId = chapterDetail.chapterId;
     const courseId = courseDetail.courseId;
     const videoFileId = value.videoFileId;
     const attachFileId = value.attachFileId;
-
     let vFileId,aFileId;
     if(videoFileId.length>0){
       vFileId = videoFileId[0].uid;
     }
     if(attachFileId.length>0){
       aFileId = attachFileId[0].uid;
-
     }
-    // const aFileId = attachFileId[0].uid;
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     debugger;
     dispatch({
       type: 'courseDetail/periodSave',
@@ -246,7 +248,7 @@ class OTree extends React.Component {
         sort, //排序，课程下面章节的排序
         isFree: 1,
         isPutaway: 1,
-        createStaffId: '0001',
+        createStaffId
       },
     });
   };
@@ -256,8 +258,17 @@ class OTree extends React.Component {
     const { dispatch, periodDetail, chapterDetail } = this.props;
     debugger;
     // var chapterId = this.state.selectedNodes.chapterId;
-    const vFileId = videoFileId[0].uid;
-    const aFileId = attachFileId[0].uid;
+    // const vFileId = videoFileId[0].uid;
+    // const aFileId = attachFileId[0].uid;
+    let vFileId,aFileId;
+    if(videoFileId.length>0){
+      vFileId = videoFileId[0].uid;
+    }
+    if(attachFileId.length>0){
+      aFileId = attachFileId[0].uid;
+    }
+    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const createStaffId = roleInfo.staffNo;
     dispatch({
       type: 'courseDetail/periodUpdate',
       payload: {
@@ -268,9 +279,9 @@ class OTree extends React.Component {
         videoFileId: vFileId,
         attachFileId: aFileId, //课时个数，新增时候填0
         sort, //排序，课程下面章节的排序
-        isFree: 1,
-        isPutaway: 1,
-        modifyStaffId: '0001',
+        // isFree: 1,
+        // isPutaway: 1,
+        modifyStaffId: createStaffId
       },
     });
   };

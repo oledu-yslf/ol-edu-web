@@ -12,7 +12,7 @@ export default {
     treeData: [],
     plusVisible: false,
     deleteVisible: false,
-    editPeriod: false
+    editPeriod: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -20,7 +20,7 @@ export default {
         if (pathname === '/teacher/courseDetail') {
           dispatch({
             type: 'courseDetail',
-            payload: {courseId:query.id}
+            payload: { courseId: query.id },
           });
         }
       });
@@ -39,14 +39,14 @@ export default {
         type: 'save',
         payload: {
           courseDetail: data,
-          treeData
+          treeData,
         },
       });
     },
-   
+
     *chapterSave({ payload }, { call, put, select }) {
       yield call(service.chapterSave, payload);
-      const courseId = yield select(state => state.courseDetail.courseDetail.courseId)
+      const courseId = yield select(state => state.courseDetail.courseDetail.courseId);
       const { data } = yield call(service.courseDetail, { courseId: courseId });
       const treeData = data.chapterVOList;
       for (let i in treeData) {
@@ -59,13 +59,13 @@ export default {
         payload: {
           courseDetail: data,
           treeData,
-          plusVisible: false
+          plusVisible: false,
         },
       });
     },
     *chapterUpdate({ payload }, { call, put, select }) {
       yield call(service.chapterUpdate, payload);
-      const courseId = yield select(state => state.courseDetail.courseDetail.courseId)
+      const courseId = yield select(state => state.courseDetail.courseDetail.courseId);
       const { data } = yield call(service.courseDetail, { courseId: courseId });
       const treeData = data.chapterVOList;
       for (let i in treeData) {
@@ -78,7 +78,7 @@ export default {
         payload: {
           courseDetail: data,
           treeData,
-          plusVisible: false
+          plusVisible: false,
         },
       });
     },
@@ -104,10 +104,11 @@ export default {
       yield put({
         type: 'save',
         payload: {
+          chapterDetail:{},
           courseDetail: data,
           treeData,
           editPeriod: false,
-          deleteVisible:false
+          deleteVisible: false,
         },
       });
     },
@@ -128,7 +129,6 @@ export default {
           courseDetail: data,
           treeData,
           editPeriod: false,
-
         },
       });
     },
@@ -148,23 +148,24 @@ export default {
           courseDetail: data,
           treeData,
           editPeriod: false,
-
         },
       });
     },
     *periodDetail({ payload }, { call, put, select }) {
       const { data } = yield call(service.periodDetail, payload);
       const { attachFileInfo, videoFileInfo } = data;
-
-      videoFileInfo.name = videoFileInfo.fileName;
-      videoFileInfo.url = `/api${videoFileInfo.url}/${videoFileInfo.fileName}`;
-      videoFileInfo.status = 'done';
-      videoFileInfo.uid = videoFileInfo.fileId;
-
-      attachFileInfo.name = attachFileInfo.fileName;
-      attachFileInfo.url = `/api${attachFileInfo.url}/${attachFileInfo.fileName}`;
-      attachFileInfo.status = 'done';
-      attachFileInfo.uid = attachFileInfo.fileId
+      if (videoFileInfo) {
+        videoFileInfo.name = videoFileInfo.fileName;
+        videoFileInfo.url = `/api${videoFileInfo.url}/${videoFileInfo.fileName}`;
+        videoFileInfo.status = 'done';
+        videoFileInfo.uid = videoFileInfo.fileId;
+      }
+      if (attachFileInfo) {
+        attachFileInfo.name = attachFileInfo.fileName;
+        attachFileInfo.url = `/api${attachFileInfo.url}/${attachFileInfo.fileName}`;
+        attachFileInfo.status = 'done';
+        attachFileInfo.uid = attachFileInfo.fileId;
+      }
 
       yield put({
         type: 'save',
@@ -186,10 +187,11 @@ export default {
       yield put({
         type: 'save',
         payload: {
+          periodDetail:{},
           courseDetail: data,
           treeData,
           editPeriod: false,
-          deleteVisible:false
+          deleteVisible: false,
         },
       });
     },
@@ -197,6 +199,6 @@ export default {
   reducers: {
     save(state, action) {
       return { ...state, ...action.payload };
-    }
+    },
   },
 };

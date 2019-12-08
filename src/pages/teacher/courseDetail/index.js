@@ -26,7 +26,7 @@ function CourseDetail(props) {
       });
     }
   };
-  const { periodDetail,chapterDetail, courseDetail,isSelectedNode,isLeaf} = props;
+  const { periodDetail, chapterDetail, courseDetail, isSelectedNode, isLeaf } = props;
   const Desc = () => {
     if (!isSelectedNode && courseDetail.courseName) {
       return (
@@ -39,35 +39,34 @@ function CourseDetail(props) {
             </a>
           </Descriptions.Item>
         </Descriptions>
-      )
-    } else if(isSelectedNode && !isLeaf && chapterDetail.chapterName){
+      );
+    } else if (isSelectedNode && !isLeaf && chapterDetail.chapterName) {
       return (
         <Descriptions layout="horizontal" column={1}>
-          <Descriptions.Item label="章节名称">{chapterDetail.chapterName}</Descriptions.Item>
-          <Descriptions.Item label="课时数">{chapterDetail.totalPeriod}</Descriptions.Item>
-          <Descriptions.Item label="总时长">{'-'}</Descriptions.Item>
+          <Descriptions.Item label="章节名称">:{chapterDetail.chapterName}</Descriptions.Item>
+          <Descriptions.Item label="课时数">:{chapterDetail.totalPeriod}</Descriptions.Item>
+          <Descriptions.Item label="总时长">:{'-'}</Descriptions.Item>
         </Descriptions>
-      )
-    }else if(isSelectedNode && isLeaf && periodDetail.periodName){
+      );
+    } else if (isSelectedNode && isLeaf && periodDetail.periodName) {
       return (
         <Descriptions layout="horizontal" column={1}>
-          <Descriptions.Item label="课时名称">{periodDetail.periodName}</Descriptions.Item>
-          <Descriptions.Item label="时长">{'-'}</Descriptions.Item>
-          <Descriptions.Item label="视频">
-            <a href={`${periodDetail.videoFileInfo.url}${periodDetail.videoFileInfo.fileName}`}>
-              {periodDetail.videoFileInfo.fileName}
-            </a>
+          <Descriptions.Item label="课时名称">:{periodDetail.periodName}</Descriptions.Item>
+          <Descriptions.Item label="时长">:{'-'}</Descriptions.Item>
+          <Descriptions.Item label="视频">:
+            {periodDetail.videoFileInfo ? (
+                <span>{periodDetail.videoFileInfo.fileName}</span>
+            ) : (
+              <span>无</span>
+            )}
           </Descriptions.Item>
-          <Descriptions.Item label="附件">{periodDetail.attachFileInfo.fileName}</Descriptions.Item>
+          <Descriptions.Item label="附件">:{periodDetail.attachFileInfo?periodDetail.attachFileInfo.fileName:'无'}</Descriptions.Item>
         </Descriptions>
-      )
-      
-    }else{
-      return ""
+      );
+    } else {
+      return '';
     }
   };
-
-
 
   return (
     <div className={styles.box}>
@@ -79,7 +78,7 @@ function CourseDetail(props) {
               <OTree />
             </Col>
             <Col span={18}>
-            <Desc/>
+              <Desc />
             </Col>
           </Row>
         </TabPane>
