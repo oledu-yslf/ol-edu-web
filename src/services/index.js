@@ -18,7 +18,7 @@ export async function refreshToken (params) {
     data: qs.stringify({
       client_id:'client_2',
       client_secret:123,
-      grant_type:'password',
+      grant_type:'refresh_token',
       refresh_token
     }),
   })

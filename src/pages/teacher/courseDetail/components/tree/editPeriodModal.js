@@ -22,6 +22,7 @@ const EditPeriodModal = Form.create({
             onEdit(value);
           } else {
             resetFields();
+            debugger;
             onCreate(value);
           }
         }
@@ -137,7 +138,7 @@ const EditPeriodModal = Form.create({
                 initialValue: this.state.videoFileId,
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFileVideo,
-                rules: [{ required: true, message: '请上传课时视频!' }],
+                rules: [],
               })(
                 <Upload
                   action="../api/zuul/fileserver/upLoad"
@@ -163,7 +164,7 @@ const EditPeriodModal = Form.create({
                 initialValue: attachFileId,
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFileAttach,
-                rules: [{ required: true, message: '请上传课时附件!' }],
+                rules: [],
               })(
                 <Upload
                   action="../api/zuul/fileserver/upLoad"

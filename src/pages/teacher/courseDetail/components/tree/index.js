@@ -216,12 +216,24 @@ class OTree extends React.Component {
     });
   };
   handleCreatePeriod = value => {
-    const { periodName, periodDesc, videoFileId, attachFileId, sort } = value;
+    console.log(value);
+    const { periodName, periodDesc, sort } = value;
     const { dispatch, chapterDetail, courseDetail } = this.props;
     const chapterId = chapterDetail.chapterId;
     const courseId = courseDetail.courseId;
-    const vFileId = videoFileId[0].uid;
-    const aFileId = attachFileId[0].uid;
+    const videoFileId = value.videoFileId;
+    const attachFileId = value.attachFileId;
+
+    let vFileId,aFileId;
+    if(videoFileId.length>0){
+      vFileId = videoFileId[0].uid;
+    }
+    if(attachFileId.length>0){
+      aFileId = attachFileId[0].uid;
+
+    }
+    // const aFileId = attachFileId[0].uid;
+    debugger;
     dispatch({
       type: 'courseDetail/periodSave',
       payload: {
@@ -242,6 +254,7 @@ class OTree extends React.Component {
   handleUpdatePeriod = value => {
     const { periodName, periodDesc, videoFileId, attachFileId, sort } = value;
     const { dispatch, periodDetail, chapterDetail } = this.props;
+    debugger;
     // var chapterId = this.state.selectedNodes.chapterId;
     const vFileId = videoFileId[0].uid;
     const aFileId = attachFileId[0].uid;
