@@ -246,7 +246,7 @@ class OTree extends React.Component {
           onCancel={this.handleCancel}
           confirmLoading={loading}
         >
-          <p>确定删除{categoryName}分类吗？</p>
+          <p>删除{categoryName}分类会一并删除对应的课程，以及下面的子分类,确定删除分类吗？</p>
         </Modal>
       </div>
     );

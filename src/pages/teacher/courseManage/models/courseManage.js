@@ -112,6 +112,8 @@ export default {
       });
     },
     *courseDelete({ payload }, { call, put, select }) {
+      let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
+      const staffNo = roleInfo?roleInfo.staffNo :'';
       yield call(service.courseDelete, payload);
       yield put({
         type: 'save',
@@ -128,6 +130,7 @@ export default {
       yield put({
         type: 'courseListpage',
         payload: {
+          createStaffId:staffNo,
           courseName,
           categoryId:selectedNodes.categoryId || '',
           page: {

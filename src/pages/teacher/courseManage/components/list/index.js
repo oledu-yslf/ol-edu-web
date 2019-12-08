@@ -147,7 +147,6 @@ class OList extends React.Component {
       <div>
         <OSearchBar onSearch={this.searchCourse} />
         <Divider />
-
         <List
           dataSource={list}
           pagination={{

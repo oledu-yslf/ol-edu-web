@@ -87,11 +87,6 @@ class PlusCourse extends React.Component {
               categoryId,
               introduce,
               courseLogoUrl,
-              state: 1,
-              isFree: 1,
-              isPutaway: 0,
-              totalChapter: 0,
-              totalPeriod: 0,
               teacherStaffId: createStaffId,
               modifyStaffId:createStaffId
 

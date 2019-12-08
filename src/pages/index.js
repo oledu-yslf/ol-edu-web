@@ -11,7 +11,7 @@ class Index extends React.Component {
   };
 
   render() {
-    const { recentList, newList, hotList } = this.props;
+    const { recentList, newList, hotList, loading } = this.props;
     const ListHeader = props => {
       const { type } = props;
       return (
@@ -29,7 +29,7 @@ class Index extends React.Component {
     };
     return (
       <div className={style.box}>
-        {localStorage.getItem('jwToken') ? (
+        {localStorage.getItem('jwToken') && !loading ? (
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={recentList}
@@ -57,52 +57,60 @@ class Index extends React.Component {
           ''
         )}
 
-        <List
-          grid={{ gutter: 16, column: 4 }}
-          dataSource={newList}
-          header={<ListHeader type={2} />}
-          renderItem={item => (
-            <List.Item>
-              <Card
-                style={{ marginTop: '20px' }}
-                hoverable
-                onClick={e => this.handleClick(item, e)}
-                cover={
-                  <img
-                    style={{ width: '100%', height: '160px' }}
-                    alt="logo"
-                    src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
-                  />
-                }
-              >
-                <Card.Meta title={item.courseName} />
-              </Card>
-            </List.Item>
-          )}
-        />
-        <List
-          grid={{ gutter: 16, column: 4 }}
-          dataSource={hotList}
-          header={<ListHeader type={3} />}
-          renderItem={item => (
-            <List.Item>
-              <Card
-                style={{ marginTop: '20px' }}
-                hoverable
-                onClick={e => this.handleClick(item, e)}
-                cover={
-                  <img
-                    style={{ width: '100%', height: '160px' }}
-                    alt="logo"
-                    src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
-                  />
-                }
-              >
-                <Card.Meta title={item.courseName} />
-              </Card>
-            </List.Item>
-          )}
-        />
+        {!loading ? (
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={newList}
+            header={<ListHeader type={2} />}
+            renderItem={item => (
+              <List.Item>
+                <Card
+                  style={{ marginTop: '20px' }}
+                  hoverable
+                  onClick={e => this.handleClick(item, e)}
+                  cover={
+                    <img
+                      style={{ width: '100%', height: '160px' }}
+                      alt="logo"
+                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                    />
+                  }
+                >
+                  <Card.Meta title={item.courseName} />
+                </Card>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+        {loading ? (
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={hotList}
+            header={<ListHeader type={3} />}
+            renderItem={item => (
+              <List.Item>
+                <Card
+                  style={{ marginTop: '20px' }}
+                  hoverable
+                  onClick={e => this.handleClick(item, e)}
+                  cover={
+                    <img
+                      style={{ width: '100%', height: '160px' }}
+                      alt="logo"
+                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                    />
+                  }
+                >
+                  <Card.Meta title={item.courseName} />
+                </Card>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
       </div>
     );
   }
