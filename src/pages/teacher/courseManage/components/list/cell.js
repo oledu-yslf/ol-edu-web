@@ -6,7 +6,9 @@ import styles from './index.css';
 
 const { Meta } = Card;
 class OCell extends React.Component {
-  
+  handleClick = (courseId)=>{
+    window.open(`/course/coursePlay?courseId=${courseId}`);
+  }
   handleEditClick = () => {
     const {handleEdit,courseId} = this.props;
     handleEdit(courseId);
@@ -29,7 +31,7 @@ class OCell extends React.Component {
       modifyDate,
       createDate,
       logoFile,
-      courseName,
+      courseName,courseId
     } = this.props;
     let date = modifyDate ? new Date(modifyDate) : new Date(createDate);
     let putaway = Boolean(isPutaway);
@@ -38,6 +40,7 @@ class OCell extends React.Component {
         <Card
           className={styles.pullleft}
           hoverable
+          onClick={e=>this.handleClick(courseId,e)}
           cover={
             logoFile ? (
               <img

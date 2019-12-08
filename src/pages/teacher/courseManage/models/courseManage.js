@@ -23,12 +23,15 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/courseManage') {
+          let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
+          const staffNo = roleInfo?roleInfo.staffNo :'';
           dispatch({
             type: 'categoryListAll',
           });
           dispatch({
             type: 'courseListpage',
             payload: {
+              createStaffId:staffNo,
               page: {
                 pageSize,
                 pageNum: 1,
