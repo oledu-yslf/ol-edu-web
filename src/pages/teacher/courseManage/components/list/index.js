@@ -11,7 +11,6 @@ class OList extends React.Component {
     router.push(`/teacher/courseEdit?id=${id}`);
   };
   handleDelete = (optionCourseName, optionCourseId) => {
-    console.log(1);
     const { dispatch } = this.props;
     dispatch({
       type: 'courseManage/save',
@@ -25,7 +24,6 @@ class OList extends React.Component {
 
   HandleDeleteCourse = () => {
     const { dispatch, optionCourseId } = this.props;
-
     dispatch({
       type: 'courseManage/courseDelete',
       payload: {
@@ -67,6 +65,7 @@ class OList extends React.Component {
         type: 'courseManage/courseListpage',
         payload: {
           courseName,
+          createStaffId:modifyStaffId,
           categoryId: selectedNodes.categoryId || '',
           page: {
             pageSize,
@@ -94,7 +93,10 @@ class OList extends React.Component {
 
   searchCourse = value => {
     const { dispatch, selectedNodes } = this.props;
-
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const modifyStaffId = roleInfo.staffNo || '';
     dispatch({
       type: 'courseManage/save',
       payload: {
@@ -104,6 +106,7 @@ class OList extends React.Component {
     dispatch({
       type: 'courseManage/courseListpage',
       payload: {
+        createStaffId:modifyStaffId,
         ...value,
         categoryId: selectedNodes.categoryId || '',
         page: {
@@ -115,7 +118,10 @@ class OList extends React.Component {
   };
   pageChange = (page, pageSize) => {
     const { courseName, dispatch, selectedNodes } = this.props;
-
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const modifyStaffId = roleInfo.staffNo || '';
     dispatch({
       type: 'courseManage/save',
       payload: {
@@ -126,6 +132,7 @@ class OList extends React.Component {
       type: 'courseManage/courseListpage',
       payload: {
         courseName,
+        createStaffId:modifyStaffId,
         categoryId: selectedNodes.categoryId || '',
         page: {
           pageSize,

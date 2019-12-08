@@ -45,12 +45,7 @@ function course(props) {
     });
   };
   const handleClick = (item, e) => {
-    router.push({
-      pathname: '/course/coursePlay',
-      query: {
-        courseId: item.courseId,
-      },
-    });
+    window.open(`/course/coursePlay?courseId=${item.courseId}`);
   };
   
   return (

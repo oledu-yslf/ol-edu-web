@@ -29,15 +29,10 @@ export default {
   effects: {
     *courseDetail({ payload }, { call, put ,select}) {
       const { data } = yield call(service.courseDetail, payload);
-      let url = yield select(state=>state.coursePlay.url);
-      const { videoFileInfo } = data.chapterVOList[0].periodVOList[0];
-      url = url?url:`/api${videoFileInfo.url}/${videoFileInfo.convertFileName}`;
-      
       yield put({
         type: 'save',
         payload: {
           courseDetail: data,
-          url
         },
       });
     },
