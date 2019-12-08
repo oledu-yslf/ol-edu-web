@@ -2,6 +2,7 @@ import * as service from '../services/coursePlay';
 export default {
   namespace: 'coursePlay',
   state: {
+    countStudy:0,
     courseId:'',
     url:'',
     courseDetail: {},
@@ -33,6 +34,7 @@ export default {
         type: 'save',
         payload: {
           courseDetail: data,
+          countStudy:data.countStudy
         },
       });
     },
@@ -40,6 +42,9 @@ export default {
       // let courseId = yield select(state=>state.coursePlay.courseId);
       return yield call(service.favoriteSave,payload);
     },
+    *studySave({ payload }, { call, put ,select}){
+      yield call(service.studySave,payload)
+    }
   },
   reducers: {
     save(state, action) {

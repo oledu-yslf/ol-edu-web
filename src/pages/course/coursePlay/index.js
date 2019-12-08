@@ -9,39 +9,49 @@ const checkToken = () => {
   let token = `${jwToken.token_type} ${jwToken.access_token}`;
   return token;
 };
-const computerTime =(dur) =>{
-  var m = parseInt(dur/60);
-  var s = parseInt(dur%60) || '00';
-  return `${m}:${s}`
-
-}
+const computerTime = dur => {
+  var m = parseInt(dur / 60);
+  var s = parseInt(dur % 60) || '00';
+  return `${m}:${s}`;
+};
 
 class coursePlay extends React.Component {
   handleClick = (item, e) => {
     const { dispatch } = this.props;
-    if(!localStorage.getItem('roleInfo')){
+    let roleInfo;
+    if (!localStorage.getItem('roleInfo')) {
       router.push('/login');
       return;
     }
-    if(item.videoFileInfo){
+    if (item.videoFileInfo) {
+      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
       dispatch({
         type: 'coursePlay/save',
         payload: {
           url: `/api${item.videoFileInfo.url}/${item.videoFileInfo.convertFileName}`,
+          countStudy: item.countStudy,
         },
       });
-    }else if(item.videoFileInfo){
-      window.open(`/api${item.attachFileInfo.url}/${item.videoFileInfo.fileName}`)
-    }else{
-
+      dispatch({
+        type: 'coursePlay/studySave',
+        payload: {
+          courseId: item.courseId,
+          chapterId: item.chapterId,
+          periodId: item.periodId,
+          createStaffId: roleInfo.staffNo,
+        },
+      });
     }
   };
+  // handleDownLoad = (item,e) =>{
+  //   window.open(`/api${item.attachFileInfo.url}/${item.videoFileInfo.fileName}`)
+  // }
   handleFavorite = () => {
     const { dispatch, courseId } = this.props;
     let roleInfo;
-    if(localStorage.getItem('roleInfo')){
+    if (localStorage.getItem('roleInfo')) {
       roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    }else{
+    } else {
       router.push('/login');
       return;
     }
@@ -50,22 +60,22 @@ class coursePlay extends React.Component {
       payload: {
         courseId,
         staffId: roleInfo.staffNo,
-        createStaffId: roleInfo.staffNo
+        createStaffId: roleInfo.staffNo,
       },
     }).then(res => {
       dispatch({
         type: 'coursePlay/courseDetail',
         payload: {
-          courseId
+          courseId,
         },
-      })
+      });
     });
   };
 
   render() {
-    const { courseDetail, url } = this.props;
-    const { courseName,chapterVOList, countStudy,logoFile,favorites } = courseDetail;
-    const star = favorites?1:0
+    const { courseDetail, url, countStudy } = this.props;
+    const { courseName, chapterVOList, logoFile, favorites } = courseDetail;
+    const star = favorites ? 1 : 0;
     const chapterNode = item => {
       return (
         <div className={styles.cell} key={item.chapterId}>
@@ -92,13 +102,17 @@ class coursePlay extends React.Component {
             >
               {item.periodName}
             </span>
-            <span style={{marginLeft:'20px'}}>
-            {(item.videoFileInfo?((`时长:${computerTime(item.videoFileInfo.duration)}`)):'')}
+            <span style={{ marginLeft: '20px' }}>
+              {item.videoFileInfo ? `时长:${computerTime(item.videoFileInfo.duration)}` : ''}
             </span>
           </div>
-          <div className={styles.pullright} onClick={e=>this.handleDownLoad(item,e)}>
+          <div className={styles.pullright} onClick={e => this.handleDownLoad(item, e)}>
             {item.attachFileInfo ? (
-              <a download style={{ color: '#1890ff', cursor: 'pointer' }} href={`/api${item.attachFileInfo.url}/${item.attachFileInfo.fileName}`}>
+              <a
+                download
+                style={{ color: '#1890ff', cursor: 'pointer' }}
+                href={`/api${item.attachFileInfo.url}/${item.attachFileInfo.fileName}`}
+              >
                 {item.attachFileInfo.fileName}
               </a>
             ) : (
@@ -115,7 +129,7 @@ class coursePlay extends React.Component {
             <span>课程名称：{courseName}</span>
           </div>
           <div className={styles.pullright}>
-            <span style={{ fontSize: '16px',marginRight:'20px' }}>学习人数:{countStudy}</span>
+            <span style={{ fontSize: '16px', marginRight: '20px' }}>学习人数:{countStudy}</span>
             <span style={{ fontSize: '16px' }}>
               收藏: <Rate allowHalf={false} count={1} value={star} onChange={this.handleFavorite} />
             </span>
@@ -142,11 +156,18 @@ class coursePlay extends React.Component {
                 },
               }}
             />
-          ) : ''
-        }
-        {
-          !url&&logoFile?(<img style={{width:'1200px'}} src={`/api${logoFile.url}/${logoFile.fileName}`} alt=""></img>):''
-        }
+          ) : (
+            ''
+          )}
+          {!url && logoFile ? (
+            <img
+              style={{ width: '1200px' }}
+              src={`/api${logoFile.url}/${logoFile.fileName}`}
+              alt=""
+            ></img>
+          ) : (
+            ''
+          )}
         </div>
         <div className={styles.cell}>
           <div className="cell-title">
