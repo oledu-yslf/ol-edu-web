@@ -47,7 +47,6 @@ request.interceptors.response.use(
       setToken(data);
     }
     if (data.code === 401) {
-      console.log(isRefreshing);
       if (!isRefreshing) {
         isRefreshing = true;
         return service
@@ -66,16 +65,12 @@ request.interceptors.response.use(
           })
           .catch(res => {
             console.error('refreshtoken error =>', res);
-            //刷新token失败，神仙也救不了了，跳转到首页重新登录吧
-            // window.location.href = '/login';
+            window.location.href = '/login';
           });
       }else {
-        // 正在刷新token，返回一个未执行resolve的promise
         return new Promise((resolve) => {
-          // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
           requests.push(() => {
             config.baseURL = ''
-            // config.headers['X-Token'] = token
             resolve(request(config))
           })
         })
