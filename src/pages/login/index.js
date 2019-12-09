@@ -38,6 +38,8 @@ class LoginForm extends React.Component {
             },
           }).then(res=>{
             const roleInfo = res.data;
+              roleInfo.staffNo_bak = roleInfo.staffNo;
+              roleInfo.staffNo = roleInfo.staffId;
             localStorage.setItem('roleInfo',JSON.stringify(roleInfo));
             if (prerouter) {
               router.push(prerouter);
