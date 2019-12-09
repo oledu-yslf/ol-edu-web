@@ -1,8 +1,9 @@
 import React from 'react';
-import { connect, router } from 'dva';
+import { connect } from 'dva';
 import styles from './index.less';
 import ReactPlayer from 'react-player';
 import { Rate } from 'antd';
+import router from 'umi/router';
 
 const checkToken = () => {
   const jwToken = JSON.parse(localStorage.getItem('jwToken'));
@@ -72,6 +73,20 @@ class coursePlay extends React.Component {
     });
   };
 
+    handleDownLoad = (item, e) => {
+        let roleInfo;
+        if (localStorage.getItem('roleInfo')) {
+            roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+        } else {
+            router.push('/login');
+            return;
+        }
+        const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+        const access_token = jwToken.access_token;
+
+        window.open(`/api` + item.attachFileInfo.url +`/` + item.attachFileInfo.fileName + `?access_token=` + access_token);
+    };
+
   render() {
     const { courseDetail, url, countStudy } = this.props;
     const { courseName, chapterVOList, logoFile, favorites } = courseDetail;
@@ -111,7 +126,6 @@ class coursePlay extends React.Component {
               <a
                 download
                 style={{ color: '#1890ff', cursor: 'pointer' }}
-                href={`/api${item.attachFileInfo.url}/${item.attachFileInfo.fileName}`}
               >
                 {item.attachFileInfo.fileName}
               </a>
