@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-
+import { notification } from 'antd';
 
 import { Form, Icon, Input, Button, Row, Col } from 'antd';
 import styles from './index.css';
@@ -24,6 +24,13 @@ class LoginForm extends React.Component {
             ...values,
           },
         }).then(res => {
+          if (res.code != 200){
+            notification.error({
+              message: res.msg,
+            });
+
+            return ;
+          }
           dispatch({
             type: 'login/loadUserByUserName',
             payload: {

@@ -8,7 +8,7 @@ import qs from 'qs'
 export async function refreshToken (params) {
   const jwToken = JSON.parse(localStorage.getItem('jwToken'));
   const refresh_token = jwToken.refresh_token;
-  console.log(refresh_token);
+  console.log("refresh_token = " + refresh_token);
   return request('/api/oauth/token',{
     headers: {
       'Content-Type': "application/x-www-form-urlencoded;charset=utf-8",
