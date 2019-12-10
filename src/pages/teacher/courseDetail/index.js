@@ -7,6 +7,17 @@ import OTree from './components/tree';
 // import { chapterDetail } from './services/courseDetail';
 
 const { TabPane } = Tabs;
+const computerTime = dur => {
+    var h = parseInt(dur / 3600);
+    var m = parseInt((dur - h * 3600) / 60);
+    var s = parseInt(dur % 60);
+
+    h = (Array(2).join(0) + parseInt(h)).slice(-2);
+    m = (Array(2).join(0) + parseInt(m)).slice(-2);
+    s = (Array(2).join(0) + parseInt(s)).slice(-2);
+
+    return `${h}:${m}:${s}`;
+};
 
 function CourseDetail(props) {
   const onTabClick = e => {
@@ -34,7 +45,7 @@ function CourseDetail(props) {
           <Descriptions.Item label="课程名称">{courseDetail.courseName}</Descriptions.Item>
           <Descriptions.Item label="课程介绍">{courseDetail.introduce}</Descriptions.Item>
           <Descriptions.Item label="课程logo">
-            <a href={`${courseDetail.logoFile.url}${courseDetail.logoFile.fileName}`}>
+            <a href={`/api${courseDetail.logoFile.url}/${courseDetail.logoFile.fileName}`}>
               {courseDetail.logoFile.fileName}
             </a>
           </Descriptions.Item>
@@ -43,24 +54,24 @@ function CourseDetail(props) {
     } else if (isSelectedNode && !isLeaf && chapterDetail.chapterName) {
       return (
         <Descriptions layout="horizontal" column={1}>
-          <Descriptions.Item label="章节名称">:{chapterDetail.chapterName}</Descriptions.Item>
-          <Descriptions.Item label="课时数">:{chapterDetail.totalPeriod}</Descriptions.Item>
-          <Descriptions.Item label="总时长">:{'-'}</Descriptions.Item>
+          <Descriptions.Item label="章节名称">{chapterDetail.chapterName}</Descriptions.Item>
+          <Descriptions.Item label="课时数">{chapterDetail.totalPeriod}</Descriptions.Item>
+          <Descriptions.Item label="总时长">{'-'}</Descriptions.Item>
         </Descriptions>
       );
     } else if (isSelectedNode && isLeaf && periodDetail.periodName) {
       return (
         <Descriptions layout="horizontal" column={1}>
-          <Descriptions.Item label="课时名称">:{periodDetail.periodName}</Descriptions.Item>
-          <Descriptions.Item label="时长">:{'-'}</Descriptions.Item>
-          <Descriptions.Item label="视频">:
+          <Descriptions.Item label="课时名称">{periodDetail.periodName}</Descriptions.Item>
+            <Descriptions.Item label="时长">{periodDetail.videoFileInfo ? `${computerTime(periodDetail.videoFileInfo.duration)}`:'-'}</Descriptions.Item>
+            <Descriptions.Item label="视频">
             {periodDetail.videoFileInfo ? (
                 <span>{periodDetail.videoFileInfo.fileName}</span>
             ) : (
               <span>无</span>
             )}
           </Descriptions.Item>
-          <Descriptions.Item label="附件">:{periodDetail.attachFileInfo?periodDetail.attachFileInfo.fileName:'无'}</Descriptions.Item>
+          <Descriptions.Item label="附件">{periodDetail.attachFileInfo?periodDetail.attachFileInfo.fileName:'无'}</Descriptions.Item>
         </Descriptions>
       );
     } else {
