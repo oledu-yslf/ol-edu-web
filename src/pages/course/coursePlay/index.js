@@ -1,8 +1,9 @@
 import React from 'react';
-import { connect, router } from 'dva';
+import { connect } from 'dva';
 import styles from './index.less';
 import ReactPlayer from 'react-player';
 import { Rate } from 'antd';
+import router from 'umi/router';
 
 const checkToken = () => {
   const jwToken = JSON.parse(localStorage.getItem('jwToken'));
@@ -10,9 +11,15 @@ const checkToken = () => {
   return token;
 };
 const computerTime = dur => {
-  var m = parseInt(dur / 60);
-  var s = parseInt(dur % 60) || '00';
-  return `${m}:${s}`;
+    var h = parseInt(dur / 3600);
+    var m = parseInt((dur - h * 3600) / 60);
+    var s = parseInt(dur % 60);
+
+    h = (Array(2).join(0) + parseInt(h)).slice(-2);
+    m = (Array(2).join(0) + parseInt(m)).slice(-2);
+    s = (Array(2).join(0) + parseInt(s)).slice(-2);
+
+    return `${h}:${m}:${s}`;
 };
 
 class coursePlay extends React.Component {
@@ -72,6 +79,20 @@ class coursePlay extends React.Component {
     });
   };
 
+    handleDownLoad = (item, e) => {
+        let roleInfo;
+        if (localStorage.getItem('roleInfo')) {
+            roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+        } else {
+            router.push('/login');
+            return;
+        }
+        const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+        const access_token = jwToken.access_token;
+
+        window.open(`/api` + item.attachFileInfo.url +`/` + item.attachFileInfo.fileName + `?access_token=` + access_token);
+    };
+
   render() {
     const { courseDetail, url, countStudy } = this.props;
     const { courseName, chapterVOList, logoFile, favorites } = courseDetail;
@@ -111,7 +132,6 @@ class coursePlay extends React.Component {
               <a
                 download
                 style={{ color: '#1890ff', cursor: 'pointer' }}
-                href={`/api${item.attachFileInfo.url}/${item.attachFileInfo.fileName}`}
               >
                 {item.attachFileInfo.fileName}
               </a>

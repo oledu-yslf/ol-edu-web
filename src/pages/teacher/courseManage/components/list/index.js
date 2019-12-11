@@ -173,7 +173,7 @@ class OList extends React.Component {
           onCancel={this.handleCancel}
           confirmLoading={loading}
         >
-          <p>确定删除{optionCourseName}课程吗？</p>
+          <p>确定删除'{optionCourseName}'课程吗？</p>
         </Modal>
         <Modal
           title="提示"
@@ -182,7 +182,7 @@ class OList extends React.Component {
           onCancel={this.handleCancel}
           confirmLoading={loading}
         >
-          <p>确定删除{optionCourseName}课程吗？</p>
+          <p>确定 ???上架、下架？'{optionCourseName}'课程吗？</p>
         </Modal>
       </div>
     );

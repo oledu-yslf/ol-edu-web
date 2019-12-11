@@ -16,7 +16,12 @@ const checkToken = url => {
 };
 
 const setToken = data => {
-  localStorage.setItem('jwToken', JSON.stringify(data));
+  if(data && data.code && data.code == 200 && data.data){
+    //返回成功,并且有返回值
+    localStorage.setItem('jwToken', JSON.stringify(data.data));
+  } else {
+    localStorage.setItem('jwToken', '');
+  }
 };
 
 const request = axios.create({
@@ -25,6 +30,13 @@ const request = axios.create({
   },
 });
 
+const isRespSuccess = data =>{
+  if(data && data.code && data.code == 200 && data.data){
+    return true;
+  } else{
+    return false;
+  }
+}
 
 request.interceptors.request.use(
   function(config) {
@@ -36,6 +48,13 @@ request.interceptors.request.use(
   },
 );
 
+const isTokenExpired = data =>{
+  if(data.code == 401 && data.msg.indexOf("Access token expired") != -1){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 let isRefreshing = false;
 let requests = []
@@ -44,27 +63,46 @@ request.interceptors.response.use(
   function(response) {
     const { data, config } = response;
     if (config.url.indexOf('/oauth/token') !== -1) {
-      setToken(data);
+      //正常请求token或者刷新token。
+      if (isRespSuccess(data)){
+        console.log("setToken");
+        console.log(data);
+        setToken(data);
+      }
     }
-    if (data.code === 401) {
+
+
+    //token过期的情况。
+    if (isTokenExpired(data) == true) {
+      console.log(isRefreshing);
       if (!isRefreshing) {
         isRefreshing = true;
         return service
           .refreshToken()
           .then(res => {
-            debugger;
+            console.log("res");
             console.log(res);
+            if (res.code != 200){
+              //refresh_token失败
+              isRefreshing = false;
+              window.location.href = '/login';
+             return ;
+            }
+            
             const token = res;
             setToken(token);
+            isRefreshing = false;
+
             const config = response.config;
-            // config.headers['X-Token'] = token;
-            config.baseURL = ''; // url已经带上了/api，避免出现/api/api的情况
+            config.baseURL = ''; 
             requests.forEach(cb => cb(token))
             requests = [];
             return request(config);
           })
           .catch(res => {
             console.error('refreshtoken error =>', res);
+            window.location.href = '/login';
+            isRefreshing = false;
             window.location.href = '/login';
           });
       }else {
@@ -76,7 +114,7 @@ request.interceptors.response.use(
         })
       }
     }
-    if (data.code !== 200 && data.code !== 401) {
+    if (data.code !== 200 && isTokenExpired(data) == false) {
       const { msg } = data;
       notification.error({
         message: `请求错误${config.url}`,
