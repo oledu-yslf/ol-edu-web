@@ -65,8 +65,6 @@ request.interceptors.response.use(
     if (config.url.indexOf('/oauth/token') !== -1) {
       //正常请求token或者刷新token。
       if (isRespSuccess(data)){
-        console.log("setToken");
-        console.log(data);
         setToken(data);
       }
     }
@@ -74,16 +72,12 @@ request.interceptors.response.use(
 
     //token过期的情况。
     if (isTokenExpired(data) === true) {
-      console.log(isRefreshing);
       if (!isRefreshing) {
         isRefreshing = true;
         return service
           .refreshToken()
           .then(res => {
-            console.log("res");
-            console.log(res);
             if (res.code !== 200){
-              //refresh_token失败
               isRefreshing = false;
               window.location.href = '/login';
              return ;

@@ -71,7 +71,6 @@ export default {
         hotResult = results[1];
       }
       if(rencentResult){
-        console.log(rencentResult,newResult,hotResult)
         yield put({
           type: 'save',
           payload: {
@@ -81,7 +80,6 @@ export default {
           },
         });
       }else{
-        console.log(rencentResult,newResult,hotResult)
         yield put({
           type: 'save',
           payload: {
