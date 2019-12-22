@@ -24,7 +24,7 @@ class LoginForm extends React.Component {
             ...values,
           },
         }).then(res => {
-          if (res.code != 200){
+          if (res.code !== 200){
             notification.error({
               message: res.msg,
             });
