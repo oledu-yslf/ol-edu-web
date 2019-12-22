@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import qs from 'qs'
 
 /**
- * 课程列表
+ * 获取token
  * @param {*} params 
  */
 export async function token (params) {
@@ -23,7 +23,7 @@ export async function token (params) {
 
 
 /**
- * 课程列表
+ * 获取用户信息
  * @param {*} params 
  */
 export async function loadUserByUserName (params) {
