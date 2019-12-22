@@ -49,7 +49,7 @@ request.interceptors.request.use(
 );
 
 const isTokenExpired = data =>{
-  if(data.code == 401 && data.msg.indexOf("Access token expired") != -1){
+  if(data.code === 401 && data.msg.indexOf("Access token expired") !== -1){
     return true;
   } else {
     return false;
@@ -73,7 +73,7 @@ request.interceptors.response.use(
 
 
     //token过期的情况。
-    if (isTokenExpired(data) == true) {
+    if (isTokenExpired(data) === true) {
       console.log(isRefreshing);
       if (!isRefreshing) {
         isRefreshing = true;
@@ -82,7 +82,7 @@ request.interceptors.response.use(
           .then(res => {
             console.log("res");
             console.log(res);
-            if (res.code != 200){
+            if (res.code !== 200){
               //refresh_token失败
               isRefreshing = false;
               window.location.href = '/login';
