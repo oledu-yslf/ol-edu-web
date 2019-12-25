@@ -45,7 +45,7 @@ class coursePlay extends React.Component {
           courseId: item.courseId,
           chapterId: item.chapterId,
           periodId: item.periodId,
-          createStaffId: roleInfo.staffNo,
+          createStaffId: roleInfo.staffId,
         },
       });
     }
@@ -66,8 +66,8 @@ class coursePlay extends React.Component {
       type: 'coursePlay/favoriteSave',
       payload: {
         courseId,
-        staffId: roleInfo.staffNo,
-        createStaffId: roleInfo.staffNo,
+        staffId: roleInfo.staffId,
+        createStaffId: roleInfo.staffId,
       },
     }).then(res => {
       dispatch({

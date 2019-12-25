@@ -118,7 +118,7 @@ class OTree extends React.Component {
   handleCreate = value => {
     const { dispatch } = this.props;
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     if (this.state.selectedKeys[0]) {
       var parentId = this.state.selectedKeys[0].split('-')[1];
       var floor = this.state.selectedKeys[0].split('-')[2];
@@ -140,7 +140,7 @@ class OTree extends React.Component {
     }
     const { dispatch } = this.props;
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const modifyStaffId = roleInfo.staffNo;
+    const modifyStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseManage/categoryUpdate',
       payload: {

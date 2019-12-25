@@ -24,14 +24,14 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/courseManage') {
           let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
-          const staffNo = roleInfo?roleInfo.staffNo :'';
+          const staffId = roleInfo?roleInfo.staffId :'';
           dispatch({
             type: 'categoryListAll',
           });
           dispatch({
             type: 'courseListpage',
             payload: {
-              createStaffId:staffNo,
+              createStaffId:staffId,
               page: {
                 pageSize,
                 pageNum: 1,
@@ -113,7 +113,7 @@ export default {
     },
     *courseDelete({ payload }, { call, put, select }) {
       let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
-      const staffNo = roleInfo?roleInfo.staffNo :'';
+      const staffId = roleInfo?roleInfo.staffId :'';
       yield call(service.courseDelete, payload);
       yield put({
         type: 'save',
@@ -130,7 +130,7 @@ export default {
       yield put({
         type: 'courseListpage',
         payload: {
-          createStaffId:staffNo,
+          createStaffId:staffId,
           courseName,
           categoryId:selectedNodes.categoryId || '',
           page: {

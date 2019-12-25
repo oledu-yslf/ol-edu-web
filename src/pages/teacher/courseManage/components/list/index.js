@@ -48,7 +48,7 @@ class OList extends React.Component {
     const roleInfo = localStorage.getItem('roleInfo')
       ? JSON.parse(localStorage.getItem('roleInfo'))
       : '';
-    const modifyStaffId = roleInfo.staffNo || '';
+    const modifyStaffId = roleInfo.staffId || '';
     dispatch({
       type: 'courseManage/courseUpdate',
       payload: {
@@ -96,7 +96,7 @@ class OList extends React.Component {
     const roleInfo = localStorage.getItem('roleInfo')
       ? JSON.parse(localStorage.getItem('roleInfo'))
       : '';
-    const modifyStaffId = roleInfo.staffNo || '';
+    const modifyStaffId = roleInfo.staffId || '';
     dispatch({
       type: 'courseManage/save',
       payload: {
@@ -121,7 +121,7 @@ class OList extends React.Component {
     const roleInfo = localStorage.getItem('roleInfo')
       ? JSON.parse(localStorage.getItem('roleInfo'))
       : '';
-    const modifyStaffId = roleInfo.staffNo || '';
+    const modifyStaffId = roleInfo.staffId || '';
     dispatch({
       type: 'courseManage/save',
       payload: {

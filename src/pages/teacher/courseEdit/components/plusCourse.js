@@ -53,7 +53,7 @@ class PlusCourse extends React.Component {
     e.preventDefault();
     const { dispatch, courseId } = this.props;
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     this.props.form.validateFields((err, values) => {
       if (!err) {
         if (!courseId) {

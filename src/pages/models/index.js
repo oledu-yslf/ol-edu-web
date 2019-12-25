@@ -21,12 +21,12 @@ export default {
   effects: {
     *init({ payload }, { call, put }) {
       const roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
-      const staffNo = roleInfo?roleInfo.staffNo :'';
+      const staffId = roleInfo?roleInfo.staffId :'';
       let results,rencentResult,newResult,hotResult;
-      if(staffNo){
+      if(staffId){
         results = yield [
           call(service.listRecent, {
-            createStaffId: staffNo,
+            createStaffId: staffId,
             page: {
               pageSize: 4,
               pageNum: 1,

@@ -183,7 +183,7 @@ class OTree extends React.Component {
     const { dispatch, courseDetail } = this.props;
     const { chapterName, chapterDesc, sort } = value;
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/chapterSave',
       payload: {
@@ -205,7 +205,7 @@ class OTree extends React.Component {
     const chapterId = chapterDetail.chapterId;
     const courseId = courseDetail.courseId;
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/chapterUpdate',
       payload: {
@@ -234,7 +234,7 @@ class OTree extends React.Component {
       aFileId = attachFileId[0].uid;
     }
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     debugger;
     dispatch({
       type: 'courseDetail/periodSave',
@@ -268,7 +268,7 @@ class OTree extends React.Component {
       aFileId = attachFileId[0].uid;
     }
     const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-    const createStaffId = roleInfo.staffNo;
+    const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/periodUpdate',
       payload: {
