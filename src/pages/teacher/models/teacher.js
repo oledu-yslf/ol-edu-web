@@ -24,7 +24,6 @@ export default {
             type:'save',
             payload:{
               staffId
-
             }
           })
         }

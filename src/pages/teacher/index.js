@@ -10,11 +10,7 @@ const { TabPane } = Tabs;
 
 class Teacher extends React.Component {
   onTabClick = e => {
-    if (e === '基础资料') {
-      router.push('/teacher');
-    } else if (e === '课程管理') {
-      router.push('/teacher/courseManage');
-    }
+    router.push(e);
   };
   handleInfoEdit = e => {
     e.preventDefault();
@@ -76,7 +72,9 @@ class Teacher extends React.Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'teacher/save',
-      payload: {},
+      payload: {
+        staffDetail:{},staffId:'',editInfoVisible:false
+      },
     });
   }
   render() {
@@ -103,7 +101,7 @@ class Teacher extends React.Component {
     return (
       <div className={styles.box}>
         <Tabs defaultActiveKey="基础资料" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="基础资料">
+          <TabPane tab="基础资料" key="/teacher">
             <Spin tip="Loading..." spinning={loading || false}>
               <Descriptions title={<UserInfoTitle />}>
                 <Descriptions.Item label="学号">{staffNo}</Descriptions.Item>
@@ -119,7 +117,7 @@ class Teacher extends React.Component {
               </Descriptions>
             </Spin>
           </TabPane>
-          <TabPane tab="课程管理" key="课程管理"></TabPane>
+          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
         </Tabs>
 
         <Modal
