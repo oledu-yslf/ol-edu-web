@@ -100,7 +100,7 @@ class Teacher extends React.Component {
     };
     return (
       <div className={styles.box}>
-        <Tabs defaultActiveKey="基础资料" onTabClick={this.onTabClick}>
+        <Tabs defaultActiveKey="/teacher" onTabClick={this.onTabClick}>
           <TabPane tab="基础资料" key="/teacher">
             <Spin tip="Loading..." spinning={loading || false}>
               <Descriptions title={<UserInfoTitle />}>

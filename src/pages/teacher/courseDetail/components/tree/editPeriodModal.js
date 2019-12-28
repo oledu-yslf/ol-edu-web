@@ -48,8 +48,10 @@ const EditPeriodModal = Form.create({
       const fileList = e && e.fileList;
       if (e.file.status === 'done') {
         fileList[0].uid = fileList[0].response.data.fileId;
+        this.setState({ videoFileId: fileList, videouploading: false });
+
+
       }
-      this.setState({ videoFileId: fileList });
       return fileList;
     };
     normFileAttach = e => {
@@ -59,10 +61,23 @@ const EditPeriodModal = Form.create({
       const fileList = e && e.fileList;
       if (e.file.status === 'done') {
         fileList[0].uid = fileList[0].response.data.fileId;
+        this.setState({ attachFileId: fileList,fileuploading: false });
+
       }
-      this.setState({ attachFileId: fileList });
 
       return fileList;
+    };
+    beforeFileUpload = () => {
+      console.log('a');
+      this.setState({
+        fileuploading: true,
+      });
+    };
+    beforeVideoUpload = () => {
+      console.log('a');
+      this.setState({
+        videouploading: true,
+      });
     };
     attachFileRemove = () => {
       this.setState({ attachFileId: [] });
@@ -108,8 +123,7 @@ const EditPeriodModal = Form.create({
     render() {
       const { confirmLoading, visible, form, title } = this.props;
       const { getFieldDecorator } = form;
-      const { attachFileId, videoFileId, periodName, periodDesc, sort } = this.state;
-
+      const { attachFileId, videoFileId, periodName, periodDesc, sort, fileuploading,videouploading } = this.state;
       return (
         <Modal
           visible={visible}
@@ -119,6 +133,9 @@ const EditPeriodModal = Form.create({
           onCancel={this.onClose}
           onOk={this.onOk}
           confirmLoading={confirmLoading}
+          okButtonProps={{
+            disabled:fileuploading || videouploading,
+          }}
         >
           <Form layout="vertical">
             <Form.Item label="课时名称">
@@ -150,6 +167,8 @@ const EditPeriodModal = Form.create({
                     showDownloadIcon: false,
                   }}
                   onRemove={this.videoFileRemove}
+                  beforeUpload={this.beforeVideoUpload}
+
                 >
                   {videoFileId.length >= 1 ? null : (
                     <Button>
@@ -176,6 +195,7 @@ const EditPeriodModal = Form.create({
                     showDownloadIcon: false,
                   }}
                   onRemove={this.attachFileRemove}
+                  beforeUpload={this.beforeFileUpload}
                 >
                   {attachFileId.length >= 1 ? null : (
                     <Button>

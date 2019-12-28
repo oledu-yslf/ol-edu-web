@@ -119,7 +119,7 @@ class coursePlay extends React.Component {
           <div className={styles.pullleft}>
             <span
               onClick={e => this.handleClick(item, e)}
-              style={{ color: '#1890ff', cursor: 'pointer' }}
+              style={{ color: '#1890ff', cursor: 'pointer',width:'150px',display:'inline-block'}}
             >
               {item.periodName}
             </span>
@@ -129,6 +129,7 @@ class coursePlay extends React.Component {
           </div>
           <div className={styles.pullright} onClick={e => this.handleDownLoad(item, e)}>
             {item.attachFileInfo ? (
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <a
                 download
                 style={{ color: '#1890ff', cursor: 'pointer' }}

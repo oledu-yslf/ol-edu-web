@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, Button, Switch } from 'antd';
 import moment from 'moment';
-import styles from './index.css';
+import styles from './index.less';
 
 const { Meta } = Card;
 class OCell extends React.Component {

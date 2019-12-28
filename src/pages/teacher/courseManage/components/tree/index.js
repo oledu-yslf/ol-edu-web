@@ -10,15 +10,15 @@ class OTree extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      treeData:[],
+      treeData: [],
       autoExpandParent: true,
       selectedKeys: [],
-      modalTitle:''
+      modalTitle: '',
     };
   }
 
   renderTreeNodes = data => {
-    if(data){
+    if (data) {
       return data.map(item => {
         if (item.courseCategoryVOList) {
           return (
@@ -46,25 +46,40 @@ class OTree extends React.Component {
    * tree option
    */
   onSelect = (selectedKeys, info) => {
-    const { dispatch } = this.props;
+    const { dispatch,courseName } = this.props;
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const modifyStaffId = roleInfo.staffId || '';
     if (selectedKeys.length > 0) {
       this.setState({ selectedKeys });
       dispatch({
-        type:'courseManage/save',
-        payload:{
-          selectedNodes: info.selectedNodes[0].props.dataRef
-        }
-      })
-    } else {
-      this.setState({ selectedKeys: []});
+        type: 'courseManage/save',
+        payload: {
+          selectedNodes: info.selectedNodes[0].props.dataRef,
+        },
+      });
       dispatch({
-        type:'courseManage/save',
-        payload:{
-          selectedNodes: {}
-        }
-      })
+        type: 'courseManage/courseListpage',
+        payload: {
+          courseName,
+          createStaffId: modifyStaffId,
+          categoryId: info.selectedNodes[0].props.dataRef.categoryId || '',
+          page: {
+            pageSize: 5,
+            pageNum: 1,
+          },
+        },
+      });
+    } else {
+      this.setState({ selectedKeys: [] });
+      dispatch({
+        type: 'courseManage/save',
+        payload: {
+          selectedNodes: {},
+        },
+      });
     }
-
   };
 
   /**
@@ -73,27 +88,27 @@ class OTree extends React.Component {
   plusCategory = () => {
     const { dispatch } = this.props;
     this.setState({
-      modalTitle:'创建课程分类'
+      modalTitle: '创建课程分类',
     });
     dispatch({
-      type:'courseManage/save',
-      payload:{
+      type: 'courseManage/save',
+      payload: {
         plusVisible: true,
-      }
-    })
+      },
+    });
   };
   editCategory = () => {
     const { dispatch } = this.props;
     this.setState({
-      modalTitle:'编辑课程分类'
+      modalTitle: '编辑课程分类',
     });
     if (this.state.selectedKeys.length > 0) {
       dispatch({
-        type:'courseManage/save',
-        payload:{
+        type: 'courseManage/save',
+        payload: {
           editVisible: true,
-        }
-      })
+        },
+      });
     } else {
       message.warning('请先选择操作节点！');
     }
@@ -102,11 +117,11 @@ class OTree extends React.Component {
     const { dispatch } = this.props;
     if (this.state.selectedKeys.length > 0) {
       dispatch({
-        type:'courseManage/save',
-        payload:{
+        type: 'courseManage/save',
+        payload: {
           deleteVisible: true,
-        }
-      })
+        },
+      });
     } else {
       message.warning('请先选择操作节点！');
     }
@@ -150,7 +165,7 @@ class OTree extends React.Component {
       },
     });
     this.setState({
-      selectedKeys:[]
+      selectedKeys: [],
     });
   };
   HandleDelete = () => {
@@ -165,28 +180,28 @@ class OTree extends React.Component {
       },
     });
     this.setState({
-      selectedKeys:[]
+      selectedKeys: [],
     });
   };
   handleCancel = () => {
     const { dispatch } = this.props;
     dispatch({
-      type:'courseManage/save',
-      payload:{
-        plusVisible:false,
+      type: 'courseManage/save',
+      payload: {
+        plusVisible: false,
         deleteVisible: false,
-        editVisible:false
-      }
-    })
+        editVisible: false,
+      },
+    });
   };
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.setState({
-      treeData:nextProps.treeData
-    })
+      treeData: nextProps.treeData,
+    });
   }
   render() {
-    const { selectedKeys ,treeData,modalTitle } = this.state;
-    const { loading,plusVisible,deleteVisible,editVisible } = this.props;
+    const { selectedKeys, treeData, modalTitle } = this.state;
+    const { loading, plusVisible, deleteVisible, editVisible } = this.props;
     let categoryName;
 
     if (selectedKeys.length > 0) {
@@ -253,4 +268,7 @@ class OTree extends React.Component {
   }
 }
 
-export default connect((state)=>({...state.courseManage,loading:state.loading.models.courseManage}))(OTree);
+export default connect(state => ({
+  ...state.courseManage,
+  loading: state.loading.models.courseManage,
+}))(OTree);

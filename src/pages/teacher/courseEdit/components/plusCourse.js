@@ -124,8 +124,8 @@ class PlusCourse extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { file_ID, categoryId, courseName, introduce, treeData } = this.props;
-
+    const { file_ID, categoryId, courseName, introduce, treeData,loading } = this.props;
+    console.log(loading);
     return (
       <Form
         onSubmit={this.handleSubmit}
@@ -189,7 +189,7 @@ class PlusCourse extends React.Component {
           })(<TextArea rows={4} />)}
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={loading}>
             下一步
           </Button>
         </Form.Item>

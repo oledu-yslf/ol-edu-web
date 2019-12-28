@@ -78,7 +78,6 @@ class OList extends React.Component {
 
   handleCancel = () => {
     const { dispatch } = this.props;
-
     dispatch({
       type: 'courseManage/save',
       payload: {
