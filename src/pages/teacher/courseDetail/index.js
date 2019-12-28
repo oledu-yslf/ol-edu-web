@@ -45,7 +45,7 @@ function CourseDetail(props) {
           <Descriptions.Item label="课程名称">{courseDetail.courseName}</Descriptions.Item>
           <Descriptions.Item label="课程介绍">{courseDetail.introduce}</Descriptions.Item>
           <Descriptions.Item label="课程logo">
-            <a href={`/api${courseDetail.logoFile.url}/${courseDetail.logoFile.fileName}`}>
+            <a href={`/api${courseDetail.logoFile.url}/${courseDetail.logoFile.fileName}`}  target="view_window">
               {courseDetail.logoFile.fileName}
             </a>
           </Descriptions.Item>

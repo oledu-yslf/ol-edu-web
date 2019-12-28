@@ -276,8 +276,8 @@ class OTree extends React.Component {
         periodId: periodDetail.periodId,
         periodName, //状态，填写为1，表示正常正泰
         periodDesc,
-        videoFileId: vFileId,
-        attachFileId: aFileId, //课时个数，新增时候填0
+        videoFileId: vFileId || '',
+        attachFileId: aFileId || '', //课时个数，新增时候填0
         sort, //排序，课程下面章节的排序
         // isFree: 1,
         // isPutaway: 1,
