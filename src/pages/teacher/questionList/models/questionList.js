@@ -1,5 +1,5 @@
 import * as service from '../services/questionList';
-import { message, Select } from 'antd';
+import { message } from 'antd';
 import { cloneDeep } from 'lodash';
 
 export default {
@@ -8,6 +8,7 @@ export default {
     typeList: [],
     questionList: [],
     total: 10,
+    plusTypeVisible:false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -30,6 +31,16 @@ export default {
           typeList: typeListRes.data,
           questionList: result,
           total: count,
+        },
+      });
+    },
+    *listAll({ payload }, { call, put }) {
+      const { data } = yield call(service.listAll, payload);
+      // const { count, result } = data;
+      yield put({
+        type: 'save',
+        payload: {
+          typeList: data
         },
       });
     },
@@ -59,7 +70,6 @@ export default {
           }
         }
         cloneQuestionList.splice(index, 1);
-        console.log(cloneQuestionList);
         yield put({
           type: 'save',
           payload: {
@@ -68,6 +78,31 @@ export default {
         });
       }
     },
+    *categorySave({ payload }, { call, put, select }){
+      const { code } = yield call(service.categorySave, payload);
+      if(code === 200){
+        message.success('新增分类成功');
+        yield put({
+          type:'listAll'
+        })
+        yield put({
+          type:'save',
+          payload:{
+            plusTypeVisible:false
+          }
+        })
+      }
+
+    },
+    *categoryDelete({ payload }, { call, put, select }){
+      const { code } = yield call(service.categoryDelete, {categoryId:payload.categoryId});
+      if(code === 200){
+        message.success('删除分类成功');
+        yield put({
+          type:'listAll'
+        })
+      }
+    }
   },
   reducers: {
     save(state, action) {

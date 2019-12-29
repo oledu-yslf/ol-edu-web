@@ -33,3 +33,18 @@ export async function examDelete (data) {
   })
 }
 
+export async function categorySave (data) {
+  return request({
+    url:  '/api/exam/category/save',
+    method: 'post',
+    data
+  })
+}
+
+export async function categoryDelete (data) {
+  return request({
+    url:  '/api/exam/category/delete',
+    method: 'post',
+    data
+  })
+}

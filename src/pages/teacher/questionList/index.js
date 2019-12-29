@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import moment from 'moment';
-import { Tabs, Row, Col, Tree, Button, Table, Spin, Form, Input, Select, Divider } from 'antd';
+import { Tabs, Row, Col, Tree, Button, Table, Spin, Form, Input, Select, Divider,Modal,message } from 'antd';
+import PlusTypeModal from './components/plusTypeModal'
 import styles from './index.less';
-import getUserId from '@/utils/getUserId';
 const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 const { Option } = Select;
@@ -17,6 +17,7 @@ class QuestionList extends React.Component {
       examType: '',
       difficultyLevel: '',
       examName: '',
+      deleteTypeVisible:false,
     };
   }
   onTabClick = e => {
@@ -27,38 +28,80 @@ class QuestionList extends React.Component {
    * tree option
    */
   onTypeSelect = (selectedKeys, info) => {
-    const { dispatch, courseName } = this.props;
-
+    const { dispatch,form } = this.props;
+    const value = form.getFieldsValue();
+    const { examType, difficultyLevel, examName } = value;
     if (selectedKeys.length > 0) {
       this.setState({ selectedKeys, selectedNodes: info.selectedNodes[0].props.dataRef });
-      // dispatch({
-      //   type: 'examList/save',
-      //   payload: {
-      //     selectedNodes: info.selectedNodes[0].props.dataRef,
-      //   },
-      // });
-      // dispatch({
-      //   type: 'courseManage/courseListpage',
-      //   payload: {
-      //     courseName,
-      //     // createStaffId: modifyStaffId,
-      //     categoryId: info.selectedNodes[0].props.dataRef.categoryId || '',
-      //     page: {
-      //       pageSize: 5,
-      //       pageNum: 1,
-      //     },
-      //   },
-      // });
+      dispatch({
+        type: 'questionList/listPage',
+        payload: {
+          categoryId: info.selectedNodes[0].props.dataRef.categoryId,
+          examType,
+          difficultyLevel,
+          examName
+        },
+      });
     } else {
       this.setState({ selectedKeys: [], selectedNodes: {} });
     }
-  };
-  handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const { dispatch ,form} = this.props;
+  }
+  plusType = e=>{
+    const {dispatch} = this.props;
+    dispatch({
+      type:'questionList/save',
+      payload:{
+        plusTypeVisible:true
+      }
+    })
+    // this.setState({
+      
+    // })
+  }
+  
+  deleteType = e=>{
+    const { selectedKeys } = this.state;
+    if (selectedKeys.length > 0) {
+      this.setState({
+        deleteTypeVisible:true
+      })
+    } else {
+      message.warning('请先选择操作节点！');
+    }
+  }
+
+  HandleTypeDelete = e=>{
+    const {dispatch ,form} = this.props;
     const { selectedNodes } = this.state;
     const value = form.getFieldsValue();
-    const { examType,difficultyLevel,examName} = value;
+    const { examType, difficultyLevel, examName } = value;
+
+    dispatch({
+      type: 'questionList/categoryDelete',
+      payload: {
+        categoryId: selectedNodes.categoryId,
+        examType, difficultyLevel, examName
+      },
+    });
+    this.handleCancel();
+    this.setState({
+      selectedKeys: [],
+      selectedNodes: {},
+    })
+  }
+
+  handleCancel = e=>{
+    this.setState({
+      deleteTypeVisible:false,
+    })
+  }
+
+  handleSearchSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    const { selectedNodes } = this.state;
+    const value = form.getFieldsValue();
+    const { examType, difficultyLevel, examName } = value;
 
     dispatch({
       type: 'questionList/listPage',
@@ -66,12 +109,12 @@ class QuestionList extends React.Component {
         categoryId: selectedNodes.categoryId,
         examType,
         difficultyLevel,
-        examName
+        examName,
       },
     });
   };
 
-  deleteExam = (record,e)=>{
+  deleteExam = (record, e) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'questionList/examDelete',
@@ -79,22 +122,22 @@ class QuestionList extends React.Component {
         examId: record.examId,
       },
     });
-  }
-  newExam = ()=>{
+  };
+  newExam = () => {
     router.push('/teacher/examEdit');
-  }
-  queryExam = (record,e)=>{
+  };
+  queryExam = (record, e) => {
     router.push(`/teacher/examDetail?examId=${record.examId}`);
-  }
-  editExam = (record,e)=>{
+  };
+  editExam = (record, e) => {
     router.push(`/teacher/examEdit??examId=${record.examId}`);
-  }
+  };
 
   pageChange = (page, pageSize) => {
-    const { dispatch ,form} = this.props;
+    const { dispatch, form } = this.props;
     const { selectedNodes } = this.state;
     const value = form.getFieldsValue();
-    const { examType,difficultyLevel,examName} = value;
+    const { examType, difficultyLevel, examName } = value;
     dispatch({
       type: 'questionList/listPage',
       payload: {
@@ -110,8 +153,8 @@ class QuestionList extends React.Component {
     });
   };
   render() {
-    const { typeList, questionList, total, loading, form } = this.props;
-    const { selectedKeys, examType, difficultyLevel, examName } = this.state;
+    const { typeList, questionList, total, loading, form,plusTypeVisible } = this.props;
+    const { selectedKeys, selectedNodes,examType, difficultyLevel, examName,deleteTypeVisible } = this.state;
     const { getFieldDecorator } = form;
 
     const renderTreeNodes = data => {
@@ -232,14 +275,14 @@ class QuestionList extends React.Component {
             <Spin spinning={loading}>
               <Row gutter={24}>
                 <Col span={6}>
-                  <Button type="primary" icon="plus" size="small" onClick={this.plusCategory}>
+                  <Button type="primary" icon="plus" size="small" onClick={this.plusType}>
                     增加
                   </Button>
                   <Button
                     size="small"
                     type="primary"
                     icon="edit"
-                    onClick={this.editCategory}
+                    onClick={this.editType}
                     style={{ marginLeft: '5px' }}
                   >
                     编辑
@@ -248,7 +291,7 @@ class QuestionList extends React.Component {
                     size="small"
                     type="danger"
                     icon="delete"
-                    onClick={this.deleteCategory}
+                    onClick={this.deleteType}
                     style={{ marginLeft: '5px' }}
                   >
                     删除
@@ -307,20 +350,12 @@ class QuestionList extends React.Component {
                       </Button>
                     </Form.Item>
                     <Form.Item>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        onClick={this.newExam}
-                      >
+                      <Button type="primary" htmlType="submit" onClick={this.newExam}>
                         新增试题
                       </Button>
                     </Form.Item>
                     <Form.Item>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        onClick={this.handleSubmit}
-                      >
+                      <Button type="primary" htmlType="submit" onClick={this.handleSubmit}>
                         导入试题
                       </Button>
                     </Form.Item>
@@ -344,6 +379,31 @@ class QuestionList extends React.Component {
             </Spin>
           </TabPane>
         </Tabs>
+        {/* <Modal
+          title='编辑分类'
+          visible={plusTypeVisible}
+          onCancel={this.handleCancel}
+          onOk={this.handleTypePlus}
+          confirmLoading={loading}
+        >
+          <Form layout="vertical">
+            <Form.Item label="分类名称">
+              {getFieldDecorator('categoryName', {
+                rules: [{ required: true, message: '请输入试题分类名称！' }],
+              })(<Input />)}
+            </Form.Item>
+          </Form>
+        </Modal> */}
+        <PlusTypeModal plusTypeVisible={plusTypeVisible} selectedNodes={selectedNodes}/>
+        <Modal
+          title='删除试题分类提示'
+          visible={deleteTypeVisible}
+          onOk={this.HandleTypeDelete}
+          onCancel={this.handleCancel}
+          confirmLoading={loading}
+        >
+          <p>删除{selectedNodes.categoryName}分类会一并删除对应的试题，以及下面的子分类,确定删除分类吗？</p>
+        </Modal>
       </div>
     );
   }
