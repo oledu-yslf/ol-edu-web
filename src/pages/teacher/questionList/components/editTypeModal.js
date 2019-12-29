@@ -3,21 +3,20 @@ import { Modal, Form, Input } from 'antd';
 import { connect } from 'dva';
 import getUserId from '@/utils/getUserId';
 
-class PlusTypeModal extends React.Component {
-  handleTypePlus = e => {
+class EditTypeModal extends React.Component {
+  handleTypeEdit = e => {
     const { dispatch, selectedNodes, form } = this.props;
     const { resetFields } = form;
-    const createStaffId = getUserId();
+    const modifyStaffId = getUserId();
     form.validateFields((err, value) => {
       if (!err) {
         resetFields();
         dispatch({
-          type: 'questionList/categorySave',
+          type: 'questionList/categoryUpdate',
           payload: {
+            categoryId: selectedNodes.categoryId,
             categoryName: value.categoryName,
-            parentId: selectedNodes.categoryId || '',
-            createStaffId,
-            floor: parseInt(selectedNodes.floor) + 1 || 1,
+            modifyStaffId,
           },
         });
       }
@@ -28,24 +27,26 @@ class PlusTypeModal extends React.Component {
     dispatch({
       type: 'questionList/save',
       payload: {
-        plusTypeVisible: false,
+        editTypeVisible: false,
       },
     });
   };
   render() {
-    const { plusTypeVisible, loading, form } = this.props;
+    const { editTypeVisible, loading, form,selectedNodes } = this.props;
     const { getFieldDecorator } = form;
+    const { categoryName } = selectedNodes
     return (
       <Modal
-        title="新增分类"
-        visible={plusTypeVisible}
+        title="编辑分类"
+        visible={editTypeVisible}
         onCancel={this.handleCancel}
-        onOk={this.handleTypePlus}
+        onOk={this.handleTypeEdit}
         confirmLoading={loading}
       >
         <Form layout="vertical">
           <Form.Item label="分类名称">
             {getFieldDecorator('categoryName', {
+              initialValue: categoryName,
               rules: [{ required: true, message: '请输入试题分类名称！' }],
             })(<Input />)}
           </Form.Item>
@@ -55,9 +56,9 @@ class PlusTypeModal extends React.Component {
   }
 }
 
-const PlusTypeForm = Form.create({ name: 'plusTypeForm' })(PlusTypeModal);
+const EditTypeForm = Form.create({ name: 'editTypeForm' })(EditTypeModal);
 
 export default connect(state => ({
   ...state.questionList,
   loading: state.loading.models.questionList,
-}))(PlusTypeForm);
+}))(EditTypeForm);

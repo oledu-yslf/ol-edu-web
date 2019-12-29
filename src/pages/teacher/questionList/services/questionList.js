@@ -41,6 +41,14 @@ export async function categorySave (data) {
   })
 }
 
+export async function categoryUpdate (data) {
+  return request({
+    url:  '/api/exam/category/update',
+    method: 'post',
+    data
+  })
+}
+
 export async function categoryDelete (data) {
   return request({
     url:  '/api/exam/category/delete',

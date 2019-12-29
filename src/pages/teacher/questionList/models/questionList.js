@@ -1,6 +1,7 @@
 import * as service from '../services/questionList';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
+import { categoryUpdate } from '../../courseManage/services/courseManage';
 
 export default {
   namespace: 'questionList',
@@ -8,7 +9,8 @@ export default {
     typeList: [],
     questionList: [],
     total: 10,
-    plusTypeVisible:false
+    plusTypeVisible:false,
+    editTypeVisible:false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -89,6 +91,21 @@ export default {
           type:'save',
           payload:{
             plusTypeVisible:false
+          }
+        })
+      }
+    },
+    *categoryUpdate({ payload }, { call, put, select }){
+      const { code } = yield call(service.categoryUpdate, payload);
+      if(code === 200){
+        message.success('更新分类成功');
+        yield put({
+          type:'listAll'
+        })
+        yield put({
+          type:'save',
+          payload:{
+            editTypeVisible:false
           }
         })
       }
