@@ -2,7 +2,7 @@ import * as service from '../services/questionDetail';
 export default {
   namespace: 'questionDetail',
   state: {
-    detail: {},
+    examDetail: {},
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -21,11 +21,14 @@ export default {
   effects: {
     *init({ payload }, { call, put }) {
       const [examDetailRes] = yield [call(service.examDetail,payload)];
-      const { examDetail } = examDetailRes.data;
+      console.log(examDetailRes);
+
+      // console.log(examDetail);/
+
       yield put({
         type: 'save',
         payload: {
-          examDetail
+          examDetail:examDetailRes.data
         },
       });
     },

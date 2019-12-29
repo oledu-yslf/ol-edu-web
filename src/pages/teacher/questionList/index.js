@@ -245,6 +245,9 @@ class QuestionList extends React.Component {
         dataIndex: 'examName',
         key: 'examName',
         width: 200,
+        render: text =>(
+          <div dangerouslySetInnerHTML={{ __html: text }} />
+        )
       },
       {
         title: '试题类型',
@@ -432,21 +435,7 @@ class QuestionList extends React.Component {
             </Spin>
           </TabPane>
         </Tabs>
-        {/* <Modal
-          title='编辑分类'
-          visible={plusTypeVisible}
-          onCancel={this.handleCancel}
-          onOk={this.handleTypePlus}
-          confirmLoading={loading}
-        >
-          <Form layout="vertical">
-            <Form.Item label="分类名称">
-              {getFieldDecorator('categoryName', {
-                rules: [{ required: true, message: '请输入试题分类名称！' }],
-              })(<Input />)}
-            </Form.Item>
-          </Form>
-        </Modal> */}
+      
         <PlusTypeModal plusTypeVisible={plusTypeVisible} selectedNodes={selectedNodes} />
         <EditTypeModal editTypeVisible={editTypeVisible} selectedNodes={selectedNodes} />
 

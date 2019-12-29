@@ -1,9 +1,10 @@
 import request from '@/utils/request';
 
-export async function query (params) {
+export async function examDetail (data) {
   return request({
-    url:  '/api/req',
-    method: 'get',
-    data: params,
+    url:  '/api/exam/detail',
+    method: 'post',
+    data,
   })
 }
+
