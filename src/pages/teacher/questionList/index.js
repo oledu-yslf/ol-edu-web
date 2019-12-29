@@ -153,13 +153,13 @@ class QuestionList extends React.Component {
     });
   };
   newExam = () => {
-    router.push('/teacher/examEdit');
+    router.push('/teacher/questionEdit');
   };
   queryExam = (record, e) => {
-    router.push(`/teacher/examDetail?examId=${record.examId}`);
+    router.push(`/teacher/questionDetail?examId=${record.examId}`);
   };
   editExam = (record, e) => {
-    router.push(`/teacher/examEdit??examId=${record.examId}`);
+    router.push(`/teacher/questionEdit??examId=${record.examId}`);
   };
 
   pageChange = (page, pageSize) => {

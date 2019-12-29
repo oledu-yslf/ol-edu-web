@@ -1,7 +1,6 @@
 import * as service from '../services/questionList';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
-import { categoryUpdate } from '../../courseManage/services/courseManage';
 
 export default {
   namespace: 'questionList',
