@@ -2,30 +2,44 @@ import * as service from '../services/questionEdit';
 export default {
   namespace: 'questionEdit',
   state: {
-    text: 'page work',
-    list: [],
+    examDetail: {},
+    typeList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/questionEdit') {
+          if (query.examId) {
+            dispatch({
+              type: 'examDetail',
+              payload: {
+                examId: query.examId,
+              },
+            });
+          }
           dispatch({
-            type: 'init',
-            payload:{
-              examId:query.examId
-            }
+            type: 'listAll'
           });
         }
       });
     },
   },
   effects: {
-    *init({ payload }, { call, put }) {
-      const [examDetailRes] = yield [call(service.examDetail,payload)];
+    *listAll({ payload }, { call, put }) {
+      const {data} = yield  call(service.listAll);
       yield put({
         type: 'save',
         payload: {
-          examDetail:examDetailRes.data
+          typeList:data,
+        },
+      });
+    },
+    *examDetail({ payload }, { call, put }) {
+      const { data } = yield call(service.examDetail, payload) ;
+      yield put({
+        type: 'save',
+        payload: {
+          examDetail: data,
         },
       });
     },

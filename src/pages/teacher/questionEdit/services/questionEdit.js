@@ -8,3 +8,11 @@ export async function examDetail (data) {
   })
 }
 
+export async function listAll (data) {
+  return request({
+    url:  '/api/exam/category/listAll',
+    method: 'post',
+    data,
+  })
+}
+

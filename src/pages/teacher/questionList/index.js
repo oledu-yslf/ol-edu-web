@@ -159,7 +159,7 @@ class QuestionList extends React.Component {
     router.push(`/teacher/questionDetail?examId=${record.examId}`);
   };
   editExam = (record, e) => {
-    router.push(`/teacher/questionEdit??examId=${record.examId}`);
+    router.push(`/teacher/questionEdit?examId=${record.examId}`);
   };
 
   pageChange = (page, pageSize) => {
