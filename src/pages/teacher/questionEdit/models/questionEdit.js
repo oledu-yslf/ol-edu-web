@@ -13,12 +13,12 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/questionEdit') {
           if (query.examId) {
-            // dispatch({
-            //   type: 'examDetail',
-            //   payload: {
-            //     examId: query.examId,
-            //   },
-            // });
+            dispatch({
+              type: 'examDetail',
+              payload: {
+                examId: query.examId,
+              },
+            });
             dispatch({
               type: 'save',
               payload: {

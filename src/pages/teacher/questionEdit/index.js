@@ -179,12 +179,12 @@ class QuestionEdit extends React.Component {
     });
   };
   init = () => {
-    const { dispatch, examId } = this.props;
-    if (examId) {
+    const { dispatch, location } = this.props;
+    if (location.query.examId) {
       dispatch({
         type: 'questionEdit/examDetail',
         payload: {
-          examId: examId,
+          examId: location.query.examId,
         },
       });
     }
@@ -195,12 +195,18 @@ class QuestionEdit extends React.Component {
       this.setState({
         examType: nextProps.examDetail.examType || undefined,
       });
+
       setTimeout(() => {
         if (nextProps.examDetail.examName) {
           this.props.form.setFieldsValue({
             examName: BraftEditor.createEditorState(nextProps.examDetail.examName),
             examSolution: BraftEditor.createEditorState(nextProps.examDetail.examSolution),
           });
+          if (nextProps.examDetail.examType === 4) {
+            this.props.form.setFieldsValue({
+              result: BraftEditor.createEditorState(nextProps.examDetail.result),
+            });
+          }
           if (
             nextProps.examDetail.baseExamAttrVOList &&
             nextProps.examDetail.baseExamAttrVOList.length > 0
@@ -223,13 +229,16 @@ class QuestionEdit extends React.Component {
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      examId: '',
-      examDetail: {},
-      typeList: [],
+      type: 'questionEdit/save',
+      payload: {
+        examId: '',
+        examDetail: {},
+        typeList: [],
+      },
     });
   }
   render() {
-    const { examDetail, typeList, form, loading } = this.props;
+    const { examDetail, typeList, examId, form, loading } = this.props;
     const { getFieldDecorator, getFieldValue } = form;
     const { examType } = this.state;
     let { categoryId, difficultyLevel, mark, result, baseExamAttrVOList } = examDetail;
@@ -244,13 +253,14 @@ class QuestionEdit extends React.Component {
         names.push(baseExamAttrVOList[i].attrName);
       }
     }
-    if (examType === 5) {
-      names1 = result.split('@_@');
+
+    if (examDetail.examType === 5 && examId) {
+      names1 = examDetail.result.split('@_@');
       for (let i in names1) {
         keys1.push(i);
       }
     }
-    // console.log(names1);
+
     const renderTreeNodes = data => {
       if (data) {
         return data.map(item => {
@@ -307,7 +317,7 @@ class QuestionEdit extends React.Component {
 
     getFieldDecorator('keys1', { initialValue: keys1 || [] });
     keys1 = getFieldValue('keys1');
-    console.log(keys1);
+    // console.log(keys1);
     const formItemInput = keys1.map((k, index) => (
       <Form.Item label={'填空题答案'} required={false} key={k}>
         {getFieldDecorator(`names1[${k}]`, { initialValue: names1[k] })(
@@ -420,21 +430,10 @@ class QuestionEdit extends React.Component {
             </Form.Item>
           ) : examType === 4 ? (
             <Form.Item label="试题答案" wrapperCol={{ span: 22 }}>
-              {getFieldDecorator('result', {
-                // initialValue: result,
-                rules: [
-                  {
-                    required: true,
-                    validator: (_, value, callback) => {
-                      if (value.isEmpty()) {
-                        callback('请输入试题答案');
-                      } else {
-                        callback();
-                      }
-                    },
-                  },
-                ],
-              })(
+              {getFieldDecorator(
+                'result',
+                {},
+              )(
                 <BraftEditor
                   className={styles.editor}
                   placeholder="请输入试题答案"
