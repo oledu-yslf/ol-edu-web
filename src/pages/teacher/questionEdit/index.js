@@ -209,9 +209,7 @@ class QuestionEdit extends React.Component {
             for (let i in nextProps.examDetail.baseExamAttrVOList) {
               let val = nextProps.examDetail.baseExamAttrVOList[i].attrName;
               let obj = {};
-              obj[`names[${i}]`] = BraftEditor.createEditorState(
-                nextProps.examDetail.baseExamAttrVOList[i].attrName,
-              );
+              obj[`names[${i}]`] = BraftEditor.createEditorState(val);
               this.props.form.setFieldsValue(obj);
             }
           }
