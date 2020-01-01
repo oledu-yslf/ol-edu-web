@@ -25,13 +25,13 @@ class QuestionDetail extends React.Component {
             <div dangerouslySetInnerHTML={{ __html: examName }} />
           </Descriptions.Item>
           <Descriptions.Item label="试题难度">
-            {difficultyLevel === '0'
+            {difficultyLevel === 0
               ? '易'
-              : difficultyLevel === '1'
+              : difficultyLevel === 1
               ? '较易'
-              : difficultyLevel === '2'
+              : difficultyLevel === 2
               ? '中等'
-              : difficultyLevel === '3'
+              : difficultyLevel === 3
               ? '偏难'
               : '难'}
           </Descriptions.Item>

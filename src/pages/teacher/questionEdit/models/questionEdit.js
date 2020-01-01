@@ -1,4 +1,6 @@
 import * as service from '../services/questionEdit';
+import { message } from 'antd';
+import router from 'umi/router';
 export default {
   namespace: 'questionEdit',
   state: {
@@ -42,6 +44,20 @@ export default {
           examDetail: data,
         },
       });
+    },
+    *examSave({ payload }, { call, put }) {
+      const { code } = yield call(service.examSave, payload) ;
+      if(code === 200){
+        message.success('添加试题成功').then(()=>{
+          router.push('/teacher/questionList')
+        })  
+      }
+      // yield put({
+      //   type: 'save',
+      //   payload: {
+      //     examDetail: data,
+      //   },
+      // });
     },
   },
   reducers: {

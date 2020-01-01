@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form, TreeSelect, Select, Input, Button, Icon } from 'antd';
+import { Form, TreeSelect, Select, Input, Button, Icon,Upload } from 'antd';
 import 'braft-editor/dist/index.css';
-
+import getUserId from '@/utils/getUserId'
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import styles from './index.less';
@@ -80,14 +80,57 @@ class QuestionEdit extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const {dispatch} = this.props;
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { keys, names } = values;
-        console.log('Received values of form: ', values);
-        console.log(
-          'Merged values:',
-          keys.map(key => names[key]),
-        );
+        let { categoryId,difficultyLevel, examType,mark,examName,names,names1,result,examSolution } = values;
+        let submitData;
+        examName = examName.toHTML();
+        examSolution = examSolution.toHTML()
+        if(examType === 1 || examType === 2){
+          let examAttrSaveQOList = []
+          for(var i in names){
+            let obj = {};
+            obj.sort = letter[i];
+            obj.attrName = names[i].toHTML();
+            examAttrSaveQOList.push(obj);
+          }
+          submitData = {
+            categoryId,difficultyLevel, examType,mark,
+            examName,result,examSolution,examAttrSaveQOList,createStaffId:getUserId()
+          }
+        }
+        if(examType === 3){
+          submitData = {
+            categoryId,difficultyLevel, examType,mark,
+            examName,result,examSolution,examAttrSaveQOList:[{
+              sort:'A',
+              attrName:'是'
+            },{
+              sort:'B',
+              attrName:'否'
+            }]
+            ,createStaffId:getUserId()
+          }
+        }
+        if(examType === 4){
+          submitData = {
+            categoryId,difficultyLevel, examType,mark,
+            examName,result:result.toHTML(),examSolution
+            ,createStaffId:getUserId()
+          }
+        }
+        if(examType === 5){
+          submitData = {
+            categoryId,difficultyLevel, examType,mark,
+            examName,result:names1.join('@_@'),examSolution
+            ,createStaffId:getUserId()
+          }
+        }
+        dispatch({
+          type:'questionEdit/examSave',
+          payload:submitData
+        })
       }
     });
   };
@@ -97,6 +140,16 @@ class QuestionEdit extends React.Component {
         examType: nextProps.examDetail.examType || undefined,
       });
     }
+  }
+  componentDidMount () {
+
+    // 异步设置编辑器内容
+    setTimeout(() => {
+      this.props.form.setFieldsValue({
+        examName: BraftEditor.createEditorState('<p></p>')
+      })
+    }, 1000)
+
   }
   render() {
     const { examDetail, typeList, form, loading } = this.props;
@@ -130,6 +183,24 @@ class QuestionEdit extends React.Component {
         });
       }
     };
+    const extendControls = [
+      {
+        key: 'antd-uploader',
+        type: 'component',
+        component: (
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            customRequest={this.uploadHandler}
+          >
+            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+            <button type="button" className="control-item button upload-button" data-title="插入图片">
+              <Icon type="picture" theme="filled" />
+            </button>
+          </Upload>
+        )
+      }
+    ]
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
     const formItemEditors = keys.map((k, index) => (
@@ -151,6 +222,7 @@ class QuestionEdit extends React.Component {
           <BraftEditor
             className={styles.editor}
             placeholder="请输入试题选项"
+            extendControls={extendControls}
             style={{ border: '1px solid #d9d9d9' }}
           />,
         )}
@@ -188,7 +260,7 @@ class QuestionEdit extends React.Component {
     ));
     return (
       <div className={styles.box}>
-        <Form onSubmit={this.handleSubmit} labelCol={{ span: 2 }}>
+        <Form onSubmit={this.handleSubmit} labelCol={{ span: 2 }} style={{marginTop:'20px'}}>
           <Form.Item label="试题分类" wrapperCol={{ span: 4 }}>
             {getFieldDecorator('categoryId', {
               initialValue: categoryId,
@@ -257,7 +329,8 @@ class QuestionEdit extends React.Component {
               ],
             })(
               <BraftEditor
-                className={styles.editor}
+              extendControls={extendControls}
+              className={styles.editor}
                 placeholder="请输入试题名称"
                 style={{ border: '1px solid #d9d9d9' }}
               />,
@@ -300,7 +373,8 @@ class QuestionEdit extends React.Component {
                 ],
               })(
                 <BraftEditor
-                  className={styles.editor}
+                extendControls={extendControls}
+                className={styles.editor}
                   placeholder="请输入试题答案"
                   style={{ border: '1px solid #d9d9d9' }}
                 />,
@@ -334,6 +408,8 @@ class QuestionEdit extends React.Component {
               ],
             })(
               <BraftEditor
+              extendControls={extendControls}
+
                 className={styles.editor}
                 placeholder="请输入试题讲解"
                 style={{ border: '1px solid #d9d9d9' }}

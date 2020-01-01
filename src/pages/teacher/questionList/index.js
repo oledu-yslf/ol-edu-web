@@ -279,13 +279,13 @@ class QuestionList extends React.Component {
         key: 'difficultyLevel',
         render: text => (
           <span>
-            {text === '0'
+            {text === 0
               ? '易'
-              : text === '1'
+              : text === 1
               ? '较易'
-              : text === '2'
+              : text === 2
               ? '中等'
-              : text === '3'
+              : text === 3
               ? '偏难'
               : '难'}
           </span>

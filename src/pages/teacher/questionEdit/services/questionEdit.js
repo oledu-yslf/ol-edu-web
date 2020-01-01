@@ -16,3 +16,11 @@ export async function listAll (data) {
   })
 }
 
+export async function examSave (data) {
+  return request({
+    url:  '/api/exam/save',
+    method: 'post',
+    data,
+  })
+}
+
