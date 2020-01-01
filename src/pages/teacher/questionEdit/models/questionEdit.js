@@ -4,6 +4,7 @@ import router from 'umi/router';
 export default {
   namespace: 'questionEdit',
   state: {
+    examId:'',
     examDetail: {},
     typeList: [],
   },
@@ -12,8 +13,14 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/questionEdit') {
           if (query.examId) {
+            // dispatch({
+            //   type: 'examDetail',
+            //   payload: {
+            //     examId: query.examId,
+            //   },
+            // });
             dispatch({
-              type: 'examDetail',
+              type: 'save',
               payload: {
                 examId: query.examId,
               },
@@ -52,12 +59,14 @@ export default {
           router.push('/teacher/questionList')
         })  
       }
-      // yield put({
-      //   type: 'save',
-      //   payload: {
-      //     examDetail: data,
-      //   },
-      // });
+    },
+    *examUpdate({ payload }, { call, put }) {
+      const { code } = yield call(service.examUpdate, payload) ;
+      if(code === 200){
+        message.success('更新试题成功').then(()=>{
+          router.push('/teacher/questionList')
+        })  
+      }
     },
   },
   reducers: {

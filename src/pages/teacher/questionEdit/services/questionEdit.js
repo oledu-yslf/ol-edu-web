@@ -24,3 +24,12 @@ export async function examSave (data) {
   })
 }
 
+export async function examUpdate (data) {
+  return request({
+    url:  '/api/exam/update',
+    method: 'post',
+    data,
+  })
+}
+
+

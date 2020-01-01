@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form, TreeSelect, Select, Input, Button, Icon,Upload } from 'antd';
+import { Form, TreeSelect, Select, Input, Button, Icon, Upload } from 'antd';
 import 'braft-editor/dist/index.css';
-import getUserId from '@/utils/getUserId'
+import getUserId from '@/utils/getUserId';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import styles from './index.less';
@@ -28,15 +28,16 @@ class QuestionEdit extends React.Component {
   removeEditor = k => {
     const { form } = this.props;
     // can use data-binding to get
-    const keys = form.getFieldValue('keys');
+    let keys = form.getFieldValue('keys');
     // We need at least one passenger
     if (keys.length === 1) {
       return;
     }
+    keys = keys.filter(key => key !== k);
 
     // can use data-binding to set
     form.setFieldsValue({
-      keys: keys.filter(key => key !== k),
+      keys,
     });
   };
 
@@ -80,83 +81,178 @@ class QuestionEdit extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const {dispatch} = this.props;
+    const { dispatch, examId } = this.props;
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        let { categoryId,difficultyLevel, examType,mark,examName,names,names1,result,examSolution } = values;
+        let {
+          categoryId,
+          difficultyLevel,
+          examType,
+          mark,
+          examName,
+          names,
+          names1,
+          result,
+          examSolution,
+        } = values;
         let submitData;
         examName = examName.toHTML();
-        examSolution = examSolution.toHTML()
-        if(examType === 1 || examType === 2){
-          let examAttrSaveQOList = []
-          for(var i in names){
+        examSolution = examSolution.toHTML();
+        if (examType === 1 || examType === 2) {
+          let examAttrSaveQOList = [];
+          for (var i in names) {
             let obj = {};
             obj.sort = letter[i];
             obj.attrName = names[i].toHTML();
             examAttrSaveQOList.push(obj);
           }
           submitData = {
-            categoryId,difficultyLevel, examType,mark,
-            examName,result,examSolution,examAttrSaveQOList,createStaffId:getUserId()
-          }
+            categoryId,
+            difficultyLevel,
+            examType,
+            mark,
+            examName,
+            result,
+            examSolution,
+            examAttrSaveQOList,
+            // createStaffId: getUserId(),
+          };
         }
-        if(examType === 3){
+        if (examType === 3) {
           submitData = {
-            categoryId,difficultyLevel, examType,mark,
-            examName,result,examSolution,examAttrSaveQOList:[{
-              sort:'A',
-              attrName:'是'
-            },{
-              sort:'B',
-              attrName:'否'
-            }]
-            ,createStaffId:getUserId()
-          }
+            categoryId,
+            difficultyLevel,
+            examType,
+            mark,
+            examName,
+            result,
+            examSolution,
+            examAttrSaveQOList: [
+              {
+                sort: 'A',
+                attrName: '是',
+              },
+              {
+                sort: 'B',
+                attrName: '否',
+              },
+            ],
+            // createStaffId: getUserId(),
+          };
         }
-        if(examType === 4){
+        if (examType === 4) {
           submitData = {
-            categoryId,difficultyLevel, examType,mark,
-            examName,result:result.toHTML(),examSolution
-            ,createStaffId:getUserId()
-          }
+            categoryId,
+            difficultyLevel,
+            examType,
+            mark,
+            examName,
+            result: result.toHTML(),
+            examSolution,
+            // createStaffId: getUserId(),
+          };
         }
-        if(examType === 5){
+        if (examType === 5) {
           submitData = {
-            categoryId,difficultyLevel, examType,mark,
-            examName,result:names1.join('@_@'),examSolution
-            ,createStaffId:getUserId()
-          }
+            categoryId,
+            difficultyLevel,
+            examType,
+            mark,
+            examName,
+            result: names1.join('@_@'),
+            examSolution,
+            // createStaffId: getUserId(),
+          };
         }
-        dispatch({
-          type:'questionEdit/examSave',
-          payload:submitData
-        })
+        if (examId) {
+          dispatch({
+            type: 'questionEdit/examUpdate',
+            payload: Object.assign(submitData, { examId, modifyStaffId: getUserId() }),
+          });
+        } else {
+          dispatch({
+            type: 'questionEdit/examSave',
+            payload: Object.assign(submitData, { examId, createStaffId: getUserId() }),
+          });
+        }
       }
     });
   };
+  init = () => {
+    const { dispatch, examId } = this.props;
+    if (examId) {
+      dispatch({
+        type: 'questionEdit/examDetail',
+        payload: {
+          examId: examId,
+        },
+      });
+    }
+  };
+  initEditor = nextProps => {};
   componentWillReceiveProps(nextProps) {
     if (this.props.examDetail !== nextProps.examDetail) {
       this.setState({
         examType: nextProps.examDetail.examType || undefined,
       });
+      setTimeout(() => {
+        if (nextProps.examDetail.examName) {
+          this.props.form.setFieldsValue({
+            examName: BraftEditor.createEditorState(nextProps.examDetail.examName),
+            examSolution: BraftEditor.createEditorState(nextProps.examDetail.examSolution),
+          });
+          if (
+            nextProps.examDetail.baseExamAttrVOList &&
+            nextProps.examDetail.baseExamAttrVOList.length > 0
+          ) {
+            id = nextProps.examDetail.baseExamAttrVOList.length;
+            for (let i in nextProps.examDetail.baseExamAttrVOList) {
+              let val = nextProps.examDetail.baseExamAttrVOList[i].attrName;
+              let obj = {};
+              obj[`names[${i}]`] = BraftEditor.createEditorState(
+                nextProps.examDetail.baseExamAttrVOList[i].attrName,
+              );
+              this.props.form.setFieldsValue(obj);
+            }
+          }
+        }
+      }, 0);
     }
   }
-  componentDidMount () {
-
-    // 异步设置编辑器内容
-    setTimeout(() => {
-      this.props.form.setFieldsValue({
-        examName: BraftEditor.createEditorState('<p></p>')
-      })
-    }, 1000)
-
+  componentDidMount() {
+    this.init();
+  }
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      examId: '',
+      examDetail: {},
+      typeList: [],
+    });
   }
   render() {
     const { examDetail, typeList, form, loading } = this.props;
     const { getFieldDecorator, getFieldValue } = form;
     const { examType } = this.state;
-    const { categoryId, examName, difficultyLevel, mark, result, examSolution } = examDetail;
+    let { categoryId, difficultyLevel, mark, result, baseExamAttrVOList } = examDetail;
+    let keys = [];
+    let names = [];
+    let keys1 = [];
+    let names1 = [];
 
+    if (baseExamAttrVOList && baseExamAttrVOList.length > 0) {
+      for (let i in baseExamAttrVOList) {
+        keys.push(i);
+        names.push(baseExamAttrVOList[i].attrName);
+      }
+    }
+    if (examType === 5) {
+      names1 = result.split('@_@');
+      for (let i in names1) {
+        keys1.push(i);
+      }
+    }
+    // console.log(names1);
     const renderTreeNodes = data => {
       if (data) {
         return data.map(item => {
@@ -183,72 +279,42 @@ class QuestionEdit extends React.Component {
         });
       }
     };
-    const extendControls = [
-      {
-        key: 'antd-uploader',
-        type: 'component',
-        component: (
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            customRequest={this.uploadHandler}
-          >
-            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
-            <button type="button" className="control-item button upload-button" data-title="插入图片">
-              <Icon type="picture" theme="filled" />
-            </button>
-          </Upload>
-        )
-      }
-    ]
-    getFieldDecorator('keys', { initialValue: [] });
-    const keys = getFieldValue('keys');
-    const formItemEditors = keys.map((k, index) => (
-      <Form.Item label={`选项${letter[index]}`} required={false} key={k} wrapperCol={{ span: 22 }}>
-        {getFieldDecorator(`names[${k}]`, {
-          rules: [
-            {
-              required: true,
-              validator: (_, value, callback) => {
-                if (value.isEmpty()) {
-                  callback('请输入选项内容');
-                } else {
-                  callback();
-                }
-              },
-            },
-          ],
-        })(
-          <BraftEditor
-            className={styles.editor}
-            placeholder="请输入试题选项"
-            extendControls={extendControls}
-            style={{ border: '1px solid #d9d9d9' }}
-          />,
-        )}
-        {keys.length > 1 ? (
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.removeEditor(k)}
-          />
-        ) : null}
-      </Form.Item>
-    ));
+    getFieldDecorator('keys', { initialValue: keys || [] });
+    keys = getFieldValue('keys');
+    const formItemEditors = keys.map((k, index) => {
+      return (
+        <Form.Item
+          label={`选项${letter[index]}`}
+          required={false}
+          key={index}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`names[${k}]`)(
+            <BraftEditor
+              className={styles.editor}
+              placeholder="请输入试题选项"
+              style={{ border: '1px solid #d9d9d9' }}
+            />,
+          )}
+          {keys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => this.removeEditor(k)}
+            />
+          ) : null}
+        </Form.Item>
+      );
+    });
 
-    getFieldDecorator('keys1', { initialValue: [] });
-    const keys1 = getFieldValue('keys1');
+    getFieldDecorator('keys1', { initialValue: keys1 || [] });
+    keys1 = getFieldValue('keys1');
+    console.log(keys1);
     const formItemInput = keys1.map((k, index) => (
       <Form.Item label={'填空题答案'} required={false} key={k}>
-        {getFieldDecorator(`names1[${k}]`, {
-          rules: [
-            {
-              required: true,
-              whitespace: true,
-              message: "Please input passenger's name or delete this field.",
-            },
-          ],
-        })(<Input placeholder="填空题答案" style={{ width: '60%', marginRight: 8 }} />)}
+        {getFieldDecorator(`names1[${k}]`, { initialValue: names1[k] })(
+          <Input placeholder="填空题答案" style={{ width: '60%', marginRight: 8 }} />,
+        )}
         {keys1.length > 1 ? (
           <Icon
             className="dynamic-delete-button"
@@ -260,7 +326,7 @@ class QuestionEdit extends React.Component {
     ));
     return (
       <div className={styles.box}>
-        <Form onSubmit={this.handleSubmit} labelCol={{ span: 2 }} style={{marginTop:'20px'}}>
+        <Form onSubmit={this.handleSubmit} labelCol={{ span: 2 }} style={{ marginTop: '20px' }}>
           <Form.Item label="试题分类" wrapperCol={{ span: 4 }}>
             {getFieldDecorator('categoryId', {
               initialValue: categoryId,
@@ -314,7 +380,7 @@ class QuestionEdit extends React.Component {
           </Form.Item>
           <Form.Item label="试题名称" wrapperCol={{ span: 22 }}>
             {getFieldDecorator('examName', {
-              initialValue: examName,
+              // initialValue: examName,
               rules: [
                 {
                   required: true,
@@ -329,8 +395,7 @@ class QuestionEdit extends React.Component {
               ],
             })(
               <BraftEditor
-              extendControls={extendControls}
-              className={styles.editor}
+                className={styles.editor}
                 placeholder="请输入试题名称"
                 style={{ border: '1px solid #d9d9d9' }}
               />,
@@ -358,7 +423,7 @@ class QuestionEdit extends React.Component {
           ) : examType === 4 ? (
             <Form.Item label="试题答案" wrapperCol={{ span: 22 }}>
               {getFieldDecorator('result', {
-                initialValue: result,
+                // initialValue: result,
                 rules: [
                   {
                     required: true,
@@ -373,8 +438,7 @@ class QuestionEdit extends React.Component {
                 ],
               })(
                 <BraftEditor
-                extendControls={extendControls}
-                className={styles.editor}
+                  className={styles.editor}
                   placeholder="请输入试题答案"
                   style={{ border: '1px solid #d9d9d9' }}
                 />,
@@ -393,7 +457,7 @@ class QuestionEdit extends React.Component {
 
           <Form.Item label="试题讲解" wrapperCol={{ span: 22 }}>
             {getFieldDecorator('examSolution', {
-              initialValue: examSolution,
+              // initialValue: examSolution,
               rules: [
                 {
                   required: true,
@@ -408,8 +472,6 @@ class QuestionEdit extends React.Component {
               ],
             })(
               <BraftEditor
-              extendControls={extendControls}
-
                 className={styles.editor}
                 placeholder="请输入试题讲解"
                 style={{ border: '1px solid #d9d9d9' }}
