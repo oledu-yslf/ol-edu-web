@@ -59,7 +59,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            questionList: clonePaperList,
+            paperList: clonePaperList,
           },
         });
       }
