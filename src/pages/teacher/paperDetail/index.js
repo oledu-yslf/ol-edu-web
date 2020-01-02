@@ -1,0 +1,157 @@
+import React from 'react';
+import { Divider, List } from 'antd';
+import { connect } from 'dva';
+import styles from './index.less';
+class PaperDetail extends React.Component {
+  render() {
+    const { paperDetail } = this.props;
+    const { paperName, totalScore, mapPaperExamSummary } = paperDetail;
+    let exam = [];
+    for (let i in mapPaperExamSummary) {
+      exam[i] = mapPaperExamSummary[i].paperExamVOList;
+    }
+    return (
+      <div className={styles.box}>
+        <div className="clearfix">
+          <div className="pullleft" style={{ fontSize: '24px', lineHeight: '80px' }}>
+            <span>{paperName}</span>
+          </div>
+          <div className="pullright" style={{ fontSize: '24px', lineHeight: '80px' }}>
+            <span>总分：{totalScore}</span>
+          </div>
+        </div>
+        <Divider />
+        {exam[1] && exam[1].length > 0 ? (
+          <List
+            header={<div>一.选择题</div>}
+            bordered
+            dataSource={exam[1]}
+            itemLayout="vertical"
+            renderItem={(item, index) => (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+                {item.paperExamAttrVOS.map(v => {
+                  return (
+                    <div className="clearfix" key={v.examAttrId}>
+                      <div className="pullleft">{v.sort}.</div>
+                      <div className="pullleft" dangerouslySetInnerHTML={{ __html: v.attrName }} />
+                    </div>
+                  );
+                })}
+                <Divider/>
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+        {exam[2] && exam[2].length > 0 ? (
+          <List
+            style={{marginTop:'20px'}}
+            header={<div>二.多选题</div>}
+            bordered
+            dataSource={exam[2]}
+            itemLayout="vertical"
+            renderItem={(item, index) => (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+                {item.paperExamAttrVOS.map(v => {
+                  return (
+                    <div className="clearfix" key={v.examAttrId}>
+                      <div className="pullleft">{v.sort}.</div>
+                      <div className="pullleft" dangerouslySetInnerHTML={{ __html: v.attrName }} />
+                    </div>
+                  );
+                })}
+                <Divider/>
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+        {exam[3] && exam[3].length > 0 ? (
+          <List
+          style={{marginTop:'20px'}}
+
+            header={<div>三.判断题</div>}
+            bordered
+            dataSource={exam[3]}
+            itemLayout="vertical"
+            renderItem={(item, index) => (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+                {item.paperExamAttrVOS.map(v => {
+                  return (
+                    <div className="clearfix" key={v.examAttrId}>
+                      <div className="pullleft">{v.sort}.</div>
+                      <div className="pullleft" dangerouslySetInnerHTML={{ __html: v.attrName }} />
+                    </div>
+                  );
+                })}
+                <Divider/>
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+      </div>
+    );
+  }
+}
+export default connect(state => ({
+  ...state.paperDetail,
+  loading: state.loading.models.paperDetail,
+}))(PaperDetail);

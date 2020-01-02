@@ -1,9 +1,11 @@
 import * as service from '../services/paperList';
+import { message } from 'antd';
+import { cloneDeep } from 'lodash';
 export default {
   namespace: 'paperList',
   state: {
     paperList: [],
-    total: undefined,
+    total: 10,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -23,10 +25,44 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          questionList: result,
+          paperList: result,
           total: count,
         },
       });
+    },
+    *listPage({ payload }, { call, put }) {
+      const { data } = yield call(service.listPage, payload);
+      const { count, result } = data;
+      yield put({
+        type: 'save',
+        payload: {
+          paperList: result,
+          total: count,
+        },
+      });
+    },
+    *paperDelete({ payload }, { call, put, select }) {
+      const { data } = yield call(service.paperDelete, payload);
+
+      if (data === 1) {
+        message.success('删除成功');
+        const paperList = yield select(state => state.paperList.paperList);
+        let clonePaperList = cloneDeep(paperList);
+        let index;
+        for (let i = 0; i < clonePaperList.length; i++) {
+          if (clonePaperList[i].paperId === payload.paperId) {
+            index = i;
+            break;
+          }
+        }
+        clonePaperList.splice(index, 1);
+        yield put({
+          type: 'save',
+          payload: {
+            questionList: clonePaperList,
+          },
+        });
+      }
     },
   },
   reducers: {

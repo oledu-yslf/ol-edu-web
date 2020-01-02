@@ -15,3 +15,20 @@ export async function listPage(params) {
     },params),
   });
 }
+
+export async function paperDelete(params) {
+  return request({
+    url: '/api/exam/paper/delete',
+    method: 'post',
+    data: Object.assign({
+      page: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      paperName: '',
+      paperType: '',
+      createStaffId: '',
+    },params),
+  });
+}
+

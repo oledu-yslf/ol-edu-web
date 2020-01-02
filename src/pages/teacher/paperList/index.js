@@ -16,6 +16,52 @@ class PaperList extends React.Component {
   onTabClick = e => {
     router.push(e);
   };
+  handleSearchSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    const value = form.getFieldsValue();
+    const { paperName } = value;
+    dispatch({
+      type: 'paperList/listPage',
+      payload: {
+        paperName,
+      },
+    });
+  };
+  newPaper = () => {
+    router.push('/teacher/paperEdit');
+  };
+  querypaper = record => {
+    router.push(`/teacher/paperDetail?paperId=${record.paperId}`);
+  };
+  editPaper = record => {
+    router.push(`/teacher/paperEdit?paperId=${record.paperId}`);
+  };
+  deletePaper = record => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'paperList/paperDelete',
+      payload: {
+        paperId: record.paperId,
+      },
+    });
+  };
+  
+  pageChange = (page, pageSize) => {
+    const { dispatch, form } = this.props;
+    const value = form.getFieldsValue();
+    const { paperName } = value;
+    dispatch({
+      type: 'paperList/listPage',
+      payload: {
+        paperName,
+        page: {
+          pageNum: page,
+          pageSize: 10,
+        },
+      },
+    });
+  };
   render() {
     const { paperList, total, loading, form } = this.props;
     const { getFieldDecorator } = form;
@@ -60,13 +106,13 @@ class PaperList extends React.Component {
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.editExam(record, e)}>
+            <Button type="link" onClick={e => this.editPaper(record, e)}>
               编辑
             </Button>
-            <Button type="link" onClick={e => this.queryExam(record, e)}>
+            <Button type="link" onClick={e => this.querypaper(record, e)}>
               查看
             </Button>
-            <Button type="link" onClick={e => this.deleteExam(record, e)}>
+            <Button type="link" onClick={e => this.deletePaper(record, e)}>
               删除
             </Button>
           </span>
@@ -81,7 +127,7 @@ class PaperList extends React.Component {
           <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
           <TabPane tab="考试管理" key="/teacher/paperList">
             <Spin spinning={loading}>
-              <Form layout="inline" onSubmit={this.handleSubmit}>
+              <Form layout="inline">
                 <Form.Item label="试题名称:">
                   {getFieldDecorator('paperName', {
                     initialValue: paperName,
@@ -98,13 +144,13 @@ class PaperList extends React.Component {
                   </Button>
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit" onClick={this.newExam}>
+                  <Button type="primary" htmlType="submit" onClick={this.newPaper}>
                     新增
                   </Button>
                 </Form.Item>
               </Form>
               <Table
-                rowKey={record => record.examId}
+                rowKey={record => record.paperId}
                 columns={columns}
                 dataSource={paperList}
                 pagination={{
@@ -126,6 +172,6 @@ class PaperList extends React.Component {
 const PaperListForm = Form.create({ name: 'PaperListForm' })(PaperList);
 
 export default connect(state => ({
-  ...state.questionList,
+  ...state.paperList,
   loading: state.loading.models.paperList,
 }))(PaperListForm);
