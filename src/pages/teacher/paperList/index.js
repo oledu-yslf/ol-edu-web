@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import router from 'umi/router';
-import { Tabs, Button, Table, Spin, Form, Input } from 'antd';
+import { Tabs, Button, Table, Spin, Form, Input, Radio } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
 import NewPaperModal from './components/newPaperModal';
@@ -16,6 +16,10 @@ class PaperList extends React.Component {
   }
   onTabClick = e => {
     router.push(e);
+  };
+  handleRouterChange = e => {
+    console.log(e);
+    router.push(e.target.value);
   };
   handleSearchSubmit = e => {
     e.preventDefault();
@@ -73,7 +77,7 @@ class PaperList extends React.Component {
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'save',
+      type: 'paperList/save',
       payload: {
         paperList: [],
         total: 10,
@@ -146,6 +150,11 @@ class PaperList extends React.Component {
           <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
           <TabPane tab="考试管理" key="/teacher/paperList">
             <Spin spinning={loading}>
+           
+              <Radio.Group defaultValue="/teacher/paperList" onChange={this.handleRouterChange} style={{marginBottom:'20px'}}>
+                <Radio.Button value="/teacher/paperList">试卷添加</Radio.Button>
+                <Radio.Button value="/teacher/paperPlan">试卷发布</Radio.Button>
+              </Radio.Group>
               <Form layout="inline">
                 <Form.Item label="试题名称:">
                   {getFieldDecorator('paperName', {
