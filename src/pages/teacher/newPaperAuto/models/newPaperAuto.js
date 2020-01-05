@@ -1,5 +1,6 @@
 import * as service from '../services/newPaperAuto';
 import { message } from 'antd';
+import router from 'umi/router'
 export default {
   namespace: 'newPaperAuto',
   state: {
@@ -37,7 +38,9 @@ export default {
       console.log(payload);
       const { code } = yield call(service.paperExamRand,payload);
       if(code === 200){
-        message.success('随机试题生成成功')
+        message.success('随机试题生成成功').then(()=>{
+          router.push(`/teacher/paperDetail?paperId=${payload.paperId}`)
+        })
       }
     }
   },

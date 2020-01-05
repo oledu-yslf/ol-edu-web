@@ -23,7 +23,7 @@ class PaperDetail extends React.Component {
         <Divider />
         {exam[1] && exam[1].length > 0 ? (
           <List
-            header={<div>一.选择题</div>}
+            header={<div>选择题</div>}
             bordered
             dataSource={exam[1]}
             itemLayout="vertical"
@@ -48,7 +48,7 @@ class PaperDetail extends React.Component {
                     </div>
                   );
                 })}
-                <Divider/>
+                <Divider />
                 <div className="clearfix">
                   <div className="pullleft">答案：</div>
                   <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
@@ -64,8 +64,8 @@ class PaperDetail extends React.Component {
         )}
         {exam[2] && exam[2].length > 0 ? (
           <List
-            style={{marginTop:'20px'}}
-            header={<div>二.多选题</div>}
+            style={{ marginTop: '20px' }}
+            header={<div>多选题</div>}
             bordered
             dataSource={exam[2]}
             itemLayout="vertical"
@@ -90,7 +90,7 @@ class PaperDetail extends React.Component {
                     </div>
                   );
                 })}
-                <Divider/>
+                <Divider />
                 <div className="clearfix">
                   <div className="pullleft">答案：</div>
                   <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
@@ -106,9 +106,8 @@ class PaperDetail extends React.Component {
         )}
         {exam[3] && exam[3].length > 0 ? (
           <List
-          style={{marginTop:'20px'}}
-
-            header={<div>三.判断题</div>}
+            style={{ marginTop: '20px' }}
+            header={<div>判断题</div>}
             bordered
             dataSource={exam[3]}
             itemLayout="vertical"
@@ -133,7 +132,79 @@ class PaperDetail extends React.Component {
                     </div>
                   );
                 })}
-                <Divider/>
+                <Divider />
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+
+        {exam[5] && exam[5].length > 0 ? (
+          <List
+            style={{ marginTop: '20px' }}
+            header={<div>填空题</div>}
+            bordered
+            dataSource={exam[5]}
+            itemLayout="vertical"
+            renderItem={(item, index) => (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  style={{marginBottom:0}}
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+              
+                <Divider />
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            )}
+          />
+        ) : (
+          ''
+        )}
+        {exam[4] && exam[4].length > 0 ? (
+          <List
+            style={{marginBottom:'20px',marginTop:'20px'}}
+            header={<div>问答题</div>}
+            bordered
+            dataSource={exam[4]}
+            itemLayout="vertical"
+            renderItem={(item, index) => (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+              
+                <Divider />
                 <div className="clearfix">
                   <div className="pullleft">答案：</div>
                   <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />

@@ -1,97 +1,80 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './index.less';
-import { Form, Input, Icon, Select ,Button} from 'antd';
-const { Option } = Select;
-
-let id = 0;
+import { Form, Icon, Button, Divider, List } from 'antd';
+import QuestionListModal from './components/QuestionListModal';
 
 class NewPaperManual extends React.Component {
-  remove = k => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    // We need at least one passenger
-    if (keys.length === 1) {
-      return;
-    }
-
-    // can use data-binding to set
-    form.setFieldsValue({
-      keys: keys.filter(key => key !== k),
-    });
-  };
-
-  add = () => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(id++);
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      keys: nextKeys,
+  constructor(props) {
+    super(props);
+    this.state = {
+      totalScore: 0,
+    };
+  }
+  questionListModal = e => {
+    // this.setState({
+    //   questionListModalVisbile:true
+    // })
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'newPaperManual/save',
+      payload: {
+        questionListModalVisbile: true,
+      },
     });
   };
   render() {
-    const { form } = this.props;
-    const { getFieldDecorator, getFieldValue } = form;
+    const { selectedExams, paperDetail, questionListModalVisbile } = this.props;
+    console.log(selectedExams);
+    // const { getFieldDecorator, getFieldValue } = form;
+    const { totalScore } = this.state;
 
-    getFieldDecorator('keys', { initialValue: [0] });
-    const keys = getFieldValue('keys');
-    // console.log(keys1);
-    const formItem = keys.map((k, index) => (
-      <div>
-        <Form.Item label="试题类型" wrapperCol={{ span: 4 }}>
-          {getFieldDecorator(`names[${k}].examType`, {
-            rules: [{ required: true, message: '请选择试题类型！' }],
-          })(
-            <Select placeholder="请选择试题类型！">
-              <Option value={1}>单选题</Option>
-              <Option value={2}>多选题</Option>
-              <Option value={3}>判断题</Option>
-              <Option value={4}>问答题</Option>
-              <Option value={5}>填空题</Option>
-            </Select>,
-          )}
-        </Form.Item>
-        <Form.Item label="试题难度" wrapperCol={{ span: 4 }}>
-          {getFieldDecorator(`names[${k}].difficultyLevel`, {
-            rules: [{ required: true, message: '请选择试题难度！' }],
-          })(
-            <Select placeholder="请选择试题难度！">
-              <Option value={0}>易</Option>
-              <Option value={1}>较易</Option>
-              <Option value={2}>中等</Option>
-              <Option value={3}>偏难</Option>
-              <Option value={4}>难</Option>
-            </Select>,
-          )}
-        </Form.Item>
-        <Form.Item label={'题数'} required={false} key={k}>
-          {getFieldDecorator(`names[${k}].randNum`)(
-            <Input style={{ width: '60%', marginRight: 8 }} />,
-          )}
-          {/* {keys.length > 1 ? (
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.removeInput(k)}
-          />
-        ) : null} */}
-        </Form.Item>
-      </div>
-    ));
     return (
-      <div className={styles.normal}>
-        <Form>
-          {formItem}
-          <Form.Item label="增加答案">
-            <Button type="dashed" onClick={this.addInput} style={{ width: '60%' }}>
-              <Icon type="plus" /> 点击增加
+      <div className={styles.box}>
+        <div className="clearfix" style={{ textAlign: 'center' }}>
+          <div className="pullleft" style={{ fontSize: '24px', lineHeight: '80px' }}>
+            {/* <Button>选择试题</Button> */}
+            <Button type="dashed" onClick={this.questionListModal}>
+              <Icon type="plus" /> 增加试题
             </Button>
-          </Form.Item>
-        </Form>
+          </div>
+          <span style={{ fontSize: '24px', lineHeight: '80px' }}>{paperDetail.paperName}</span>
+          <div className="pullright" style={{ fontSize: '24px', lineHeight: '80px' }}>
+            <span>总分：{totalScore}</span>
+          </div>
+        </div>
+        <Divider />
+        <List
+          bordered
+          dataSource={selectedExams}
+          itemLayout="vertical"
+          renderItem={(item, index) => {
+            return (
+              <List.Item key={item.examId}>
+                <List.Item.Meta
+                  title={
+                    <div className="clearfix">
+                      <div className="pullleft">{index + 1}.</div>
+                      <div
+                        className="pullleft"
+                        dangerouslySetInnerHTML={{ __html: item.examName }}
+                      />
+                    </div>
+                  }
+                />
+                <Divider />
+                <div className="clearfix">
+                  <div className="pullleft">答案：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.result }} />
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">分数：{item.mark}</div>
+                </div>
+              </List.Item>
+            );
+          }}
+        />
+        <QuestionListModal questionListModalVisbile={questionListModalVisbile} />
       </div>
     );
   }
