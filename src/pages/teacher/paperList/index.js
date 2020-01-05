@@ -4,6 +4,7 @@ import router from 'umi/router';
 import { Tabs, Button, Table, Spin, Form, Input } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
+import NewPaperModal from './components/newPaperModal';
 const { TabPane } = Tabs;
 
 class PaperList extends React.Component {
@@ -29,7 +30,14 @@ class PaperList extends React.Component {
     });
   };
   newPaper = () => {
-    router.push('/teacher/paperEdit');
+    // router.push('/teacher/paperEdit');
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'paperList/save',
+      payload: {
+        newPaperVisible: true,
+      },
+    });
   };
   querypaper = record => {
     router.push(`/teacher/paperDetail?paperId=${record.paperId}`);
@@ -46,7 +54,7 @@ class PaperList extends React.Component {
       },
     });
   };
-  
+
   pageChange = (page, pageSize) => {
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
@@ -62,8 +70,19 @@ class PaperList extends React.Component {
       },
     });
   };
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'save',
+      payload: {
+        paperList: [],
+        total: 10,
+        newPaperVisible: false,
+      },
+    });
+  }
   render() {
-    const { paperList, total, loading, form } = this.props;
+    const { paperList, total, newPaperVisible, loading, form } = this.props;
     const { getFieldDecorator } = form;
     const { paperName } = this.state;
     const columns = [
@@ -164,6 +183,7 @@ class PaperList extends React.Component {
             </Spin>
           </TabPane>
         </Tabs>
+        <NewPaperModal newPaperVisible={newPaperVisible} />
       </div>
     );
   }

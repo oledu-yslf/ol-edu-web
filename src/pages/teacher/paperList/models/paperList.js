@@ -1,11 +1,13 @@
 import * as service from '../services/paperList';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
+import router from 'umi/router'
 export default {
   namespace: 'paperList',
   state: {
     paperList: [],
     total: 10,
+    newPaperVisible:false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -64,6 +66,20 @@ export default {
         });
       }
     },
+    *paperSave({ payload }, { call, put, select }){
+      const { code,data } = yield call(service.paperSave, payload);
+      if(code === 200 ){
+        if(payload.genType === 0){
+          message.success('新增试卷成功').then(()=>{
+            router.push(`/teacher/newPaperManual?paperId=${data}`)
+          })
+        }else{
+          message.success('新增试卷成功').then(()=>{
+            router.push(`/teacher/newPaperAuto?paperId=${data}`)
+          })
+        }
+      }
+    }
   },
   reducers: {
     save(state, action) {
