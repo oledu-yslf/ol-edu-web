@@ -4,7 +4,7 @@ import {  Button, Table, Spin, Form, Input } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
 
-class PaperList extends React.Component {
+class PlanDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -16,7 +16,7 @@ class PaperList extends React.Component {
     const value = form.getFieldsValue();
     const { paperName } = value;
     dispatch({
-      type: 'planDetailsave/listPage',
+      type: 'planDetail/listPage',
       payload: {
         paperName,
       },
@@ -28,7 +28,7 @@ class PaperList extends React.Component {
     const value = form.getFieldsValue();
     const { paperName } = value;
     dispatch({
-      type: 'planDetailsave/listPage',
+      type: 'planDetail/listPage',
       payload: {
         paperName,
         page: {
@@ -41,7 +41,7 @@ class PaperList extends React.Component {
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'planDetailsave/save',
+      type: 'planDetail/save',
       payload: {
         paperList: [],
         total: 10,
@@ -107,7 +107,7 @@ class PaperList extends React.Component {
         </Form>
         <Spin spinning={loading}>
           <Table
-            rowKey={record => record.paperId}
+            rowKey={record => record.planDetailId}
             columns={columns}
             dataSource={paperList}
             pagination={{
@@ -124,9 +124,9 @@ class PaperList extends React.Component {
   }
 }
 
-const PaperListForm = Form.create({ name: 'PaperListForm' })(PaperList);
+const PlanDetailForm = Form.create({ name: 'PlanDetailForm' })(PlanDetail);
 
 export default connect(state => ({
-  ...state.paperList,
-  loading: state.loading.models.paperList,
-}))(PaperListForm);
+  ...state.planDetail,
+  loading: state.loading.models.planDetail,
+}))(PlanDetailForm);

@@ -149,34 +149,37 @@ class PaperList extends React.Component {
           <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
           <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
           <TabPane tab="考试管理" key="/teacher/paperList">
+            <Radio.Group
+              defaultValue="/teacher/paperList"
+              onChange={this.handleRouterChange}
+              style={{ marginBottom: '20px' }}
+            >
+              <Radio.Button value="/teacher/paperList">试卷添加</Radio.Button>
+              <Radio.Button value="/teacher/paperPlan">试卷发布</Radio.Button>
+            </Radio.Group>
+            <Form layout="inline">
+              <Form.Item label="试题名称:">
+                {getFieldDecorator('paperName', {
+                  initialValue: paperName,
+                })(<Input style={{ width: '120px' }} />)}
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  icon="search"
+                  onClick={this.handleSearchSubmit}
+                >
+                  查询
+                </Button>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" onClick={this.newPaper}>
+                  新增
+                </Button>
+              </Form.Item>
+            </Form>
             <Spin spinning={loading}>
-           
-              <Radio.Group defaultValue="/teacher/paperList" onChange={this.handleRouterChange} style={{marginBottom:'20px'}}>
-                <Radio.Button value="/teacher/paperList">试卷添加</Radio.Button>
-                <Radio.Button value="/teacher/paperPlan">试卷发布</Radio.Button>
-              </Radio.Group>
-              <Form layout="inline">
-                <Form.Item label="试题名称:">
-                  {getFieldDecorator('paperName', {
-                    initialValue: paperName,
-                  })(<Input style={{ width: '120px' }} />)}
-                </Form.Item>
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    icon="search"
-                    onClick={this.handleSearchSubmit}
-                  >
-                    查询
-                  </Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" onClick={this.newPaper}>
-                    新增
-                  </Button>
-                </Form.Item>
-              </Form>
               <Table
                 rowKey={record => record.paperId}
                 columns={columns}

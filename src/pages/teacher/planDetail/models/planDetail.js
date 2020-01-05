@@ -2,8 +2,8 @@ import * as service from '../services/planDetail';
 export default {
   namespace: 'planDetail',
   state: {
-    text: 'page work',
-    list: [],
+    total: 10,
+    paperList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -21,6 +21,7 @@ export default {
     *listPage({ payload }, { call, put }) {
       const { data } = yield call(service.listPage, payload);
       const { count, result } = data;
+      console.log(count,result)
       yield put({
         type: 'save',
         payload: {

@@ -2,15 +2,22 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-import { Button, Table, Spin, Form, Input, Divider, Radio } from 'antd';
+import { Button, Table, Spin, Form, Input, Divider, Radio ,Tabs} from 'antd';
 import styles from './index.less'
+const {TabPane} = Tabs;
 
 class PaperPlan extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
+  onTabClick = e => {
+    router.push(e);
+  };
+  handleRouterChange = e => {
+    console.log(e);
+    router.push(e.target.value);
+  };
   newPaperPlan = e => {
     router.push('/teacher/newPlan');
   };
@@ -111,6 +118,11 @@ class PaperPlan extends React.Component {
 
     return (
       <div className={styles.box}>
+        <Tabs defaultActiveKey="/teacher/paperList" onTabClick={this.onTabClick}>
+          <TabPane tab="基础资料" key="/teacher"></TabPane>
+          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
+          <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
+          <TabPane tab="考试管理" key="/teacher/paperList">
         <Radio.Group
           defaultValue="/teacher/paperPlan"
           onChange={this.handleRouterChange}
@@ -154,6 +166,8 @@ class PaperPlan extends React.Component {
             }}
           />
         </Spin>
+        </TabPane>
+        </Tabs>
       </div>
     );
   }
