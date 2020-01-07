@@ -47,7 +47,7 @@ class PaperList extends React.Component {
     router.push(`/teacher/paperDetail?paperId=${record.paperId}`);
   };
   editPaper = record => {
-    router.push(`/teacher/paperEdit?paperId=${record.paperId}`);
+    router.push(`/teacher/newPaperManual?paperId=${record.paperId}`);
   };
   deletePaper = record => {
     const { dispatch } = this.props;

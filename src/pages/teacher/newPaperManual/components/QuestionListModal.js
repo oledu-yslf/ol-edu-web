@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { Button, Table, Spin, Form, Input, Select, Divider, Modal, TreeSelect } from 'antd';
+import { cloneDeep } from 'lodash';
 
 const { TreeNode } = TreeSelect;
 const { Option } = Select;
@@ -13,21 +14,21 @@ class QuestionListModal extends React.Component {
     };
   }
 
-  handleCancel= e=>{
-    const {dispatch} = this.props;
+  handleCancel = e => {
+    const { dispatch } = this.props;
     dispatch({
-      type:"newPaperManual/save",
-      payload:{
-        questionListModalVisbile:false
-      }
-    })
-  }
+      type: 'newPaperManual/save',
+      payload: {
+        questionListModalVisbile: false,
+      },
+    });
+  };
 
   handleSearchSubmit = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
-    const {categoryId, examType, difficultyLevel, examName } = value;
+    const { categoryId, examType, difficultyLevel, examName } = value;
 
     dispatch({
       type: 'newPaperManual/listPage',
@@ -42,13 +43,12 @@ class QuestionListModal extends React.Component {
 
   pageChange = (page, pageSize) => {
     const { dispatch, form } = this.props;
-    const { selectedNodes } = this.state;
     const value = form.getFieldsValue();
-    const { examType, difficultyLevel, examName } = value;
+    const { categoryId, examType, difficultyLevel, examName } = value;
     dispatch({
       type: 'newPaperManual/listPage',
       payload: {
-        categoryId: selectedNodes.categoryId,
+        categoryId,
         examType,
         difficultyLevel,
         examName,
@@ -60,24 +60,62 @@ class QuestionListModal extends React.Component {
     });
   };
   rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      const { dispatch, form } = this.props;
+    onSelect: (record, selected, selectedRows, nativeEvent) => {
+      const { dispatch, selectedExams } = this.props;
+      let cloneSelectedExams = cloneDeep(selectedExams);
+      if (selected) {
+        cloneSelectedExams.push(record);
+      } else {
+        let a;
+        for (let i = 0; i < cloneSelectedExams.length; i++) {
+          if (cloneSelectedExams[i].examId === record.examId) {
+            a = i;
+            break;
+          }
+        }
+        cloneSelectedExams.splice(a, 1);
+      }
+      console.log(cloneSelectedExams);
 
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       dispatch({
-        type:'newPaperManual/save',
-        payload:{
-          selectedExams:selectedRows
-
-      }})
+        type: 'newPaperManual/save',
+        payload: {
+          selectedExams: cloneSelectedExams,
+        },
+      });
     },
-    // getCheckboxProps: record => ({
-    //   disabled: record.name === 'Disabled User', // Column configuration not to be checked
-    //   name: record.name,
-    // }),
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      const { dispatch, selectedExams } = this.props;
+      let cloneSelectedExams = cloneDeep(selectedExams);
+      if (selected) {
+        cloneSelectedExams = cloneSelectedExams.concat(changeRows);
+      } else {
+        for (let j = 0; j < changeRows.length; j++) {
+          let a;
+          for (let i = 0; i < cloneSelectedExams.length; i++) {
+            if (cloneSelectedExams[i].examId === changeRows[j].examId) {
+              a = i;
+              break;
+            }
+          }
+          cloneSelectedExams.splice(a, 1);
+        }
+      }
+      console.log(cloneSelectedExams);
+      dispatch({
+        type: 'newPaperManual/save',
+        payload: {
+          selectedExams: cloneSelectedExams,
+        },
+      });
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
   };
   render() {
-    const { typeList, questionList, total, loading, form ,questionListModalVisbile} = this.props;
+    const { typeList, questionList, total, loading, form, questionListModalVisbile } = this.props;
     // const { examType, difficultyLevel, examName,  } = this.state;
     const { getFieldDecorator } = form;
     const renderTreeNodes = data => {
@@ -169,7 +207,7 @@ class QuestionListModal extends React.Component {
         dataIndex: 'createStaffName',
       },
     ];
-    
+
     return (
       <Modal
         title="删除试题分类提示"
@@ -182,8 +220,7 @@ class QuestionListModal extends React.Component {
         <Spin spinning={loading}>
           <Form layout="inline" onSubmit={this.handleSubmit}>
             <Form.Item label="试题分类">
-              {getFieldDecorator('categoryId',
-              )(
+              {getFieldDecorator('categoryId')(
                 <TreeSelect
                   showSearch
                   style={{ width: '160px' }}

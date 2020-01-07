@@ -32,3 +32,12 @@ export async function listPage (data) {
     },data)
   })
 }
+
+export async function paperExamSave(data) {
+  return request({
+    url: '/api/exam/paperExam/save',
+    method: 'post',
+    data,
+  });
+}
+

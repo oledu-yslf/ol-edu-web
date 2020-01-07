@@ -6,6 +6,8 @@ export default {
     treeDepartData: [],
     paperList: [],
     total: 10,
+    paperListModalVisbile:false,
+    selectedPaper:[]
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -46,6 +48,17 @@ export default {
         type: 'save',
         payload: {
           paperDetail: data,
+        },
+      });
+    },
+    *listPage({ payload }, { call, put }) {
+      const { data } = yield call(service.listPage, payload);
+      const { count, result } = data;
+      yield put({
+        type: 'save',
+        payload: {
+          paperList: result,
+          total: count,
         },
       });
     },

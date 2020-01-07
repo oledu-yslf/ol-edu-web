@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, TreeSelect, Input, Button ,Select} from 'antd';
 import getUserId from '@/utils/getUserId';
 import { connect } from 'dva';
+import PaperListModal from './components/PaperListModal'
 import styles from './index.less';
 const { TreeNode } = TreeSelect;
 class NewPlan extends React.Component {
@@ -9,14 +10,24 @@ class NewPlan extends React.Component {
     super(props);
     this.state = {};
   }
+  handlePaperModalShow = e=>{
+    const {dispatch} = this.props;
+    dispatch({
+      type:'newPlan/save',
+      payload:{
+        paperListModalVisbile:true
+      }
+    })
+  }
 
   handlePlanSubmit = e=>{
     
   }
+  
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'questionEdit/save',
+      type: 'newPlan/save',
       payload: {
         examId: '',
         examDetail: {},
@@ -25,7 +36,7 @@ class NewPlan extends React.Component {
     });
   }
   render() {
-    const { planDetail, treeDepartData, form, loading } = this.props;
+    const { planDetail, treeDepartData, form, loading ,paperListModalVisbile} = this.props;
     const { getFieldDecorator, getFieldValue } = form;
     const { planName, planDepartId } = planDetail;
     const formItemLayout = {
@@ -90,7 +101,7 @@ class NewPlan extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="试卷列表">
-            <Button type="primary">
+            <Button type="primary" onClick={this.handlePaperModalShow}>
               选择试卷
             </Button>
           </Form.Item>
@@ -100,6 +111,7 @@ class NewPlan extends React.Component {
             </Button>
           </Form.Item>
         </Form>
+        <PaperListModal  paperListModalVisbile={paperListModalVisbile} />
       </div>
     );
   }
