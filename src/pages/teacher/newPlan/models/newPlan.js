@@ -1,4 +1,6 @@
 import * as service from '../services/newPlan';
+import router from 'umi/router';
+import { message } from 'antd';
 export default {
   namespace: 'newPlan',
   state: {
@@ -7,7 +9,8 @@ export default {
     paperList: [],
     total: 10,
     paperListModalVisbile:false,
-    selectedPaper:[]
+    selectedPapers:[],
+    staffList:[]
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -61,6 +64,23 @@ export default {
           total: count,
         },
       });
+    },
+    *staffList({ payload }, { call, put }) {
+      const { data } = yield call(service.staffList, payload);
+      yield put({
+        type: 'save',
+        payload: {
+          staffList: data.result,
+        },
+      });
+    },
+    *paperPlanSave({ payload }, { call, put }) {
+      const { code } = yield call(service.paperPlanSave, payload);
+      if (code === 200) {
+        message.success('发布计划成功').then(() => {
+          router.push('/teacher/paperPlan');
+        });
+      }
     },
   },
   reducers: {

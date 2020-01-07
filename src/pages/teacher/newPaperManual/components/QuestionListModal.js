@@ -108,11 +108,7 @@ class QuestionListModal extends React.Component {
           selectedExams: cloneSelectedExams,
         },
       });
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      name: record.name,
-    }),
+    }
   };
   render() {
     const { typeList, questionList, total, loading, form, questionListModalVisbile } = this.props;

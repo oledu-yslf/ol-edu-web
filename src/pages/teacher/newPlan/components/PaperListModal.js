@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { Button, Table, Spin, Form, Input, Select, Divider, Modal } from 'antd';
+import { cloneDeep } from 'lodash';
 
 const { Option } = Select;
 class PaperListModal extends React.Component {
@@ -51,16 +52,53 @@ class PaperListModal extends React.Component {
     });
   };
   rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      const { dispatch, form } = this.props;
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    onSelect: (record, selected, selectedRows, nativeEvent) => {
+      const { dispatch, selectedPapers } = this.props;
+      let cloneSelectedPapers = cloneDeep(selectedPapers);
+      if (selected) {
+        cloneSelectedPapers.push(record);
+      } else {
+        let a;
+        for (let i = 0; i < cloneSelectedPapers.length; i++) {
+          if (cloneSelectedPapers[i].paperId === record.paperId) {
+            a = i;
+            break;
+          }
+        }
+        cloneSelectedPapers.splice(a, 1);
+      }
+
       dispatch({
-        type:'newPlan/save',
-        payload:{
-          selectedPaper:selectedRows
-      }})
+        type: 'newPlan/save',
+        payload: {
+          selectedPapers: cloneSelectedPapers,
+        },
+      });
     },
-  
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      const { dispatch, selectedPapers } = this.props;
+      let cloneSelectedPapers = cloneDeep(selectedPapers);
+      if (selected) {
+        cloneSelectedPapers = cloneSelectedPapers.concat(changeRows);
+      } else {
+        for (let j = 0; j < changeRows.length; j++) {
+          let a;
+          for (let i = 0; i < cloneSelectedPapers.length; i++) {
+            if (cloneSelectedPapers[i].examId === changeRows[j].examId) {
+              a = i;
+              break;
+            }
+          }
+          cloneSelectedPapers.splice(a, 1);
+        }
+      }
+      dispatch({
+        type: 'newPlan/save',
+        payload: {
+          selectedPapers: cloneSelectedPapers,
+        },
+      });
+    }
   };
   render() {
     const { paperList, total, loading, form ,paperListModalVisbile} = this.props;
