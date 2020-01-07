@@ -85,6 +85,28 @@ class PlanDetail extends React.Component {
         key: 'createStaffName',
         dataIndex: 'createStaffName',
       },
+      {
+        title: '考试人员',
+        key: 'staffName',
+        dataIndex: 'staffName',
+      },
+      {
+        title: '时长（分钟）',
+        key: 'duration',
+        dataIndex: 'duration',
+      },
+      {
+        title: '开始时间',
+        key: 'effDate',
+        dataIndex: 'effDate',
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+
+      },
+      {
+        title: '批卷老师',
+        key: 'reviewStaffName',
+        dataIndex: 'reviewStaffName',
+      },
     ];
     return (
       <div className={styles.box}>
