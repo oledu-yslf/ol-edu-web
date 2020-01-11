@@ -56,6 +56,11 @@ class HomeworkForTeacherDetail extends React.Component {
                 <div className="clearfix">
                   <div className="pullleft">分数：{item.mark}</div>
                 </div>
+                <div className="clearfix">
+                  <div className="pullleft">讲解：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.examSolution }} />
+
+                </div>
               </List.Item>
             )}
           />
@@ -97,6 +102,11 @@ class HomeworkForTeacherDetail extends React.Component {
                 </div>
                 <div className="clearfix">
                   <div className="pullleft">分数：{item.mark}</div>
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">讲解：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.examSolution }} />
+
                 </div>
               </List.Item>
             )}
@@ -140,6 +150,11 @@ class HomeworkForTeacherDetail extends React.Component {
                 <div className="clearfix">
                   <div className="pullleft">分数：{item.mark}</div>
                 </div>
+                <div className="clearfix">
+                  <div className="pullleft">讲解：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.examSolution }} />
+
+                </div>
               </List.Item>
             )}
           />
@@ -177,6 +192,11 @@ class HomeworkForTeacherDetail extends React.Component {
                 <div className="clearfix">
                   <div className="pullleft">分数：{item.mark}</div>
                 </div>
+                <div className="clearfix">
+                  <div className="pullleft">讲解：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.examSolution }} />
+
+                </div>
               </List.Item>
             )}
           />
@@ -211,6 +231,11 @@ class HomeworkForTeacherDetail extends React.Component {
                 </div>
                 <div className="clearfix">
                   <div className="pullleft">分数：{item.mark}</div>
+                </div>
+                <div className="clearfix">
+                  <div className="pullleft">讲解：</div>
+                  <div className="pullleft" dangerouslySetInnerHTML={{ __html: item.examSolution }} />
+
                 </div>
               </List.Item>
             )}
