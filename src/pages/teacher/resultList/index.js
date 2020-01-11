@@ -35,7 +35,7 @@ class ResultList extends React.Component {
   };
 
   queryPaper = record => {
-    router.push(`/teacher/resultDetail?resultId=${record.paperId}`);
+    router.push(`/teacher/resultDetail?planId=${record.paperId}&paperId=${record.paperId}&departId=${record.departId}`);
   };
   onPlanSearch = searchText => {
     const { dispatch } = this.props;
@@ -73,7 +73,6 @@ class ResultList extends React.Component {
   //   });
   // };
   handleTableChange = (pagination, filters, sorter) => {
-    console.log(pagination, sorter);
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
     const { planId, paperId, departId } = value;
@@ -138,18 +137,7 @@ class ResultList extends React.Component {
         },
       },
     });
-    // const pager = { ...this.state.pagination };
-    // pager.current = pagination.current;
-    // this.setState({
-    //   pagination: pager,
-    // });
-    // this.fetch({
-    //   results: pagination.pageSize,
-    //   page: pagination.current,
-    //   sortField: sorter.field,
-    //   sortOrder: sorter.order,
-    //   ...filters,
-    // });
+  
   };
   componentWillUnmount() {
     const { dispatch } = this.props;
