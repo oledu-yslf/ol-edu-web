@@ -27,9 +27,9 @@ export async function listPage(params) {
   });
 }
 
-export async function detailPaper(params) {
+export async function planDetail(params) {
   return request({
-    url: '/api/exam/paper/detailPaper',
+    url: '/api/exam/paperPlan/detail',
     method: 'post',
     data: params,
   });
@@ -38,6 +38,14 @@ export async function detailPaper(params) {
 export async function paperPlanSave(params) {
   return request({
     url: '/api/exam/paperPlan/save',
+    method: 'post',
+    data: params,
+  });
+}
+
+export async function paperPlanUpdate(params) {
+  return request({
+    url: '/api/exam/paperPlan/update',
     method: 'post',
     data: params,
   });

@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import PaperListModal from './components/PaperListModal';
 import styles from './index.less';
+import { cloneDeep } from 'lodash';
 const { TreeNode } = TreeSelect;
 const { Option } = AutoComplete;
 
@@ -30,7 +31,6 @@ class NewPlan extends React.Component {
       if (!err) {
         const { name, planName,planDepartId } = values;
         const paperPlanListSaves = [];
-        console.log(name);
         Object.keys(name).forEach((key, i) => {
           let obj = {};
           obj.duration = name[key].duration;
@@ -39,11 +39,15 @@ class NewPlan extends React.Component {
           obj.effDate = name[key].effDate.valueOf();
           paperPlanListSaves.push(obj);
         });
-        
-        dispatch({
+        !planId?dispatch({
           type:'newPlan/paperPlanSave',
           payload:{
             planName,planDepartId,createStaffId:getUserId(),paperPlanListSaves
+          }
+        }):dispatch({
+          type:'newPlan/paperPlanUpdate',
+          payload:{
+            planId,planName,planDepartId,createStaffId:getUserId(),paperPlanListSaves
           }
         })
       }
@@ -57,10 +61,57 @@ class NewPlan extends React.Component {
         staffName:searchText
       }
     })
-    this.setState({
-      dataSource: !searchText ? [] : [searchText, searchText.repeat(2), searchText.repeat(3)],
-    });
   };
+  removePaper = (record,e)=>{
+    const {dispatch,selectedPapers} = this.props;
+    let index = 0;
+    for(let i in selectedPapers){
+      if(selectedPapers[i].paperId === record.paperId){
+        index = i;
+        break;
+      }
+    }
+    let cloneselectedPapers= cloneDeep(selectedPapers);
+    cloneselectedPapers.splice(index,1)
+    dispatch({
+      type:"newPlan/save",
+      payload:{
+        selectedPapers:cloneselectedPapers
+      }
+    })
+  }
+  componentWillReceiveProps(nextProps){
+    const {dispatch} = this.props;
+    if(nextProps.planDetail!==this.props.planDetail){
+      let staffList = [];
+      // let selectedPapers = [];
+      for(let i in nextProps.planDetail.paperPlanListVOList){
+        nextProps.planDetail.paperPlanListVOList[i].effDate = moment(nextProps.planDetail.paperPlanListVOList[i].effDate)
+        nextProps.planDetail.paperPlanListVOList[i].totalScore = nextProps.planDetail.paperPlanListVOList[i].paperVO.totalScore;
+        nextProps.planDetail.paperPlanListVOList[i].createStaffName = nextProps.planDetail.paperPlanListVOList[i].paperVO.createStaffName;
+        nextProps.planDetail.paperPlanListVOList[i].paperName = nextProps.planDetail.paperPlanListVOList[i].paperVO.paperName;
+
+        let obj = {};
+        obj.staffId =  nextProps.planDetail.paperPlanListVOList[i].reviewStaffId;
+        obj.staffName =  nextProps.planDetail.paperPlanListVOList[i].reviewStaffName;
+        let isPush = true;
+        for(let i in staffList){
+          if(staffList[i].staffId===obj.staffId){
+            isPush = false;
+            break;
+          }
+        }
+        isPush && staffList.push(obj);
+      }
+      dispatch({
+        type:"newPlan/save",
+        payload:{
+          selectedPapers:nextProps.planDetail.paperPlanListVOList,
+          staffList
+        }
+      })
+    }
+  }
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
@@ -80,12 +131,13 @@ class NewPlan extends React.Component {
       form,
       loading,
       paperListModalVisbile,
-      staffList
+      staffList,
     } = this.props;
     const { getFieldDecorator, getFieldValue } = form;
-    const { planName, planDepartId } = planDetail;
-    const staffNode = staffList.map(item => <Option key={item.staffId}>{item.staffName}</Option>);
+    const { planName, planDepartId  } = planDetail;
+    console.log(staffList);
 
+    const staffNode = staffList.map(item => <Option key={item.staffId}>{item.staffName}</Option>);
     const columns = [
       {
         title: '试卷名称',
@@ -166,8 +218,8 @@ class NewPlan extends React.Component {
         title: '操作',
         key: 'action',
         render: (text, record) => (
-          <span>
-            <a>移除</a>
+          <span onClick={e=>this.removePaper(record,e)}>
+            <a >移除</a>
           </span>
         ),        
         width:100

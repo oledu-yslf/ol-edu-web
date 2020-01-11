@@ -188,7 +188,7 @@ class HomeworkForTeacherList extends React.Component {
             </Form>
             <Spin spinning={loading}>
               <Table
-                rowKey={record => `${record.paperId}-${record.staffId}`}
+                rowKey={record => `${record.paperId}-${record.planDetailId}`}
                 columns={columns}
                 dataSource={paperList}
                 pagination={{

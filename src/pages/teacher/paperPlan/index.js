@@ -26,12 +26,12 @@ class PaperPlan extends React.Component {
     router.push(`/teacher/planDetail?planId=${record.planId}`);
   };
   editPlan  = record => {
-    router.push(`/teacher/planEdit?planId=${record.planId}`);
+    router.push(`/teacher/newPlan?planId=${record.planId}`);
   };
   deletePlan  = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'paperPlan/planDelete',
+      type: 'paperPlan/paperPlanUpdate',
       payload: {
         planId: record.planId,
       },

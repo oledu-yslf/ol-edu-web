@@ -21,7 +21,7 @@ export default {
           });
           if (query.planId) {
             dispatch({
-              type: 'detailPaper',
+              type: 'planDetail',
               payload: query,
             });
           }
@@ -45,12 +45,12 @@ export default {
         },
       });
     },
-    *detailPaper({ payload }, { call, put }) {
-      const { data } = yield call(service.detailPaper, payload);
+    *planDetail({ payload }, { call, put }) {
+      const { data } = yield call(service.planDetail, payload);
       yield put({
         type: 'save',
         payload: {
-          paperDetail: data,
+          planDetail: data,
         },
       });
     },
@@ -78,6 +78,14 @@ export default {
       const { code } = yield call(service.paperPlanSave, payload);
       if (code === 200) {
         message.success('发布计划成功').then(() => {
+          router.push('/teacher/paperPlan');
+        });
+      }
+    },
+    *paperPlanUpdate({ payload }, { call, put }) {
+      const { code } = yield call(service.paperPlanUpdate, payload);
+      if (code === 200) {
+        message.success('修改计划成功').then(() => {
           router.push('/teacher/paperPlan');
         });
       }
