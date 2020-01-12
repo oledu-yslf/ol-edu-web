@@ -16,7 +16,15 @@ class HomeworkForStudent extends React.Component {
   };
 
   queryPaper = record => {
-    router.push(`/student/homeworkForStudentDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
+    router.push(
+      `/student/homeworkForStudentDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
+    );
+  };
+
+  PaperReview = record => {
+    router.push(
+      `/student/startHomeWork?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
+    );
   };
 
   pageChange = (page, pageSize) => {
@@ -48,9 +56,8 @@ class HomeworkForStudent extends React.Component {
         title: '作业名称',
         dataIndex: 'paperName',
         key: 'paperName',
-        width:100
       },
-  
+
       {
         title: '创建时间',
         dataIndex: 'effDate',
@@ -67,31 +74,33 @@ class HomeworkForStudent extends React.Component {
           </span>
         ),
       },
- 
+
       {
         title: '得分',
         dataIndex: 'score',
         key: 'score',
       },
-     
+
       {
         title: '批卷老师',
         key: 'reviewStaffName',
         dataIndex: 'reviewStaffName',
       },
-     
+
       {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.queryPaper(record, e)}>
-              查看
-            </Button>
-            {record.state === 2 && (
+            {record.state >= 2 && (
+              <Button type="link" onClick={e => this.queryPaper(record, e)}>
+                查看
+              </Button>
+            )}
+            {record.state < 2 && (
               <Button type="link" onClick={e => this.PaperReview(record, e)}>
-                审阅
+                开始
               </Button>
             )}
           </span>
@@ -125,9 +134,7 @@ class HomeworkForStudent extends React.Component {
   }
 }
 
-const HomeworkForStudentForm = Form.create({ name: 'homeworkForStudentForm' })(
-  HomeworkForStudent,
-);
+const HomeworkForStudentForm = Form.create({ name: 'homeworkForStudentForm' })(HomeworkForStudent);
 
 export default connect(state => ({
   ...state.homeworkForStudent,

@@ -115,7 +115,7 @@ request.interceptors.response.use(
         description: msg,
       });
     }
-    return data;
+    return response;
   },
   function(error) {
     return Promise.reject(error);

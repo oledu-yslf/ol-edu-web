@@ -35,8 +35,5 @@ export default {
       },
     },
   },
-  targets: {
-    ie: 9,
-  },
 };
 
