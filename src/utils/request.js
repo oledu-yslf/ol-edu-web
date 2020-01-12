@@ -16,7 +16,7 @@ const checkToken = url => {
 };
 
 const setToken = data => {
-  if(data && data.code && data.code == 200 && data.data){
+  if(data && data.code && data.code === 200 && data.data){
     //返回成功,并且有返回值
     localStorage.setItem('jwToken', JSON.stringify(data.data));
   } else {
@@ -31,7 +31,7 @@ const request = axios.create({
 });
 
 const isRespSuccess = data =>{
-  if(data && data.code && data.code == 200 && data.data){
+  if(data && data.code && data.code === 200 && data.data){
     return true;
   } else{
     return false;
@@ -115,7 +115,7 @@ request.interceptors.response.use(
         description: msg,
       });
     }
-    return response;
+    return data;
   },
   function(error) {
     return Promise.reject(error);
