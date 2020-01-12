@@ -37,7 +37,6 @@ function BasicLayout(props) {
         <Nav/>
       </Header>
       <Content className={content}>{props.children}</Content>
-      {/* <Footer>Footer</Footer> */}
     </Layout>
   );
 }
