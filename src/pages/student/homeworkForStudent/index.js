@@ -112,7 +112,7 @@ class HomeworkForStudent extends React.Component {
         <Tabs defaultActiveKey="/student/homeworkForStudent" onTabClick={this.onTabClick}>
           <TabPane tab="基础资料" key="/student"></TabPane>
           <TabPane tab="课程管理" key="/student/recentList"></TabPane>
-          <TabPane tab="作业审阅" key="/student/homeworkForStudent">
+          <TabPane tab="我的作业" key="/student/homeworkForStudent">
             <Spin spinning={loading}>
               <Table
                 rowKey={record => `${record.paperId}-${record.planDetailId}`}

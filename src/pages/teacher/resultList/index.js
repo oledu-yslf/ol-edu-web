@@ -304,8 +304,8 @@ class ResultList extends React.Component {
         <Tabs defaultActiveKey="/teacher/resultList" onTabClick={this.onTabClick}>
           <TabPane tab="基础资料" key="/teacher"></TabPane>
           <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/paperList"></TabPane>
+          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
+          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
           <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
           <TabPane tab="学生成绩" key="/teacher/resultList">
             <Form layout="inline">

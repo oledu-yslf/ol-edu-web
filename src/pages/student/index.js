@@ -118,6 +118,7 @@ class Student extends React.Component {
             </Spin>
           </TabPane>
           <TabPane tab="学习记录" key="/student/recentList"></TabPane>
+          <TabPane tab="我的作业" key="/student/homeworkForStudent"></TabPane>
         </Tabs>
 
         <Modal

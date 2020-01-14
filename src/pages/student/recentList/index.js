@@ -119,6 +119,8 @@ class RecentList extends React.Component {
               )}
             />
           </TabPane>
+          <TabPane tab="我的作业" key="/student/homeworkForStudent"></TabPane>
+
         </Tabs>
       </div>
     );

@@ -31,6 +31,10 @@ class CourseManage extends React.Component {
               </Row>
             </Spin>
           </TabPane>
+          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
+          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
+          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
+          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
         </Tabs>
       </div>
     );

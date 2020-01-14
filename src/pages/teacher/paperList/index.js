@@ -194,6 +194,8 @@ class PaperList extends React.Component {
               />
             </Spin>
           </TabPane>
+          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
+          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
         </Tabs>
         <NewPaperModal newPaperVisible={newPaperVisible} />
       </div>

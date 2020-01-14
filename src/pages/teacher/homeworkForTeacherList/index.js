@@ -201,6 +201,8 @@ class HomeworkForTeacherList extends React.Component {
               />
             </Spin>
           </TabPane>
+          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
+
         </Tabs>
       </div>
     );

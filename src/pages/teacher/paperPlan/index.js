@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-import { Button, Table, Spin, Form, Input, Divider, Radio ,Tabs} from 'antd';
-import styles from './index.less'
-const {TabPane} = Tabs;
+import { Button, Table, Spin, Form, Input, Divider, Radio, Tabs } from 'antd';
+import styles from './index.less';
+const { TabPane } = Tabs;
 
 class PaperPlan extends React.Component {
   constructor(props) {
@@ -25,10 +25,10 @@ class PaperPlan extends React.Component {
   queryPlan = record => {
     router.push(`/teacher/planDetail?planId=${record.planId}`);
   };
-  editPlan  = record => {
+  editPlan = record => {
     router.push(`/teacher/newPlan?planId=${record.planId}`);
   };
-  deletePlan  = record => {
+  deletePlan = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'paperPlan/paperPlanUpdate',
@@ -47,7 +47,7 @@ class PaperPlan extends React.Component {
     dispatch({
       type: 'paperPlan/listPage',
       payload: {
-        planName
+        planName,
       },
     });
   };
@@ -123,50 +123,52 @@ class PaperPlan extends React.Component {
           <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
           <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
           <TabPane tab="考试管理" key="/teacher/paperList">
-        <Radio.Group
-          defaultValue="/teacher/paperPlan"
-          onChange={this.handleRouterChange}
-          style={{ marginBottom: '20px' }}
-        >
-          <Radio.Button value="/teacher/paperList">试卷添加</Radio.Button>
-          <Radio.Button value="/teacher/paperPlan">试卷发布</Radio.Button>
-        </Radio.Group>
-        <Form layout="inline" onSubmit={this.handleSubmit}>
-          <Form.Item label="发布计划名称:">
-            {getFieldDecorator('planName', {})(<Input />)}
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon="search"
-              onClick={this.handleSearchSubmit}
+            <Radio.Group
+              defaultValue="/teacher/paperPlan"
+              onChange={this.handleRouterChange}
+              style={{ marginBottom: '20px' }}
             >
-              查询
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" onClick={this.newPaperPlan}>
-              新增
-            </Button>
-          </Form.Item>
-        </Form>
-        <Divider />
-        <Spin spinning={loading}>
-          <Table
-            rowKey={record => record.planId}
-            columns={columns}
-            dataSource={planList}
-            pagination={{
-              total,
-              pageSize: 10,
-              onChange: (page, pageSize) => {
-                this.pageChange(page, pageSize);
-              },
-            }}
-          />
-        </Spin>
-        </TabPane>
+              <Radio.Button value="/teacher/paperList">试卷添加</Radio.Button>
+              <Radio.Button value="/teacher/paperPlan">试卷发布</Radio.Button>
+            </Radio.Group>
+            <Form layout="inline" onSubmit={this.handleSubmit}>
+              <Form.Item label="发布计划名称:">
+                {getFieldDecorator('planName', {})(<Input />)}
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  icon="search"
+                  onClick={this.handleSearchSubmit}
+                >
+                  查询
+                </Button>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" onClick={this.newPaperPlan}>
+                  新增
+                </Button>
+              </Form.Item>
+            </Form>
+            <Divider />
+            <Spin spinning={loading}>
+              <Table
+                rowKey={record => record.planId}
+                columns={columns}
+                dataSource={planList}
+                pagination={{
+                  total,
+                  pageSize: 10,
+                  onChange: (page, pageSize) => {
+                    this.pageChange(page, pageSize);
+                  },
+                }}
+              />
+            </Spin>
+          </TabPane>
+          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
+          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
         </Tabs>
       </div>
     );
