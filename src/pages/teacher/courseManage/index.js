@@ -35,6 +35,8 @@ class CourseManage extends React.Component {
           <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
           <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
           <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
+          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
+          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
         </Tabs>
       </div>
     );

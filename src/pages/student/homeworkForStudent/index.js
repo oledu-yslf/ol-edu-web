@@ -111,7 +111,7 @@ class HomeworkForStudent extends React.Component {
       <div className={styles.box}>
         <Tabs defaultActiveKey="/student/homeworkForStudent" onTabClick={this.onTabClick}>
           <TabPane tab="基础资料" key="/student"></TabPane>
-          <TabPane tab="课程管理" key="/student/recentList"></TabPane>
+          <TabPane tab="学习记录" key="/student/recentList"></TabPane>
           <TabPane tab="我的作业" key="/student/homeworkForStudent">
             <Spin spinning={loading}>
               <Table
@@ -128,6 +128,8 @@ class HomeworkForStudent extends React.Component {
               />
             </Spin>
           </TabPane>
+          <TabPane tab="我的收藏" key="/student/favorite"></TabPane>
+          <TabPane tab="修改密码" key="/student/changePsw"></TabPane>
         </Tabs>
       </div>
     );

@@ -137,7 +137,7 @@ class ResultList extends React.Component {
         },
       },
     });
-  
+
   };
   componentWillUnmount() {
     const { dispatch } = this.props;
@@ -381,6 +381,8 @@ class ResultList extends React.Component {
               />
             </Spin>
           </TabPane>
+          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
+          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
         </Tabs>
       </div>
     );
