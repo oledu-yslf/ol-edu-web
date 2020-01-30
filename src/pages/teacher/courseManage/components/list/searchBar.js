@@ -36,11 +36,11 @@ class OSearchBar extends React.Component {
             <Link to="/teacher/courseEdit" style={{color:'#fff'}}>添加</Link>
           </Button>
         </Col>
-        <Col span={3}>
+        {/*<Col span={3}>
           <Button type="primary" icon="upload">
             导入
           </Button>
-        </Col>
+        </Col>*/}
       </Row>
     );
   }

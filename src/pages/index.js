@@ -44,7 +44,7 @@ class Index extends React.Component {
                     <img
                       style={{ width: '100%', height: '160px' }}
                       alt="logo"
-                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                      src={item.logoFile? (`/api/${item.logoFile.url}/${item.logoFile.fileName}`):''}
                     />
                   }
                 >
@@ -72,7 +72,7 @@ class Index extends React.Component {
                     <img
                       style={{ width: '100%', height: '160px' }}
                       alt="logo"
-                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                      src={item.logoFile?(`/api/${item.logoFile.url}/${item.logoFile.fileName}`) :''}
                     />
                   }
                 >
@@ -99,7 +99,7 @@ class Index extends React.Component {
                     <img
                       style={{ width: '100%', height: '160px' }}
                       alt="logo"
-                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                      src={item.logoFile? (`/api/${item.logoFile.url}/${item.logoFile.fileName}`) : ''}
                     />
                   }
                 >

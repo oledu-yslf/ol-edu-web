@@ -110,6 +110,8 @@ export default {
           total: count,
         },
       });
+
+      return count;
     },
     *courseDelete({ payload }, { call, put, select }) {
       let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';

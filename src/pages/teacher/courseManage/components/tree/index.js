@@ -113,18 +113,42 @@ class OTree extends React.Component {
       message.warning('请先选择操作节点！');
     }
   };
+
+
   deleteCategory = () => {
     const { dispatch } = this.props;
-    if (this.state.selectedKeys.length > 0) {
-      dispatch({
-        type: 'courseManage/save',
-        payload: {
-          deleteVisible: true,
-        },
-      });
-    } else {
-      message.warning('请先选择操作节点！');
+
+    if (this.state.selectedKeys[0]) {
+      var categoryId = this.state.selectedKeys[0].split('-')[1];
     }
+
+    dispatch({
+      type: 'courseManage/courseListpage',
+      payload: {
+        categoryId:categoryId,
+        page: {
+          pageSize : 20,
+          pageNum: 1,
+        },
+      },
+    }).then((count) => {
+      console.log(count);
+      if (count > 0){
+        message.warning('此分类下还有课程，不能删除！');
+      } else{
+        if (this.state.selectedKeys.length > 0) {
+
+          dispatch({
+            type: 'courseManage/save',
+            payload: {
+              deleteVisible: true,
+            },
+          });
+        } else {
+          message.warning('请先选择操作节点！');
+        }
+      }
+    })
   };
 
   /**
