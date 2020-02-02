@@ -74,6 +74,7 @@ class coursePlay extends React.Component {
         type: 'coursePlay/courseDetail',
         payload: {
           courseId,
+          staffId: roleInfo.staffId,
         },
       });
     });

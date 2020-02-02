@@ -142,8 +142,8 @@ class PaperDetailForStudent extends React.Component {
           </div>
           <div className="pullright" style={{fontSize: '20px', lineHeight: '80px'}}>
             <span>总分：{totalScore}</span>
-            <span>开始时间：{moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS')}</span>
-            <span>结束时间：{moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS')}</span>
+            <span>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
+            <span>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
             <span>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</span>
           </div>
         </div>

@@ -51,7 +51,7 @@ class Index extends React.Component {
   render() {
     const { Search } = Input;
     const { TabPane } = Tabs;
-    const { list, loading } = this.props;
+    const { list, total, loading } = this.props;
     return (
       <div className={style.box}>
         <Tabs defaultActiveKey="/student/favorite" onTabClick={this.onTabClick}>
@@ -76,6 +76,8 @@ class Index extends React.Component {
             grid={{ gutter: 16, column: 4 }}
             dataSource={list}
             pagination={{
+              total,
+              pageSize: 10,
               onChange: page => {
                 this.pageChange(page);
               },
@@ -90,7 +92,7 @@ class Index extends React.Component {
                     <img
                       style={{ width: '100%', height: '160px' }}
                       alt="logo"
-                      src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                      src={item.logoFile? (`/api/${item.logoFile.url}/${item.logoFile.fileName}`):''}
                     />
                   }
                 >

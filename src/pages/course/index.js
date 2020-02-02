@@ -47,7 +47,7 @@ function course(props) {
   const handleClick = (item, e) => {
     window.open(`/course/coursePlay?courseId=${item.courseId}`);
   };
-  
+
   return (
     <div className={styles.box}>
       <OSearchBar onSearch={searchCourse} />
@@ -69,7 +69,7 @@ function course(props) {
                 <img
                   style={{ width: '100%', height: '160px' }}
                   alt="logo"
-                  src={`/api/${item.logoFile.url}/${item.logoFile.fileName}`}
+                  src={item.logoFile? (`/api/${item.logoFile.url}/${item.logoFile.fileName}`):''}
                 />
               }
             >
@@ -79,7 +79,7 @@ function course(props) {
         )}
       />
 
-  
+
     </div>
   );
 }

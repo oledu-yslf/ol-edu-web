@@ -1,8 +1,9 @@
 import * as service from '../services/changePsw';
 import { message } from 'antd';
+import router from 'umi/router';
 
 export default {
-  namespace: 'teacher',
+  namespace: 'changepsw',
   state: {
     staffDetail:{},staffId:'',editInfoVisible:false
   },
@@ -23,7 +24,11 @@ export default {
           }
         })
         message.success('更新成功', 3);
-
+        setTimeout(()=>{
+          router.push('/login')
+          localStorage.setItem('roleInfo', '');
+          localStorage.setItem('jwToken', '');
+        },3000)
       }
     },
   },

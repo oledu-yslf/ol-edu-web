@@ -11,10 +11,15 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/course/coursePlay') {
+          const roleInfo = localStorage.getItem('roleInfo')
+            ? JSON.parse(localStorage.getItem('roleInfo'))
+            : '';
+          const staffId = roleInfo.staffId || '';
           dispatch({
             type: 'courseDetail',
             payload: {
-              courseId:query.courseId
+              courseId:query.courseId,
+              staffId:staffId
             },
           });
           dispatch({

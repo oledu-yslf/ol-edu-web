@@ -10,9 +10,9 @@ class ChangePsw extends React.Component {
   };
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
-    if (value) {
-      form.validateFields(['confirm'], { force: true });
-    }
+    // if (value) {
+    //   form.validateFields(['confirm'], { force: true });
+    // }
     callback();
   };
 
@@ -40,7 +40,7 @@ class ChangePsw extends React.Component {
         const staffId = roleInfo ? roleInfo.staffId : '';
         console.log('Received values of form: ', values);
         dispatch({
-          type: 'teacher/staffUpdate',
+          type: 'changepsw/staffUpdate',
           payload: {
             staffId,
             oldStaffPwd:values.oldPassword,
@@ -149,6 +149,6 @@ class ChangePsw extends React.Component {
 const TeacherFrom = Form.create({ name: 'TeacherFrom' })(ChangePsw);
 
 export default connect(state => ({
-  ...state.teacher,
-  loading: state.loading.models.teacher,
+  ...state.changepsw,
+  loading: state.loading.models.changepsw,
 }))(TeacherFrom);

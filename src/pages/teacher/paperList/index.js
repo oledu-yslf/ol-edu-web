@@ -147,8 +147,8 @@ class PaperList extends React.Component {
         <Tabs defaultActiveKey="/teacher/paperList" onTabClick={this.onTabClick}>
           <TabPane tab="基础资料" key="/teacher"></TabPane>
           <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/paperList">
+          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
+          <TabPane tab="试卷管理" key="/teacher/paperList">
             <Radio.Group
               defaultValue="/teacher/paperList"
               onChange={this.handleRouterChange}

@@ -8,7 +8,6 @@ export default {
     setup({ dispatch, history }) {
       const roleInfo = localStorage.getItem('roleInfo') ? JSON.parse(localStorage.getItem('roleInfo')) : '';
       const staffId = roleInfo.staffId || '';
-      debugger
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/favorite') {
           dispatch({
@@ -28,25 +27,23 @@ export default {
   },
   effects: {
     *init({ payload }, { call, put }) {
-      debugger
       const { data } = yield call(service.listPage, payload);
       const { count, result } = data;
       yield put({
         type: 'save',
         payload: {
-          list:result.data,
+          list:result,
           total:count
         },
       });
     },
     *listPage({ payload }, { call, put }) {
-      debugger
       const { data } = yield call(service.listPage, payload);
       const { count, result } = data;
       yield put({
         type: 'save',
         payload: {
-          list:result.data,
+          list:result,
           total:count
         },
       });

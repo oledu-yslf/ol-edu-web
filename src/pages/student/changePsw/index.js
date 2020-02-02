@@ -10,9 +10,9 @@ class ChangePsw extends React.Component {
   };
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
-    if (value) {
-      form.validateFields(['confirm'], { force: true });
-    }
+    // if (value) {
+    //   form.validateFields(['confirm'], { force: true });
+    // }
     callback();
   };
 

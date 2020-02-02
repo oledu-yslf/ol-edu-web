@@ -34,7 +34,7 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          list:result.data,
+          list:result,
           total:count
         },
       });
@@ -46,7 +46,7 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          list:result.data,
+          list:result,
           total:count
         },
       });
