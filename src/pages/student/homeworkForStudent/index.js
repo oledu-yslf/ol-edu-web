@@ -17,7 +17,7 @@ class HomeworkForStudent extends React.Component {
 
   queryPaper = record => {
     router.push(
-      `/student/homeworkForStudentDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
+      `/student/paperDetailForStudent?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
     );
   };
 
