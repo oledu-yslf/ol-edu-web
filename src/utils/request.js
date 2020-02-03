@@ -82,13 +82,13 @@ request.interceptors.response.use(
               window.location.href = '/login';
              return ;
             }
-            
+
             const token = res;
             setToken(token);
             isRefreshing = false;
 
             const config = response.config;
-            config.baseURL = ''; 
+            config.baseURL = '';
             requests.forEach(cb => cb(token))
             requests = [];
             return request(config);
@@ -108,12 +108,16 @@ request.interceptors.response.use(
         })
       }
     }
-    if (data.code !== 200 && isTokenExpired(data) == false) {
+    if (data.code !== 200 && isTokenExpired(data) === false) {
       const { msg } = data;
-      notification.error({
-        message: `请求错误${config.url}`,
-        description: msg,
-      });
+      if (config.url.indexOf('/sys/staff/export') !== -1) {
+        //文件下载。
+      } else {
+        notification.error({
+          message: `请求错误${config.url}`,
+          description: msg,
+        });
+      }
     }
     return data;
   },

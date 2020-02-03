@@ -6,3 +6,10 @@ export const dva = {
     },
   },
 };
+
+// 自定义 render，比如在 render 前做权限校验
+export function render(oldRender) {
+    console.log("1111111111111");
+    oldRender();
+}
+
