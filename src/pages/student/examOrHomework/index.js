@@ -17,7 +17,6 @@ class ExamOrHomework extends React.Component {
   componentWillMount (){
     const {dispatch} = this.props;
     const {query} = this.props.location;
-
     dispatch({
       type: 'examOrHomework/init',
       payload:{
@@ -36,12 +35,12 @@ render() {
   return (
       <div className={styles.box}>
         <div className="clearfix">
-          <div className="pullleft" style={{fontSize: '20px', lineHeight: '80px'}}>
-            <span>{paperName}</span>
+          <div style={{fontSize: '24px', lineHeight: '48px', textAlign:'center'}}>
+            <span>{paperName}1</span>
           </div>
           <div className="pullright" style={{fontSize: '20px', lineHeight: '80px'}}>
-            <span style={{fontSize: '14px', lineHeight: '80px'}}>开始时间：{paperPlanDetailVO?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
-            <span style={{fontSize: '14px', lineHeight: '80px'}}>结束时间：{paperPlanDetailVO?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
+            <div style={{fontSize: '14px', lineHeight: '28px'}}>开始时间：{paperPlanDetailVO?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
+            <div style={{fontSize: '14px', lineHeight: '28px'}}>结束时间：{paperPlanDetailVO?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
           </div>
 
         </div>
@@ -82,7 +81,7 @@ render() {
 
 export default connect(state =>(
   {
-    ...state.examOrHomeworkDetail,
-    // loading: state.loading.models.examOrHomework,
+    ...state.examOrHomework,
+    loading: state.loading.models.examOrHomework,
   }))(ExamOrHomework);
 
