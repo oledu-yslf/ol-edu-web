@@ -190,7 +190,7 @@ render() {
 
 export default connect(state =>(
   {
-    ...state.examOrHomeworkDetail,
-    loading: state.loading.models.examOrHomeworkDetail,
+    ...state.examStartDetail,
+    //loading: state.loading.models.examOrHomeworkDetail,
   }))(ExamOrHomeworkDetail);
 

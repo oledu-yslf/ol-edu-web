@@ -19,14 +19,14 @@ class ExamOrHomework extends React.Component {
     const {query} = this.props.location;
 
     dispatch({
-      type: 'examOrHomework/init',
+      type: 'examStart/init',
       payload:{
         ...query
       }
     });
   }
   startAnswering=()=>{
-    router.push('/student/examOrHomeworkDetail');
+    router.push('/student/examStartDetail');
   }
 
 render() {
@@ -82,7 +82,7 @@ render() {
 
 export default connect(state =>(
   {
-    ...state.examOrHomeworkDetail,
+    ...state.examStart,
     // loading: state.loading.models.examOrHomework,
   }))(ExamOrHomework);
 

@@ -23,7 +23,7 @@ class HomeworkForStudent extends React.Component {
 
   PaperReview = record => {
     router.push(
-      `/student/startHomeWork?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
+      `/student/examStart?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`,
     );
   };
 

@@ -1,6 +1,6 @@
-import * as service from '../services/examOrHomeworkDetail';
+import * as service from '../services/examStart';
 export default {
-  namespace: 'examOrHomeworkDetail',
+  namespace: 'examStart',
   state: {
     paperDetail: {}
   },
