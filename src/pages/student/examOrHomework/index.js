@@ -36,12 +36,12 @@ render() {
   return (
       <div className={styles.box}>
         <div className="clearfix">
-          <div className="pullleft" style={{fontSize: '20px', lineHeight: '80px'}}>
+          <div className="" style={{fontSize: '24px', lineHeight: '48px',textAlign:'center'}}>
             <span>{paperName}</span>
           </div>
-          <div className="pullright" style={{fontSize: '20px', lineHeight: '80px'}}>
-            <span style={{fontSize: '14px', lineHeight: '80px'}}>开始时间：{paperPlanDetailVO?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
-            <span style={{fontSize: '14px', lineHeight: '80px'}}>结束时间：{paperPlanDetailVO?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
+          <div className="pullright" style={{fontSize: '20px', lineHeight: '28px'}}>
+            <div style={{fontSize: '14px', lineHeight: '28px'}}>开始时间：{paperPlanDetailVO?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
+            <div style={{fontSize: '14px', lineHeight: '28px'}}>结束时间：{paperPlanDetailVO?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
           </div>
 
         </div>
