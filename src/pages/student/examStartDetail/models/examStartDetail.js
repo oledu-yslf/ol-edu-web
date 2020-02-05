@@ -20,18 +20,8 @@ export default {
     },
 
     *studentCommitPaper ({ payload }, {select, call, put }) {
-      const res = yield [call(service.studentCommitPaper,payload)]
-      if (res.code === 200){
-        //成功
-        const state = yield select(state => state.examStartDetail);
-
-        yield put({
-            type: 'save',
-            payload: {
-              cursorExamIndex: state.cursorExamIndex + 1,
-            },
-          });
-        }
+      const [res] = yield [call(service.studentCommitPaper,payload)]
+      return res;
     },
   },
   reducers: {

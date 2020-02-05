@@ -10,7 +10,7 @@ export default {
   subscriptions: {
       setup({ dispatch, history }) {
           history.listen(({ pathname,query }) => {
-              console.log(pathname);
+              //console.log(pathname);
               getWebMenu()
                   .then((res) => {
                       //成功，
@@ -19,11 +19,11 @@ export default {
                           for(var i = 0, len = data.length; i < len; i++){
                               //这些菜单需要进行权限控制。
 
-                              console.log(data[i].menuUrl);
+                              //console.log(data[i].menuUrl);
                               //往后台发送指令，让后台判断是否有权限。
                               if (pathname == data[i].menuUrl){
 
-                                  console.log("=========");
+                                  //console.log("=========");
                                   checkUrlPermission({url:data[i].menuUrl}).then( (res) => {
                                       if (res.code === 200){
 

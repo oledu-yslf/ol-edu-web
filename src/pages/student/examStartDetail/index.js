@@ -1,10 +1,17 @@
 import React from 'react';
-import {Button, Col, List, Checkbox, Radio, Row} from 'antd';
+import {Button, Col, List, Checkbox, Radio, Row, Form, message} from 'antd';
 import {connect} from 'dva';
 import styles from './index.less';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor'
+import 'braft-editor/dist/index.css'
+import MaxLength from 'braft-extensions/dist/max-length'
 
+const options = {
+  defaultValue: 16777215, // 指定默认限制数，如不指定则为Infinity(无限),16M
+  //defaultValue: 20,
+};
+BraftEditor.use(MaxLength(options));
 
 const mapExamName = {};
 mapExamName[1] = "单选题";
@@ -28,48 +35,72 @@ class ExamStartDetail extends React.Component {
     });
   }
 
-  handleNext = (exam,maxCount) => {
-    const {dispatch} = this.props;
-    let result = ``;
+  handleNext = (exam, maxCount) => {
+    const {dispatch, cursorExamIndex} = this.props;
+    let result = "";
 
     if (exam.examType === 1 || exam.examType === 3) {
       //单选题,判断题
-      let radio = document.getElementsByName("examAttr");
-      console.log(radio);
-      for (let i in radio){
-        console.log(radio[i].checked)
-
-        if (radio[i].checked){
-          result = radio[i].value;
-        }
-      }
+      result = this.props.form.getFieldsValue().radio;
     }
     else if (exam.examType === 2) {
       //多选题
-      let obj = document.getElementsByName("examAttr");
-      for (let i in obj){
-        if (obj[i].checked){
-          result = result + obj[i].value;
+      let values = this.props.form.getFieldsValue().checkbox;
+      if (values !== undefined && values !== []) {
+        values.sort();
+        for (let i in values) {
+          result = result + values[i];
         }
       }
     }
-    else if (exam.examType === 4) {
-      //问答题
-
+    else if (exam.examType === 4 || exam.examType === 5) {
+      //问答题,//填空题
+      const context = this.props.form.getFieldsValue().braftEditor;
+      result = context.toHTML();
     }
-    else if (exam.examType === 5) {
-      //填空题
 
-    }
+
+    const {query} = this.props.location;
+    const {paperId, paperExamId, examId} = exam;
+    const {planDetailId} = this.props.location.query;
 
     console.log(result);
-    dispatch({
-      type: 'examStartDetail/studentCommitPaper',
-      payload: {
+    if (result === undefined || result === "") {
+      //未提交，进入下一题
+      dispatch({
+        type: 'examStartDetail/save',
+        payload: {
+          cursorExamIndex: cursorExamIndex + 1
+        }
+      })
+    } else {
+      //进行了答题,需要提交
+      dispatch({
+        type: 'examStartDetail/studentCommitPaper',
+        payload: {
+          createStaffId: query.staffId,
+          planDetailId,
+          paperId,
+          paperExamId,
+          examId,
+          result
+        }
+      }).then(res => {
 
-      }
-    });
+        console.log(res);
+        if (res.code == 200) {
+          //成功，
+          console.log(cursorExamIndex);
+          dispatch({
+            type: 'examStartDetail/save',
+            payload: {
+              cursorExamIndex: cursorExamIndex + 1
+            }
+          })
+        }
+      });
 
+    }
   }
   handlePre = () => {
     const {dispatch} = this.props;
@@ -83,84 +114,118 @@ class ExamStartDetail extends React.Component {
     });
   }
 
+  handleMaxLength = () => {
+    // console.log(1111);
+    message.info('最多只能输入16777215个字符')
+  };
+
   examRender = (item) => {
-      return (
-        <List.Item >
-          <Row gutter={24}>
-            <Col span={24}>
-              <div>
-                <div>{item.index}. {mapExamName[item.examType]} [{item.mark}分]</div>
-                <div dangerouslySetInnerHTML={{__html: item.examName}}></div>
-                {
-                  this.examAttrRadioRender(item)
-                }
-              </div>
-            </Col>
-          </Row>
-        </List.Item>
-      )
+    return (
+      <List.Item >
+        <Row gutter={24}>
+          <Col span={24}>
+            <div>
+              <div>{item.index}. {mapExamName[item.examType]} [{item.mark}分]</div>
+              <div dangerouslySetInnerHTML={{__html: item.examName}}></div>
+              {
+                this.examAttrRadioRender(item)
+              }
+            </div>
+          </Col>
+        </Row>
+      </List.Item>
+    )
   }
 
   examAttrRadioRender = (exam) => {
-    if (exam.examType === 1 || exam.examType === 3) {
-      //单选题,判断题
-      return <Radio.Group style={{width: '100%'}}>
-        <List
-          style={{width: '100%'}}
-          dataSource={exam.paperExamAttrVOS}
-          renderItem={(temp) =>
-            <List.Item style={{width: '100%'}}>
-              <Radio name='examAttr' value={temp.sort} style={{width: '100%'}}>{temp.sort}. <span
-                dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Radio>
-            </List.Item>
-          }>
-        </List>
-      </Radio.Group>
+    const {form} = this.props;
+    const {getFieldDecorator} = form;
+    let oldResult;
+
+    if (exam.studentExamResult && exam.studentExamResult.result){
+      oldResult = exam.studentExamResult.result;
+    }
+
+    if (exam.examType === 1) {
+      //判断题
+      return (
+        <Form.Item >
+          {getFieldDecorator('radio', {initialValue:oldResult})(<Radio.Group style={{width: '100%'}}>
+            <List
+              style={{width: '100%'}}
+              dataSource={exam.paperExamAttrVOS}
+              renderItem={(temp) =>
+                <List.Item style={{width: '100%'}}>
+                  <Radio value={temp.sort} style={{width: '100%'}}>{temp.sort}. <span
+                    dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Radio>
+                </List.Item>
+              }>
+            </List>
+          </Radio.Group>)
+          }
+        </Form.Item>
+      )
     }
     else if (exam.examType === 2) {
       //多选题
-      return <Checkbox.Group style={{width: '100%'}}>
-        <List
-          style={{width: '100%'}}
-          dataSource={exam.paperExamAttrVOS}
-          renderItem={(temp) =>
-            <List.Item style={{width: '100%'}}>
-              <Checkbox name='examAttr' value={temp.sort} style={{width: '100%'}}>{temp.sort}.<span
-                dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Checkbox>
-            </List.Item>
-          }>
-        </List>
-      </Checkbox.Group>
+      let checkValue = [];
+      if (oldResult != null){
+        for (let i = 0; i < oldResult.length; i ++){
+          checkValue[i] = oldResult[i];
+        }
+      }
+      console.log(checkValue);
+      return (<Form.Item >
+          {getFieldDecorator('checkbox', {initialValue:checkValue})(
+            <Checkbox.Group style={{width: '100%'}}>
+              <List
+                style={{width: '100%'}}
+                dataSource={exam.paperExamAttrVOS}
+                renderItem={(temp) =>
+                  <List.Item style={{width: '100%'}}>
+                    <Checkbox value={temp.sort} style={{width: '100%'}}>{temp.sort}.<span
+                      dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Checkbox>
+                  </List.Item>
+                }>
+              </List>
+            </Checkbox.Group>
+          )}
+        </Form.Item>
+      )
 
     }
-    else if (exam.examType === 4) {
-      //问答题
-      return <List
-        style={{width: '100%'}}
-        dataSource={exam.paperExamAttrVOS}
-        renderItem={(temp) =>
-          <List.Item style={{width: '100%'}}>
-            <span dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
-            <BraftEditor
-              contentStyle={{height: 80, overflow: 'scroll'}}
-              // value={editor}
-              onChange={this.handleEditorChange}
-            />
-          </List.Item>
-        }>
-      </List>
+    if (exam.examType === 3) {
+      //判断题
+      return (
+        <Form.Item >
+          {getFieldDecorator('radio', {initialValue:oldResult})(<Radio.Group style={{width: '100%'}}>
+            <List
+              style={{width: '100%'}}
+              dataSource={exam.paperExamAttrVOS}
+              renderItem={(temp) =>
+                <List.Item style={{width: '100%'}}>
+                  <Radio value={temp.attrName} style={{width: '100%'}}><span
+                    dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Radio>
+                </List.Item>
+              }>
+            </List>
+          </Radio.Group>)
+          }
+        </Form.Item>
+      )
     }
-    else if (exam.examType === 5) {
-      //填空题
-      return <List
-        style={{width: '100%'}}
-        dataSource={exam.paperExamAttrVOS}
-        renderItem={(temp) =>
-          <List.Item style={{width: '100%'}}>
-            <span dangerouslySetInnerHTML={{__html: temp.attrName}}></span><input/>
-          </List.Item>
-        }>
-      </List>;
+    else if (exam.examType === 4 || exam.examType === 5) {
+      //问答题,填空题
+      return <Form.Item >
+        {getFieldDecorator('braftEditor', {initialValue:oldResult})(
+          <BraftEditor
+            contentStyle={{height: 200, overflow: 'scroll'}}
+            placeholder="请输入答案"
+            maxLength={16777215}
+            onReachMaxLength={this.handleMaxLength}
+          />)
+        }
+      </Form.Item>
     }
   }
 
@@ -170,7 +235,7 @@ class ExamStartDetail extends React.Component {
 
     //cursorExamIndex 当前的试题号。
 
-    if (mapPaperExamSummary == undefined){
+    if (mapPaperExamSummary == undefined) {
       return <div/>;
     }
 
@@ -195,15 +260,15 @@ class ExamStartDetail extends React.Component {
     return (
       <div className={styles.box}>
         <div  >
-
-          {this.examRender(curExam)}
-
+          <Form>
+            {this.examRender(curExam)}
+          </Form>
           <Row >
             <Col style={{textAlign: 'center', marginTop: '30px'}}>
               <Button disabled={cursorExamIndex == 1} style={{marginRight: '10px'}} type="primary"
                       onClick={e => this.handlePre()}>上一题</Button>
               <Button style={{marginLeft: '10px'}} type="primary"
-                      onClick={e => this.handleNext(curExam,count)}>{cursorExamIndex == count ? `提交` : `下一题`}</Button>
+                      onClick={e => this.handleNext(curExam, count)}>{cursorExamIndex == count ? `提交` : `下一题`}</Button>
             </Col>
           </Row>
         </div>
@@ -215,9 +280,11 @@ class ExamStartDetail extends React.Component {
 
 }
 
+const ExamStartDetailForm = Form.create({name: 'ExamStartDetail'})(ExamStartDetail);
+
 export default connect(state => (
   {
     ...state.examStartDetail,
     //loading: state.loading.models.examStartDetail,
-  }))(ExamStartDetail);
+  }))(ExamStartDetailForm);
 
