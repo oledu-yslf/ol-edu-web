@@ -2,22 +2,11 @@ import * as service from '../services/examStart';
 export default {
   namespace: 'examStart',
   state: {
-    paperDetail: {}
+    paperDetail: {},
+    urlParam:{},
   },
   subscriptions: {
-    /*setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        console.log(pathname);
-        console.log(query);
-        dispatch({
-          type: 'init',
-          payload:{
-            ...query
-          }
-        });
 
-      });
-    },*/
   },
   effects: {
     *init({ payload }, { call, put }) {
@@ -25,7 +14,8 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          paperDetail:paperDetailRes.data
+          paperDetail:paperDetailRes.data,
+          urlParam: payload,
         },
       });
     },

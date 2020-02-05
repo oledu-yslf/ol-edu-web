@@ -7,3 +7,12 @@ export async function studentPaperDetailForSdt (params) {
     data: params,
   })
 }
+
+
+export async function studentCommitPaper (params) {
+  return request({
+    url:  '/api/exam/paperExamResultDetail/commit',
+    method: 'post',
+    data: params,
+  })
+}
