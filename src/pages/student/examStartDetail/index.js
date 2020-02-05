@@ -216,8 +216,9 @@ class ExamStartDetail extends React.Component {
     }
     else if (exam.examType === 4 || exam.examType === 5) {
       //问答题,填空题
+      console.log(oldResult);
       return <Form.Item >
-        {getFieldDecorator('braftEditor', {initialValue:oldResult})(
+        {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult)})(
           <BraftEditor
             contentStyle={{height: 200, overflow: 'scroll'}}
             placeholder="请输入答案"
