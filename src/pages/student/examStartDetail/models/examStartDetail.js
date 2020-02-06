@@ -4,6 +4,7 @@ export default {
   state: {
     paperDetail: {},
     cursorExamIndex : 1,    //当前试题
+    sureCommit:false,
   },
   subscriptions: {
 

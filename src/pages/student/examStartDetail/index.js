@@ -1,11 +1,15 @@
 import React from 'react';
-import {Button, Col, List, Checkbox, Radio, Row, Form, message} from 'antd';
+import {Button, Col, List, Checkbox, Radio, Row, Form, message,Modal} from 'antd';
 import {connect} from 'dva';
 import styles from './index.less';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import MaxLength from 'braft-extensions/dist/max-length'
+
+const excludeControls = [
+  'emoji','link'
+]
 
 const options = {
   defaultValue: 16777215, // 指定默认限制数，如不指定则为Infinity(无限),16M
@@ -39,6 +43,7 @@ class ExamStartDetail extends React.Component {
     const {dispatch, cursorExamIndex} = this.props;
     let result = "";
 
+    console.log("handleNext");
     if (exam.examType === 1 || exam.examType === 3) {
       //单选题,判断题
       result = this.props.form.getFieldsValue().radio;
@@ -53,9 +58,14 @@ class ExamStartDetail extends React.Component {
         }
       }
     }
-    else if (exam.examType === 4 || exam.examType === 5) {
+    else if (exam.examType === 4) {
       //问答题,//填空题
       const context = this.props.form.getFieldsValue().braftEditor;
+      result = context.toHTML();
+    }
+    else if (exam.examType === 5) {
+      //问答题,//填空题
+      const context = this.props.form.getFieldsValue().braftEditor1;
       result = context.toHTML();
     }
 
@@ -75,6 +85,12 @@ class ExamStartDetail extends React.Component {
       })
     } else {
       //进行了答题,需要提交
+      let sureCommit = 0; //是否最后一题标志，0否，1是
+      if (cursorExamIndex === maxCount){
+        sureCommit = 1;     //最后一题
+      }
+
+
       dispatch({
         type: 'examStartDetail/studentCommitPaper',
         payload: {
@@ -83,14 +99,28 @@ class ExamStartDetail extends React.Component {
           paperId,
           paperExamId,
           examId,
-          result
+          result,
+          sureCommit
         }
       }).then(res => {
 
         console.log(res);
         if (res.code == 200) {
           //成功，
+          if (sureCommit === 1){
+            //提交成功后，需要跳转。
+            router.push('/student')
+            return ;
+          }
+
           console.log(cursorExamIndex);
+          dispatch({
+            type: 'examStartDetail/init',
+            payload: {
+              ...query
+            }
+          })
+
           dispatch({
             type: 'examStartDetail/save',
             payload: {
@@ -140,7 +170,7 @@ class ExamStartDetail extends React.Component {
   examAttrRadioRender = (exam) => {
     const {form} = this.props;
     const {getFieldDecorator} = form;
-    let oldResult;
+    let oldResult = null;
 
     if (exam.studentExamResult && exam.studentExamResult.result){
       oldResult = exam.studentExamResult.result;
@@ -214,16 +244,32 @@ class ExamStartDetail extends React.Component {
         </Form.Item>
       )
     }
-    else if (exam.examType === 4 || exam.examType === 5) {
+    else if (exam.examType === 4 ) {
       //问答题,填空题
       console.log(oldResult);
       return <Form.Item >
-        {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult)})(
+        {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
           <BraftEditor
             contentStyle={{height: 200, overflow: 'scroll'}}
             placeholder="请输入答案"
             maxLength={16777215}
             onReachMaxLength={this.handleMaxLength}
+            excludeControls = {excludeControls}
+          />)
+        }
+      </Form.Item>
+    }
+    else if (exam.examType === 5) {
+      //问答题,填空题
+      console.log(oldResult);
+      return <Form.Item >
+        {getFieldDecorator('braftEditor1', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
+          <BraftEditor
+            contentStyle={{height: 200, overflow: 'scroll'}}
+            placeholder="请输入答案"
+            maxLength={16777215}
+            onReachMaxLength={this.handleMaxLength}
+            excludeControls = {excludeControls}
           />)
         }
       </Form.Item>
@@ -231,7 +277,7 @@ class ExamStartDetail extends React.Component {
   }
 
   render() {
-    const {paperDetail, cursorExamIndex} = this.props;
+    const {paperDetail, cursorExamIndex,sureCommit} = this.props;
     const {mapPaperExamSummary} = paperDetail;
 
     //cursorExamIndex 当前的试题号。
@@ -268,16 +314,53 @@ class ExamStartDetail extends React.Component {
             <Col style={{textAlign: 'center', marginTop: '30px'}}>
               <Button disabled={cursorExamIndex == 1} style={{marginRight: '10px'}} type="primary"
                       onClick={e => this.handlePre()}>上一题</Button>
+              {(cursorExamIndex != count) &&
               <Button style={{marginLeft: '10px'}} type="primary"
-                      onClick={e => this.handleNext(curExam, count)}>{cursorExamIndex == count ? `提交` : `下一题`}</Button>
+                      onClick={e => this.handleNext(curExam, count)}>下一题</Button>
+              }
+
+              {(cursorExamIndex == count) &&
+              <Button style={{marginLeft: '10px'}} type="primary"
+                      onClick={e => this.handleCommit()}>提交</Button>
+              }
             </Col>
           </Row>
         </div>
+
+        <Modal
+          title="确认提交么？"
+          visible={sureCommit}
+          onOk={ e => this.handleNext(curExam,count)}
+          onCancel={e => this.handleCancel()}
+          //confirmLoading={loading}
+        >
+          <p>提交后将不可修改!</p>
+        </Modal>
 
       </div>
     );
   }
 
+  handleCommit = () => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'examStartDetail/save',
+      payload: {
+        sureCommit : true
+      }
+    });
+  }
+
+  handleCancel = () => {
+    const {dispatch} = this.props;
+    console.log("222222222")
+    dispatch({
+      type: 'examStartDetail/save',
+      payload: {
+        sureCommit : false
+      }
+    });
+  }
 
 }
 
