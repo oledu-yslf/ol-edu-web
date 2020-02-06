@@ -16,14 +16,27 @@ import {
   Divider,
   Modal,
   message,
+  Upload,
+  Icon
 } from 'antd';
 import PlusTypeModal from './components/plusTypeModal';
 import EditTypeModal from './components/editTypeModal';
+import AddExamModal from './components/addExamModal';
+
 
 import styles from './index.less';
 const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 const { Option } = Select;
+
+function beforeUpload(file) {
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isLt2M;
+}
+
 class QuestionList extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +47,7 @@ class QuestionList extends React.Component {
       difficultyLevel: '',
       examName: '',
       deleteTypeVisible: false,
+      uploadVisible: false,
     };
   }
   onTabClick = e => {
@@ -85,12 +99,37 @@ class QuestionList extends React.Component {
       message.warning('请先选择操作节点！');
     }
   };
+  addExam = e => {
+    const { dispatch } = this.props;
+    const { selectedKeys } = this.state;
+    if (selectedKeys.length > 0) {
+      dispatch({
+        type: 'questionList/save',
+        payload: {
+          addExamVisible: true,
+        },
+      });
+    } else {
+      message.warning('请先选择操作节点！');
+    }
+  };
 
   deleteType = e => {
     const { selectedKeys } = this.state;
     if (selectedKeys.length > 0) {
       this.setState({
         deleteTypeVisible: true,
+      });
+    } else {
+      message.warning('请先选择操作节点！');
+    }
+  };
+
+  handleImport= e =>{
+    const { selectedKeys } = this.state;
+    if (selectedKeys.length > 0) {
+      this.setState({
+        uploadVisible: true,
       });
     } else {
       message.warning('请先选择操作节点！');
@@ -122,6 +161,7 @@ class QuestionList extends React.Component {
   handleCancel = e => {
     this.setState({
       deleteTypeVisible: false,
+      uploadVisible: false,
     });
   };
 
@@ -159,8 +199,56 @@ class QuestionList extends React.Component {
     router.push(`/teacher/questionDetail?examId=${record.examId}`);
   };
   editExam = (record, e) => {
-    router.push(`/teacher/questionEdit?examId=${record.examId}`);
+    // router.push(`/teacher/questionEdit?examId=${record.examId}`);
+    const { dispatch } = this.props;
+    const { selectedNodes } = this.state;
+    dispatch({
+      type: 'questionList/examDetail',
+      payload: {
+        examId:`${record.examId}`
+      },
+
+    });
+
+    dispatch({
+      type: 'questionList/save',
+      payload: {
+        categoryId: selectedNodes.categoryId,
+        addExamVisible: true,
+        examId:`${record.examId}`
+      },
+
+    });
   };
+
+  handleImportExam=()=>{
+    debugger
+    this.handleImportExamSubmit()
+  }
+
+  handleImportExamSubmit = () =>{
+    debugger
+    const { dispatch, form } = this.props;
+    const { selectedNodes } = this.state;
+    const value = form.getFieldsValue();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(values)
+        const {examType, difficultyLevel, examName} = value;
+        const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+        const createStaffId = roleInfo.staffId;
+        dispatch({
+          type: 'questionList/importExam',
+          payload: {
+            categoryId: selectedNodes.categoryId,
+            createStaffId: createStaffId,
+          },
+        });
+      }
+
+
+    })
+  }
 
   pageChange = (page, pageSize) => {
     const { dispatch, form } = this.props;
@@ -192,6 +280,7 @@ class QuestionList extends React.Component {
         total: 10,
         plusTypeVisible: false,
         editTypeVisible: false,
+        addExamVisible: false,
       },
     });
   }
@@ -204,6 +293,7 @@ class QuestionList extends React.Component {
       form,
       plusTypeVisible,
       editTypeVisible,
+      addExamVisible,
     } = this.props;
     const {
       selectedKeys,
@@ -212,6 +302,7 @@ class QuestionList extends React.Component {
       difficultyLevel,
       examName,
       deleteTypeVisible,
+      uploadVisible,
     } = this.state;
     const { getFieldDecorator } = form;
 
@@ -406,14 +497,14 @@ class QuestionList extends React.Component {
                       </Button>
                     </Form.Item>
                     <Form.Item>
-                      <Button type="primary" htmlType="submit" onClick={this.newExam}>
+                      <Button type="primary" htmlType="submit" onClick={this.addExam}>
                         新增试题
                       </Button>
                     </Form.Item>
                     <Form.Item>
-                      <Button type="primary" htmlType="submit" onClick={this.handleSubmit}>
-                        导入试题
-                      </Button>
+                        <Button type="primary" htmlType="submit" onClick={this.handleImport} >
+                          导入试题
+                        </Button>
                     </Form.Item>
                   </Form>
                   <Divider />
@@ -443,6 +534,7 @@ class QuestionList extends React.Component {
 
         <PlusTypeModal plusTypeVisible={plusTypeVisible} selectedNodes={selectedNodes} />
         <EditTypeModal editTypeVisible={editTypeVisible} selectedNodes={selectedNodes} />
+        <AddExamModal addExamVisible={addExamVisible} selectedNodes={selectedNodes} />
 
         <Modal
           title="删除试题分类提示"
@@ -455,6 +547,48 @@ class QuestionList extends React.Component {
             删除{selectedNodes.categoryName}
             分类会一并删除对应的试题，以及下面的子分类,确定删除分类吗？
           </p>
+        </Modal>
+
+        <Modal
+          title="导入试题"
+          visible={uploadVisible}
+          onOk={this.handleImportExam}
+          onCancel={this.handleCancel}
+        >
+          <Form
+            onSubmit={this.handleImportExamSubmit}
+            wrapperCol={{ span: 12 }}
+            labelCol={{ span: 3 }}
+            layout={'vertical'}
+          >
+            <Row>
+              <Col span={4}>模板下载</Col>
+              <Col span={20}><a href={'../../../assets/file/import_test.docx'} target='_blank'>import_test.docx</a></Col>
+            </Row>
+            <Form.Item>
+              {getFieldDecorator('file_ID', {
+                valuePropName: 'fileList',
+                getValueFromEvent: this.normFile,
+                rules: [{ required: true, message: '请上传文件' }],
+              })(
+                <Upload
+                  action="../api/zuul/fileserver/upLoad"
+                  beforeUpload={beforeUpload}
+                  data={{
+                    fileType: 'other',
+                    createStaffId: '0001',
+                  }}
+                  showUploadList={{
+                    showDownloadIcon: false,
+                  }}
+                >
+                    <Button>
+                      <Icon type="upload" /> Upload
+                    </Button>
+                </Upload>,
+              )}
+            </Form.Item>
+          </Form>
         </Modal>
       </div>
     );

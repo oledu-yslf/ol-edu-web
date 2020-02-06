@@ -118,7 +118,47 @@ export default {
           type:'listAll'
         })
       }
-    }
+    },
+    *importExam({ payload }, { call, put }){
+      const { code } = yield call(service.importExam(), {categoryId:payload.categoryId});
+      if(code === 200){
+        message.success('导入试题成功');
+        yield put({
+          type:'listAll'
+        })
+      }
+    },
+    *saveExam({payload},{call,put}){
+      const data = yield call(service.saveExam, payload);
+      if (data.successed) {
+        message.success('试题保存成功');
+        yield put({
+          type:'save',
+        })
+      }
+    },
+    *examDetail({payload},{call,put}){
+      const data = yield call(service.examDetail, payload);
+      if (data.successed) {
+        yield put({
+          type:'save',
+          payload: {
+            examDetail:data.data ,
+            editTypeVisible:false
+
+          },
+        })
+      }
+    },
+    *updateExam({payload},{call,put}){
+      const data = yield call(service.updateExam, payload);
+      if (data.successed) {
+        message.success('试题更新成功');
+        yield put({
+          type:'save',
+        })
+      }
+    },
   },
   reducers: {
     save(state, action) {

@@ -56,3 +56,36 @@ export async function categoryDelete (data) {
     data
   })
 }
+
+export async function importExam(data) {
+  return request({
+    url:  '/api/exam/import',
+    method: 'POST',
+    data
+  })
+}
+
+export async function saveExam(data) {
+  debugger
+  return  request({
+    url: '/api/exam/save',
+    method:'POST',
+    data
+  })
+}
+
+export async function examDetail(data) {
+  return request({
+    url: '/api/exam/detail',
+    method: 'POST',
+    data
+  })
+}
+
+export async function updateExam(data) {
+  return request({
+    url: '/api/exam/update',
+    method: 'POST',
+    data
+  })
+}
