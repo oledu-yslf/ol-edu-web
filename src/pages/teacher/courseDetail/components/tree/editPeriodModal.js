@@ -124,6 +124,12 @@ const EditPeriodModal = Form.create({
       const { confirmLoading, visible, form, title } = this.props;
       const { getFieldDecorator } = form;
       const { attachFileId, videoFileId, periodName, periodDesc, sort, fileuploading,videouploading } = this.state;
+
+      const roleInfo = localStorage.getItem('roleInfo')
+        ? JSON.parse(localStorage.getItem('roleInfo'))
+        : '';
+      const staffId = roleInfo.staffId || '';
+
       return (
         <Modal
           visible={visible}
@@ -161,7 +167,7 @@ const EditPeriodModal = Form.create({
                   action="../api/zuul/fileserver/upLoad"
                   data={{
                     fileType: 'video',
-                    createStaffId: '0001',
+                    createStaffId: staffId,
                   }}
                   showUploadList={{
                     showDownloadIcon: false,
@@ -189,7 +195,7 @@ const EditPeriodModal = Form.create({
                   action="../api/zuul/fileserver/upLoad"
                   data={{
                     fileType: 'attach',
-                    createStaffId: '0001',
+                    createStaffId: staffId,
                   }}
                   showUploadList={{
                     showDownloadIcon: false,

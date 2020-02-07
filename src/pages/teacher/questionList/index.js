@@ -413,6 +413,12 @@ class QuestionList extends React.Component {
         ),
       },
     ];
+
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const staffId = roleInfo.staffId || '';
+
     return (
       <div className={styles.box}>
         <Tabs defaultActiveKey="/teacher/questionList" onTabClick={this.onTabClick}>
@@ -576,7 +582,7 @@ class QuestionList extends React.Component {
                   beforeUpload={beforeUpload}
                   data={{
                     fileType: 'other',
-                    createStaffId: '0001',
+                    createStaffId: staffId,
                   }}
                   showUploadList={{
                     showDownloadIcon: false,

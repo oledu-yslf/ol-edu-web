@@ -126,6 +126,11 @@ class PlusCourse extends React.Component {
     const { getFieldDecorator } = this.props.form;
     const { file_ID, categoryId, courseName, introduce, treeData,loading } = this.props;
     console.log(loading);
+    const roleInfo = localStorage.getItem('roleInfo')
+      ? JSON.parse(localStorage.getItem('roleInfo'))
+      : '';
+    const staffId = roleInfo.staffId || '';
+
     return (
       <Form
         onSubmit={this.handleSubmit}
@@ -168,7 +173,7 @@ class PlusCourse extends React.Component {
               beforeUpload={beforeUpload}
               data={{
                 fileType: 'other',
-                createStaffId: '0001',
+                createStaffId: staffId,
               }}
               showUploadList={{
                 showDownloadIcon: false,
