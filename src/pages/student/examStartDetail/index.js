@@ -5,8 +5,10 @@ import styles from './index.less';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
+import OlBraftEditor from '@/components/olBraftEditor/OlBraftEditor'
 import MaxLength from 'braft-extensions/dist/max-length'
 
+/*
 const excludeControls = [
   'emoji','link'
 ]
@@ -16,6 +18,7 @@ const options = {
   //defaultValue: 20,
 };
 BraftEditor.use(MaxLength(options));
+*/
 
 const mapExamName = {};
 mapExamName[1] = "单选题";
@@ -24,7 +27,6 @@ mapExamName[3] = "判断题";
 mapExamName[4] = "问答题";
 mapExamName[5] = "填空题";
 
-let result = ``;
 
 class ExamStartDetail extends React.Component {
   componentWillMount() {
@@ -75,7 +77,7 @@ class ExamStartDetail extends React.Component {
     const {planDetailId} = this.props.location.query;
 
     console.log(result);
-    if (result === undefined || result === "") {
+    if (result === undefined || result === "" || result === null) {
       //未提交，进入下一题
       dispatch({
         type: 'examStartDetail/save',
@@ -106,6 +108,8 @@ class ExamStartDetail extends React.Component {
 
         console.log(res);
         if (res.code == 200) {
+
+
           //成功，
           if (sureCommit === 1){
             //提交成功后，需要跳转。
@@ -127,6 +131,10 @@ class ExamStartDetail extends React.Component {
               cursorExamIndex: cursorExamIndex + 1
             }
           })
+
+          //antd中的form表单 initialValue导致数据不更新问题
+          //https://blog.csdn.net/weixin_34087301/article/details/93900887
+          this.props.form.resetFields();
         }
       });
 
@@ -136,12 +144,24 @@ class ExamStartDetail extends React.Component {
     const {dispatch} = this.props;
     const {cursorExamIndex} = this.props;
     let pre = cursorExamIndex - 1;
+
     dispatch({
       type: 'examStartDetail/save',
       payload: {
         cursorExamIndex: pre
       }
     });
+
+    this.props.form.resetFields();
+
+    // const {query} = this.props.location;
+    // dispatch({
+    //   type: 'examStartDetail/init',
+    //   payload: {
+    //     ...query
+    //   }
+    // })
+
   }
 
   handleMaxLength = () => {
@@ -245,31 +265,28 @@ class ExamStartDetail extends React.Component {
       )
     }
     else if (exam.examType === 4 ) {
-      //问答题,填空题
+      //问答题
       console.log(oldResult);
       return <Form.Item >
         {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
-          <BraftEditor
+          <OlBraftEditor
             contentStyle={{height: 200, overflow: 'scroll'}}
-            placeholder="请输入答案"
-            maxLength={16777215}
-            onReachMaxLength={this.handleMaxLength}
-            excludeControls = {excludeControls}
           />)
         }
       </Form.Item>
     }
     else if (exam.examType === 5) {
-      //问答题,填空题
+      //填空题
       console.log(oldResult);
+      // if (this.props.form.getFieldsValue().braftEditor){
+      //   this.props.form.setFieldsValue("braftEditor",BraftEditor.createEditorState(null));
+      // }
+
       return <Form.Item >
-        {getFieldDecorator('braftEditor1', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
-          <BraftEditor
+        {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
+          <OlBraftEditor
             contentStyle={{height: 200, overflow: 'scroll'}}
-            placeholder="请输入答案"
-            maxLength={16777215}
-            onReachMaxLength={this.handleMaxLength}
-            excludeControls = {excludeControls}
+
           />)
         }
       </Form.Item>
