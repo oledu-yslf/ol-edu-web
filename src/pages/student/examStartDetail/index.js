@@ -45,7 +45,6 @@ class ExamStartDetail extends React.Component {
     const {dispatch, cursorExamIndex} = this.props;
     let result = "";
 
-    console.log("handleNext");
     if (exam.examType === 1 || exam.examType === 3) {
       //单选题,判断题
       result = this.props.form.getFieldsValue().radio;
@@ -60,14 +59,9 @@ class ExamStartDetail extends React.Component {
         }
       }
     }
-    else if (exam.examType === 4) {
+    else if (exam.examType === 4 || exam.examType === 5) {
       //问答题,//填空题
       const context = this.props.form.getFieldsValue().braftEditor;
-      result = context.toHTML();
-    }
-    else if (exam.examType === 5) {
-      //问答题,//填空题
-      const context = this.props.form.getFieldsValue().braftEditor1;
       result = context.toHTML();
     }
 
@@ -76,7 +70,6 @@ class ExamStartDetail extends React.Component {
     const {paperId, paperExamId, examId} = exam;
     const {planDetailId} = this.props.location.query;
 
-    console.log(result);
     if (result === undefined || result === "" || result === null) {
       //未提交，进入下一题
       dispatch({
@@ -106,10 +99,7 @@ class ExamStartDetail extends React.Component {
         }
       }).then(res => {
 
-        console.log(res);
         if (res.code == 200) {
-
-
           //成功，
           if (sureCommit === 1){
             //提交成功后，需要跳转。
@@ -117,7 +107,6 @@ class ExamStartDetail extends React.Component {
             return ;
           }
 
-          console.log(cursorExamIndex);
           dispatch({
             type: 'examStartDetail/init',
             payload: {
@@ -164,10 +153,6 @@ class ExamStartDetail extends React.Component {
 
   }
 
-  handleMaxLength = () => {
-    // console.log(1111);
-    message.info('最多只能输入16777215个字符')
-  };
 
   examRender = (item) => {
     return (
@@ -224,7 +209,7 @@ class ExamStartDetail extends React.Component {
           checkValue[i] = oldResult[i];
         }
       }
-      console.log(checkValue);
+
       return (<Form.Item >
           {getFieldDecorator('checkbox', {initialValue:checkValue})(
             <Checkbox.Group style={{width: '100%'}}>
@@ -264,29 +249,13 @@ class ExamStartDetail extends React.Component {
         </Form.Item>
       )
     }
-    else if (exam.examType === 4 ) {
+    else if (exam.examType === 4 || exam.examType === 5) {
       //问答题
-      console.log(oldResult);
-      return <Form.Item >
-        {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
-          <OlBraftEditor
-            contentStyle={{height: 200, overflow: 'scroll'}}
-          />)
-        }
-      </Form.Item>
-    }
-    else if (exam.examType === 5) {
-      //填空题
-      console.log(oldResult);
-      // if (this.props.form.getFieldsValue().braftEditor){
-      //   this.props.form.setFieldsValue("braftEditor",BraftEditor.createEditorState(null));
-      // }
 
       return <Form.Item >
         {getFieldDecorator('braftEditor', {initialValue:BraftEditor.createEditorState(oldResult||'')})(
           <OlBraftEditor
             contentStyle={{height: 200, overflow: 'scroll'}}
-
           />)
         }
       </Form.Item>
@@ -370,7 +339,6 @@ class ExamStartDetail extends React.Component {
 
   handleCancel = () => {
     const {dispatch} = this.props;
-    console.log("222222222")
     dispatch({
       type: 'examStartDetail/save',
       payload: {

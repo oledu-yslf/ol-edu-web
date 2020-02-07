@@ -35,3 +35,18 @@ export async function getWebMenu(params) {
         data: params,
     });
 }
+
+
+//Form Data 上传文件。
+export async function upLoadFile(formData,progressFn) {
+  return request('/api/zuul/fileserver/upLoad', {
+    headers: {
+      'Content-Type': "multipart/form-data",
+      "Authorization": ''
+    },
+    onUploadProgress:progressFn,
+    method: 'POST',
+    data:formData
+  });
+}
+
