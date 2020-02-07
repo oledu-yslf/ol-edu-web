@@ -235,8 +235,8 @@ class AddExamModal extends React.Component {
     const modifyStaffId = getUserId();
     form.validateFields((err, value) => {
       if (!err) {
-        resetFields();
-        if(examDetail.examId){
+        debugger
+        if(examDetail && examDetail.examId){
           dispatch({
             type: 'questionList/updateExam',
             payload:{
@@ -268,11 +268,14 @@ class AddExamModal extends React.Component {
             }
           });
         }
-
-
-
-
-
+        this.props.form.resetFields();
+        this.setState({
+          singleChoiceVisible:false,
+          multiChoiceVisible:false,
+          trueOrFalseVisible:false,
+          fillInBlanksVisible:false,
+          questionAndAnswerVisible:false,
+        })
       }
     });
   };

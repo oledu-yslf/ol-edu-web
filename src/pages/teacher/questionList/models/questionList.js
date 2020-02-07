@@ -134,6 +134,9 @@ export default {
         message.success('试题保存成功');
         yield put({
           type:'save',
+          payload: {
+            addExamVisible: false
+          }
         })
       }
     },
@@ -156,6 +159,9 @@ export default {
         message.success('试题更新成功');
         yield put({
           type:'save',
+          payload: {
+            addExamVisible: false
+          }
         })
       }
     },
