@@ -137,14 +137,14 @@ class PaperDetailForStudent extends React.Component {
     return (
       <div className={styles.box}>
         <div className="clearfix">
-          <div className="pullleft" style={{fontSize: '20px', lineHeight: '80px'}}>
+          <div className="pullleft" style={{fontSize: '24px', lineHeight: '40px',textAlign: 'center'}}>
             <span>{paperName}</span>
           </div>
-          <div className="pullright" style={{fontSize: '20px', lineHeight: '80px'}}>
-            <span>总分：{totalScore}</span>
-            <span>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
-            <span>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</span>
-            <span>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</span>
+          <div className="pullright" style={{fontSize: '12px', lineHeight: '20px'}}>
+            <div>总分：{totalScore}</div>
+            <div>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
+            <div>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
+            <div>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</div>
           </div>
         </div>
         <Divider />
