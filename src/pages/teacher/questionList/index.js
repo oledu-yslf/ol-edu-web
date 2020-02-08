@@ -29,13 +29,6 @@ const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 const { Option } = Select;
 
-function beforeUpload(file) {
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isLt2M;
-}
 
 class QuestionList extends React.Component {
   constructor(props) {
@@ -558,7 +551,7 @@ class QuestionList extends React.Component {
         <Modal
           title="导入试题"
           visible={uploadVisible}
-          onOk={this.handleImportExam}
+          // onOk={this.handleImportExam}
           onCancel={this.handleCancel}
         >
           <Form
@@ -578,11 +571,10 @@ class QuestionList extends React.Component {
                 rules: [{ required: true, message: '请上传文件' }],
               })(
                 <Upload
-                  action="../api/zuul/fileserver/upLoad"
-                  beforeUpload={beforeUpload}
+                  action="../api/exam/import"
                   data={{
-                    fileType: 'other',
                     createStaffId: staffId,
+                    categoryId: selectedNodes.categoryId,
                   }}
                   showUploadList={{
                     showDownloadIcon: false,
