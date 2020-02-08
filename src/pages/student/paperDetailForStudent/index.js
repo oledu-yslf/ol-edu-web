@@ -83,9 +83,9 @@ class PaperDetailForStudent extends React.Component {
             )
             }
 
-            {item.studentExamResult && (
+            {item.studentExamResult && item.studentExamResult.score && (
               <div className="clearfix">
-                <div className="pullleft">得分：{item.studentExamResult.score? item.studentExamResult.score : 0}</div>
+                <div className="pullleft">得分：{item.studentExamResult.score}</div>
               </div>
             )
             }

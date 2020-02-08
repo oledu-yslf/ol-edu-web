@@ -108,7 +108,7 @@ class OlBraftEditor extends React.Component {
             audio: false,
             embed: false,
           },
-          uploadFn: this.uploadFile,
+          //uploadFn: this.uploadFile,
         }
       }
     />)
