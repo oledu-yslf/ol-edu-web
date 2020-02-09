@@ -50,8 +50,24 @@ class HomeworkForStudent extends React.Component {
     });
   }
   render() {
-    const { paperList, total, loading } = this.props;
+    const { paperList, total,pageNum,pageSize, loading } = this.props;
     const columns = [
+      {
+        key: 'index',
+        title: '序号',
+        width:80,
+        render:(text,record,index)=> {
+          return(
+            `${(pageNum-1)*pageSize+(index+1)}` //当前页数减1乘以每一页页数再加当前页序号+1
+          )
+        }
+      },
+      {
+        title: '计划名称',
+        dataIndex: 'planName',
+        key: 'planName',
+      },
+
       {
         title: '作业名称',
         dataIndex: 'paperName',
@@ -59,11 +75,19 @@ class HomeworkForStudent extends React.Component {
       },
 
       {
-        title: '创建时间',
+        title: '开始时间',
         dataIndex: 'effDate',
         key: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
       },
+
+      {
+        title: '结束时间',
+        dataIndex: 'expDate',
+        key: 'expDate',
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
+      },
+
       {
         title: '状态',
         dataIndex: 'state',
@@ -128,6 +152,8 @@ class HomeworkForStudent extends React.Component {
               />
             </Spin>
           </TabPane>
+          <TabPane tab="我的考试" key="/student/paperList"></TabPane>
+          <TabPane tab="我的成绩" key="/student/achievement"></TabPane>
           <TabPane tab="我的收藏" key="/student/favorite"></TabPane>
           <TabPane tab="修改密码" key="/student/changePsw"></TabPane>
         </Tabs>

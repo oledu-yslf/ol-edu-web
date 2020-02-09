@@ -41,6 +41,98 @@ class ExamStartDetail extends React.Component {
     });
   }
 
+  handleSubmmit = (exam, maxCount,step) => {
+    const {dispatch, cursorExamIndex} = this.props;
+    let result = "";
+
+    if (exam.examType === 1 || exam.examType === 3) {
+      //单选题,判断题
+      result = this.props.form.getFieldsValue().radio;
+    }
+    else if (exam.examType === 2) {
+      //多选题
+      let values = this.props.form.getFieldsValue().checkbox;
+      if (values !== undefined && values !== []) {
+        values.sort();
+        for (let i in values) {
+          result = result + values[i];
+        }
+      }
+    }
+    else if (exam.examType === 4 || exam.examType === 5) {
+      //问答题,//填空题
+      const context = this.props.form.getFieldsValue().braftEditor;
+      result = context.toHTML();
+    }
+
+
+    const {query} = this.props.location;
+    const {paperId, paperExamId, examId} = exam;
+    const {planDetailId} = this.props.location.query;
+
+    let nextIndex = cursorExamIndex + step;
+
+    if (result === undefined || result === "" || result === null) {
+      //未提交，进入下一题
+      dispatch({
+        type: 'examStartDetail/save',
+        payload: {
+          cursorExamIndex: nextIndex
+        }
+      })
+    } else {
+      //进行了答题,需要提交
+      let sureCommit = 0; //是否最后一题标志，0否，1是
+      if (cursorExamIndex === maxCount){
+        sureCommit = 1;     //最后一题
+      }
+
+
+      dispatch({
+        type: 'examStartDetail/studentCommitPaper',
+        payload: {
+          createStaffId: query.staffId,
+          planDetailId,
+          paperId,
+          paperExamId,
+          examId,
+          result,
+          sureCommit
+        }
+      }).then(res => {
+
+        if (res.code == 200) {
+          //成功，
+          if (sureCommit === 1){
+            //提交成功后，需要跳转。
+            router.push('/student')
+            return ;
+          }
+
+          dispatch({
+            type: 'examStartDetail/init',
+            payload: {
+              ...query
+            }
+          })
+
+          dispatch({
+            type: 'examStartDetail/save',
+            payload: {
+              cursorExamIndex: nextIndex
+            }
+          })
+
+          //antd中的form表单 initialValue导致数据不更新问题
+          //https://blog.csdn.net/weixin_34087301/article/details/93900887
+          this.props.form.resetFields();
+        }
+      });
+
+    }
+  }
+
+  /*
   handleNext = (exam, maxCount) => {
     const {dispatch, cursorExamIndex} = this.props;
     let result = "";
@@ -143,16 +235,8 @@ class ExamStartDetail extends React.Component {
 
     this.props.form.resetFields();
 
-    // const {query} = this.props.location;
-    // dispatch({
-    //   type: 'examStartDetail/init',
-    //   payload: {
-    //     ...query
-    //   }
-    // })
-
   }
-
+*/
 
   examRender = (item) => {
     return (
@@ -191,8 +275,8 @@ class ExamStartDetail extends React.Component {
               dataSource={exam.paperExamAttrVOS}
               renderItem={(temp) =>
                 <List.Item style={{width: '100%'}}>
-                  <Radio value={temp.sort} style={{width: '100%'}}>{temp.sort}. <span
-                    dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Radio>
+                  <Radio value={temp.sort} style={{width: '100%'}}>{temp.sort}. </Radio>
+                  <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
                 </List.Item>
               }>
             </List>
@@ -211,25 +295,26 @@ class ExamStartDetail extends React.Component {
       }
 
       return (<Form.Item >
-          {getFieldDecorator('checkbox', {initialValue:checkValue})(
-            <Checkbox.Group style={{width: '100%'}}>
-              <List
-                style={{width: '100%'}}
-                dataSource={exam.paperExamAttrVOS}
-                renderItem={(temp) =>
-                  <List.Item style={{width: '100%'}}>
-                    <Checkbox value={temp.sort} style={{width: '100%'}}>{temp.sort}.<span
-                      dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Checkbox>
-                  </List.Item>
-                }>
-              </List>
+          {getFieldDecorator(`checkbox`, {initialValue : checkValue})(
+            <Checkbox.Group  name='mycheck' style={{width: '100%'}} >
+
+              <Row>
+                {exam.paperExamAttrVOS.map(temp => (
+
+                    <Col span={8} key={temp.paperExamAttrId}>
+                    <Checkbox id={temp.paperExamAttrId} value={temp.sort} style={{width: '100%'}}>{temp.sort}.</Checkbox>
+                    <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
+                    </Col>
+                ))}
+              </Row>
+
             </Checkbox.Group>
           )}
         </Form.Item>
       )
 
     }
-    if (exam.examType === 3) {
+    else if (exam.examType === 3) {
       //判断题
       return (
         <Form.Item >
@@ -239,8 +324,8 @@ class ExamStartDetail extends React.Component {
               dataSource={exam.paperExamAttrVOS}
               renderItem={(temp) =>
                 <List.Item style={{width: '100%'}}>
-                  <Radio value={temp.attrName} style={{width: '100%'}}><span
-                    dangerouslySetInnerHTML={{__html: temp.attrName}}></span></Radio>
+                  <Radio value={temp.attrName} style={{width: '100%'}}></Radio>
+                  <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
                 </List.Item>
               }>
             </List>
@@ -299,10 +384,10 @@ class ExamStartDetail extends React.Component {
           <Row >
             <Col style={{textAlign: 'center', marginTop: '30px'}}>
               <Button disabled={cursorExamIndex == 1} style={{marginRight: '10px'}} type="primary"
-                      onClick={e => this.handlePre()}>上一题</Button>
+                      onClick={e => this.handleSubmmit(curExam, count,-1)}>上一题</Button>
               {(cursorExamIndex != count) &&
               <Button style={{marginLeft: '10px'}} type="primary"
-                      onClick={e => this.handleNext(curExam, count)}>下一题</Button>
+                      onClick={e => this.handleSubmmit(curExam, count,1)}>下一题</Button>
               }
 
               {(cursorExamIndex == count) &&
@@ -316,7 +401,7 @@ class ExamStartDetail extends React.Component {
         <Modal
           title="确认提交么？"
           visible={sureCommit}
-          onOk={ e => this.handleNext(curExam,count)}
+          onOk={ e => this.handleSubmmit(curExam,count,0)}
           onCancel={e => this.handleCancel()}
           //confirmLoading={loading}
         >

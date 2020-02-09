@@ -4,6 +4,9 @@ export default {
   state: {
     total:10,
     paperList: [],
+    pageNum:1,
+    pageSize:10,
+
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -36,6 +39,7 @@ export default {
         payload: {
           paperList: result,
           total: count,
+          ...data,
         },
       });
     },
