@@ -240,8 +240,8 @@ class ExamStartDetail extends React.Component {
 
   examRender = (item) => {
     return (
-      <List.Item >
-        <Row gutter={24}>
+      <List.Item style={{width:'100%'}}>
+        <Row gutter={24} style={{width:'100%'}}>
           <Col span={24}>
             <div>
               <div>{item.index}. {mapExamName[item.examType]} [{item.mark}分]</div>
@@ -275,7 +275,7 @@ class ExamStartDetail extends React.Component {
               dataSource={exam.paperExamAttrVOS}
               renderItem={(temp) =>
                 <List.Item style={{width: '100%'}}>
-                  <Radio value={temp.sort} style={{width: '100%'}}>{temp.sort}. </Radio>
+                  <Radio value={temp.sort} >{temp.sort}. </Radio>
                   <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
                 </List.Item>
               }>
@@ -298,12 +298,14 @@ class ExamStartDetail extends React.Component {
           {getFieldDecorator(`checkbox`, {initialValue : checkValue})(
             <Checkbox.Group  name='mycheck' style={{width: '100%'}} >
 
-              <Row>
+              <Row style={{width:'100%'}}>
                 {exam.paperExamAttrVOS.map(temp => (
 
-                    <Col span={8} key={temp.paperExamAttrId}>
-                    <Checkbox id={temp.paperExamAttrId} value={temp.sort} style={{width: '100%'}}>{temp.sort}.</Checkbox>
-                    <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
+                    <Col span={24} key={temp.paperExamAttrId}>
+                      <div style={{lineHeight:'32px'}}>
+                        <Checkbox id={temp.paperExamAttrId} value={temp.sort}>{temp.sort}.</Checkbox>
+                        <span display="inline-block" style={{width: '96%',float:'right'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
+                      </div>
                     </Col>
                 ))}
               </Row>
@@ -324,7 +326,7 @@ class ExamStartDetail extends React.Component {
               dataSource={exam.paperExamAttrVOS}
               renderItem={(temp) =>
                 <List.Item style={{width: '100%'}}>
-                  <Radio value={temp.attrName} style={{width: '100%'}}></Radio>
+                  <Radio value={temp.attrName} ></Radio>
                   <span display="inline-block" style={{width: '100%'}} dangerouslySetInnerHTML={{__html: temp.attrName}}></span>
                 </List.Item>
               }>
@@ -378,10 +380,10 @@ class ExamStartDetail extends React.Component {
     return (
       <div className={styles.box}>
         <div  >
-          <Form>
+          <Form style={{width:'100%'}}>
             {this.examRender(curExam)}
           </Form>
-          <Row >
+          <Row style={{width:'100%'}}>
             <Col style={{textAlign: 'center', marginTop: '30px'}}>
               <Button disabled={cursorExamIndex == 1} style={{marginRight: '10px'}} type="primary"
                       onClick={e => this.handleSubmmit(curExam, count,-1)}>上一题</Button>
