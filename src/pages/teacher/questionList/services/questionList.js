@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import qs from 'qs'
 
 export async function listAll (data) {
   return request({
@@ -57,16 +58,20 @@ export async function categoryDelete (data) {
   })
 }
 
-export async function importExam(data) {
+export async function importExam(param) {
+
   return request({
     url:  '/api/exam/import',
+    headers: {
+      'Content-Type': "multipart/form-data",
+    },
     method: 'POST',
-    data
+    data:param
   })
 }
 
 export async function saveExam(data) {
-  debugger
+
   return  request({
     url: '/api/exam/save',
     method:'POST',

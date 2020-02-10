@@ -1,6 +1,7 @@
 import * as service from '../services/questionList';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
+import qs from 'qs'
 
 export default {
   namespace: 'questionList',
@@ -120,13 +121,14 @@ export default {
       }
     },
     *importExam({ payload }, { call, put }){
-      const { code } = yield call(service.importExam(), {categoryId:payload.categoryId});
-      if(code === 200){
-        message.success('导入试题成功');
+      const res = yield call(service.importExam, payload);
+      return res;
+      /*if(code === 200){
+        message.success('导入成功[' + data + ']');
         yield put({
           type:'listAll'
         })
-      }
+      }*/
     },
     *saveExam({payload},{call,put}){
       const data = yield call(service.saveExam, payload);

@@ -17,11 +17,13 @@ import {
   Modal,
   message,
   Upload,
-  Icon
+  Icon,
+  notification,
 } from 'antd';
 import PlusTypeModal from './components/plusTypeModal';
 import EditTypeModal from './components/editTypeModal';
 import AddExamModal from './components/addExamModal';
+import * as Util from '@/utils/util';
 
 
 import styles from './index.less';
@@ -41,6 +43,7 @@ class QuestionList extends React.Component {
       examName: '',
       deleteTypeVisible: false,
       uploadVisible: false,
+      fileList:[],
     };
   }
   onTabClick = e => {
@@ -123,7 +126,9 @@ class QuestionList extends React.Component {
     if (selectedKeys.length > 0) {
       this.setState({
         uploadVisible: true,
+        fileList:[],
       });
+      this.props.form.resetFields();
     } else {
       message.warning('请先选择操作节点！');
     }
@@ -155,6 +160,7 @@ class QuestionList extends React.Component {
     this.setState({
       deleteTypeVisible: false,
       uploadVisible: false,
+      fileList:[],
     });
   };
 
@@ -215,28 +221,46 @@ class QuestionList extends React.Component {
   };
 
   handleImportExam=()=>{
-    debugger
     this.handleImportExamSubmit()
   }
 
   handleImportExamSubmit = () =>{
-    debugger
     const { dispatch, form } = this.props;
-    const { selectedNodes } = this.state;
+    const { selectedNodes,fileList } = this.state;
     const value = form.getFieldsValue();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
+
         const {examType, difficultyLevel, examName} = value;
-        const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
-        const createStaffId = roleInfo.staffId;
+
+        const createStaffId = Util.getStaffId();
+        let param = new FormData();
+        param.append('categoryId',selectedNodes.categoryId);
+        param.append('createStaffId',createStaffId);
+        param.append('file',fileList[0]);
+
         dispatch({
           type: 'questionList/importExam',
-          payload: {
-            categoryId: selectedNodes.categoryId,
-            createStaffId: createStaffId,
-          },
+          payload:param
+        }).then ( (res) => {
+          if(res.code === 200){
+            notification.success({
+              message: '导入成功',
+              description: res.data,
+            });
+            dispatch({
+              type: 'questionList/listAll',
+            })
+          } else {
+            notification.error({
+              message: '导入失败',
+              description: res.msg,
+            });
+          }
+
+          this.setState({uploadVisible: false});
         });
+
       }
 
 
@@ -277,6 +301,17 @@ class QuestionList extends React.Component {
       },
     });
   }
+
+
+  beforeUpload = (file) => {
+    let fileList = [];
+    fileList[0] = file;
+
+    this.setState({fileList});
+
+    return false;
+  }
+
   render() {
     const {
       typeList,
@@ -296,6 +331,7 @@ class QuestionList extends React.Component {
       examName,
       deleteTypeVisible,
       uploadVisible,
+      fileList,
     } = this.state;
     const { getFieldDecorator } = form;
 
@@ -406,11 +442,6 @@ class QuestionList extends React.Component {
         ),
       },
     ];
-
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
-      : '';
-    const staffId = roleInfo.staffId || '';
 
     return (
       <div className={styles.box}>
@@ -551,43 +582,34 @@ class QuestionList extends React.Component {
         <Modal
           title="导入试题"
           visible={uploadVisible}
-          // onOk={this.handleImportExam}
+          onOk={this.handleImportExam}
           onCancel={this.handleCancel}
+          confirmLoading={loading}
         >
-          <Form
-            onSubmit={this.handleImportExamSubmit}
-            wrapperCol={{ span: 12 }}
-            labelCol={{ span: 3 }}
-            layout={'vertical'}
-          >
-            <Row>
-              <Col span={4}>模板下载</Col>
-              <Col span={20}><a href={'../../../assets/file/import_test.docx'} target='_blank'>import_test.docx</a></Col>
-            </Row>
+          <Row>
+            <Col span={4}>模板下载</Col>
+            <Col span={20}><a href={require('@/assets/file/试题导入模板.docx')} target='_blank'>试题导入模板.docx</a></Col>
+          </Row>
+          <Form layout={'vertical'}>
             <Form.Item>
-              {getFieldDecorator('file_ID', {
-                valuePropName: 'fileList',
-                getValueFromEvent: this.normFile,
-                rules: [{ required: true, message: '请上传文件' }],
+              {getFieldDecorator('importFile', {
+                //valuePropName: 'fileList',
+                rules: [{required: true, message: '请上传文件'}],
               })(
                 <Upload
-                  action="../api/exam/import"
-                  data={{
-                    createStaffId: staffId,
-                    categoryId: selectedNodes.categoryId,
-                  }}
-                  showUploadList={{
-                    showDownloadIcon: false,
-                  }}
+                  accept=".docx"
+                  fileList={fileList}
+                  beforeUpload={this.beforeUpload}
                 >
-                    <Button>
-                      <Icon type="upload" /> Upload
-                    </Button>
-                </Upload>,
+                  <Button>
+                    <Icon type="upload"/>上传文件
+                  </Button>
+                </Upload>
               )}
             </Form.Item>
           </Form>
         </Modal>
+
       </div>
     );
   }

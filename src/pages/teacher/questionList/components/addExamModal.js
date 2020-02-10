@@ -622,32 +622,32 @@ class AddExamModal extends React.Component {
               <Col span={18} offset={1}>正确答案：</Col>
               <Col span={18} offset={3}>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName1',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[0]:''):''})(
+                  {getFieldDecorator('attrName1',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[0]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName2',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[1]:''):''})(
+                  {getFieldDecorator('attrName2',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[1]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName3',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[2]:''):''})(
+                  {getFieldDecorator('attrName3',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[2]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName4',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[3]:''):''})(
+                  {getFieldDecorator('attrName4',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[3]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName5',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[4]:''):''})(
+                  {getFieldDecorator('attrName5',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[4]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
                 <Form.Item label="">
-                  {getFieldDecorator('attrName6',{initialValue:examDetail?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[5]:''):''})(
+                  {getFieldDecorator('attrName6',{initialValue:(examDetail&&examDetail.result)?(examDetail.result.split("@_@")[0]?examDetail.result.split("@_@")[5]:''):''})(
                     <input style={{width:'100%'}}></input>
                   )}
                 </Form.Item>
