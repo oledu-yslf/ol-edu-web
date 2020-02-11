@@ -11,8 +11,8 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/course/coursePlay') {
-          const roleInfo = localStorage.getItem('roleInfo')
-            ? JSON.parse(localStorage.getItem('roleInfo'))
+          const roleInfo = sessionStorage.getItem('roleInfo')
+            ? JSON.parse(sessionStorage.getItem('roleInfo'))
             : '';
           const staffId = roleInfo.staffId || '';
           dispatch({

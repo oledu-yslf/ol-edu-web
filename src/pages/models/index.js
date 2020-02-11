@@ -20,7 +20,7 @@ export default {
   },
   effects: {
     *init({ payload }, { call, put }) {
-      const roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
+      const roleInfo = sessionStorage.getItem('roleInfo')?JSON.parse(sessionStorage.getItem('roleInfo')):'';
       const staffId = roleInfo?roleInfo.staffId :'';
       let results,rencentResult,newResult,hotResult;
       if(staffId){

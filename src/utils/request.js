@@ -4,8 +4,8 @@ import * as service from '@/services/index';
 
 const checkToken = url => {
   let token;
-  if (url.indexOf('/oauth/token') === -1 && localStorage.getItem('jwToken')) {
-    const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+  if (url.indexOf('/oauth/token') === -1 && sessionStorage.getItem('jwToken')) {
+    const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
     if (jwToken) {
       token = `${jwToken.token_type} ${jwToken.access_token}`;
     }
@@ -18,9 +18,9 @@ const checkToken = url => {
 const setToken = data => {
   if(data && data.code && data.code === 200 && data.data){
     //返回成功,并且有返回值
-    localStorage.setItem('jwToken', JSON.stringify(data.data));
+    sessionStorage.setItem('jwToken', JSON.stringify(data.data));
   } else {
-    localStorage.setItem('jwToken', '');
+    sessionStorage.setItem('jwToken', '');
   }
 };
 

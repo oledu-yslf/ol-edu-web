@@ -34,8 +34,8 @@ class ChangePsw extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const roleInfo = localStorage.getItem('roleInfo')
-          ? JSON.parse(localStorage.getItem('roleInfo'))
+        const roleInfo = sessionStorage.getItem('roleInfo')
+          ? JSON.parse(sessionStorage.getItem('roleInfo'))
           : '';
         const staffId = roleInfo ? roleInfo.staffId : '';
         console.log('Received values of form: ', values);

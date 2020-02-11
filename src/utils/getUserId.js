@@ -1,6 +1,6 @@
 export default function getUserId() {
-  const roleInfo = localStorage.getItem('roleInfo')
-    ? JSON.parse(localStorage.getItem('roleInfo'))
+  const roleInfo = sessionStorage.getItem('roleInfo')
+    ? JSON.parse(sessionStorage.getItem('roleInfo'))
     : '';
   const modifyStaffId = roleInfo.staffId || '';
   return modifyStaffId;

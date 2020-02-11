@@ -6,7 +6,7 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      const roleInfo = localStorage.getItem('roleInfo') ? JSON.parse(localStorage.getItem('roleInfo')) : '';
+      const roleInfo = sessionStorage.getItem('roleInfo') ? JSON.parse(sessionStorage.getItem('roleInfo')) : '';
       const staffId = roleInfo.staffId || '';
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/favorite') {

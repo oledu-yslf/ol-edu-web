@@ -6,7 +6,7 @@ import { Rate } from 'antd';
 import router from 'umi/router';
 
 const checkToken = () => {
-  const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+  const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
   let token = `${jwToken.token_type} ${jwToken.access_token}`;
   return token;
 };
@@ -26,12 +26,12 @@ class coursePlay extends React.Component {
   handleClick = (item, e) => {
     const { dispatch } = this.props;
     let roleInfo;
-    if (!localStorage.getItem('roleInfo')) {
+    if (!sessionStorage.getItem('roleInfo')) {
       router.push('/login');
       return;
     }
     if (item.videoFileInfo) {
-      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+      roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
       dispatch({
         type: 'coursePlay/save',
         payload: {
@@ -56,8 +56,8 @@ class coursePlay extends React.Component {
   handleFavorite = () => {
     const { dispatch, courseId } = this.props;
     let roleInfo;
-    if (localStorage.getItem('roleInfo')) {
-      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    if (sessionStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     } else {
       router.push('/login');
       return;
@@ -82,13 +82,13 @@ class coursePlay extends React.Component {
 
     handleDownLoad = (item, e) => {
         let roleInfo;
-        if (localStorage.getItem('roleInfo')) {
-            roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+        if (sessionStorage.getItem('roleInfo')) {
+            roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
         } else {
             router.push('/login');
             return;
         }
-        const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+        const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
         const access_token = jwToken.access_token;
 
         window.open(`/api` + item.attachFileInfo.url +`/` + item.attachFileInfo.fileName + `?access_token=` + access_token);

@@ -5,7 +5,7 @@ import qs from 'qs'
  * @param {*} params
  */
 export async function refreshToken(params) {
-    const jwToken = JSON.parse(localStorage.getItem('jwToken'));
+    const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
     const refresh_token = jwToken.refresh_token;
     return request('/api/oauth/token', {
         headers: {

@@ -23,7 +23,7 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher/courseManage') {
-          let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
+          let roleInfo = sessionStorage.getItem('roleInfo')?JSON.parse(sessionStorage.getItem('roleInfo')):'';
           const staffId = roleInfo?roleInfo.staffId :'';
           dispatch({
             type: 'categoryListAll',
@@ -114,7 +114,7 @@ export default {
       return count;
     },
     *courseDelete({ payload }, { call, put, select }) {
-      let roleInfo = localStorage.getItem('roleInfo')?JSON.parse(localStorage.getItem('roleInfo')):'';
+      let roleInfo = sessionStorage.getItem('roleInfo')?JSON.parse(sessionStorage.getItem('roleInfo')):'';
       const staffId = roleInfo?roleInfo.staffId :'';
       yield call(service.courseDelete, payload);
       yield put({

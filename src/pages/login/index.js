@@ -37,7 +37,7 @@ class LoginForm extends React.Component {
             },
           }).then(res=>{
             const roleInfo = res.data;
-            localStorage.setItem('roleInfo',JSON.stringify(roleInfo));
+            sessionStorage.setItem('roleInfo',JSON.stringify(roleInfo));
             if (prerouter) {
               router.push(prerouter);
             } else {

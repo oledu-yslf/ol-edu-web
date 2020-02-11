@@ -13,8 +13,8 @@ class Index extends React.Component {
   };
   pageChange = (page, pageSize) => {
     const { courseName, dispatch } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const staffId = roleInfo.staffId || '';
     dispatch({
@@ -32,8 +32,8 @@ class Index extends React.Component {
   searchCourse = value => {
     debugger
     const { dispatch } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const staffId = roleInfo.staffId || '';
     dispatch({
@@ -74,7 +74,7 @@ class Index extends React.Component {
           </Col>
         </Row>
 
-        {localStorage.getItem('jwToken') && !loading ? (
+        {sessionStorage.getItem('jwToken') && !loading ? (
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={list}

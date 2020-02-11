@@ -23,7 +23,7 @@ class OMinHeader extends React.Component{
     });
     router.push(e.keyPath[0])
   };
-  
+
   handleAvatarClick = e => {
     const {roleInfo} = this.state;
     if (roleInfo.staffType === '0' || roleInfo.staffType === '1') {
@@ -34,16 +34,16 @@ class OMinHeader extends React.Component{
   };
 
   handleLogoutClick = e => {
-    localStorage.setItem('roleInfo', '');
-    localStorage.setItem('jwToken', '');
+    sessionStorage.setItem('roleInfo', '');
+    sessionStorage.setItem('jwToken', '');
     this.setState({
       roleInfo: '',
     });
   };
   componentWillMount() {
     let roleInfo = '';
-    if (localStorage.getItem('roleInfo')) {
-      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    if (sessionStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     } else {
       roleInfo = '';
     }
@@ -88,7 +88,7 @@ class OMinHeader extends React.Component{
       </div>
     );
   }
-  
+
 }
 
 export default connect(state => ({ ...state.global }))(OMinHeader);

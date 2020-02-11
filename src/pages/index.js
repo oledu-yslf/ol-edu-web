@@ -29,7 +29,7 @@ class Index extends React.Component {
     };
     return (
       <div className={style.box}>
-        {localStorage.getItem('jwToken') && !loading ? (
+        {sessionStorage.getItem('jwToken') && !loading ? (
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={recentList}

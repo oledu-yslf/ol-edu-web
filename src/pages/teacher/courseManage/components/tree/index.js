@@ -47,8 +47,8 @@ class OTree extends React.Component {
    */
   onSelect = (selectedKeys, info) => {
     const { dispatch,courseName } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const modifyStaffId = roleInfo.staffId || '';
     if (selectedKeys.length > 0) {
@@ -156,7 +156,7 @@ class OTree extends React.Component {
    */
   handleCreate = value => {
     const { dispatch } = this.props;
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     if (this.state.selectedKeys[0]) {
       var parentId = this.state.selectedKeys[0].split('-')[1];
@@ -178,7 +178,7 @@ class OTree extends React.Component {
       var categoryId = this.state.selectedKeys[0].split('-')[1];
     }
     const { dispatch } = this.props;
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const modifyStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseManage/categoryUpdate',

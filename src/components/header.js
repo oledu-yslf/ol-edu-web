@@ -33,16 +33,16 @@ class OHeader extends React.Component {
     }
   };
   handleLogoutClick = e => {
-    localStorage.setItem('roleInfo', '');
-    localStorage.setItem('jwToken', '');
+    sessionStorage.setItem('roleInfo', '');
+    sessionStorage.setItem('jwToken', '');
     this.setState({
       roleInfo: '',
     });
   };
   componentWillMount() {
     let roleInfo = '';
-    if (localStorage.getItem('roleInfo')) {
-      roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    if (sessionStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     } else {
       roleInfo = '';
     }

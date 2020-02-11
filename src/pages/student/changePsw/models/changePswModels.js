@@ -26,8 +26,8 @@ export default {
         message.success('更新成功', 3);
         setTimeout(()=>{
           router.push('/login')
-          localStorage.setItem('roleInfo', '');
-          localStorage.setItem('jwToken', '');
+          sessionStorage.setItem('roleInfo', '');
+          sessionStorage.setItem('jwToken', '');
         },3000)
 
       }

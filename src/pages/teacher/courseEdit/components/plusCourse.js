@@ -52,7 +52,7 @@ class PlusCourse extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, courseId } = this.props;
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -126,8 +126,8 @@ class PlusCourse extends React.Component {
     const { getFieldDecorator } = this.props.form;
     const { file_ID, categoryId, courseName, introduce, treeData,loading } = this.props;
     console.log(loading);
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const staffId = roleInfo.staffId || '';
 

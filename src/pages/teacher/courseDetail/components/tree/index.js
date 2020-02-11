@@ -182,7 +182,7 @@ class OTree extends React.Component {
   handleCreate = value => {
     const { dispatch, courseDetail } = this.props;
     const { chapterName, chapterDesc, sort } = value;
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/chapterSave',
@@ -204,7 +204,7 @@ class OTree extends React.Component {
     const { dispatch, chapterDetail, courseDetail } = this.props;
     const chapterId = chapterDetail.chapterId;
     const courseId = courseDetail.courseId;
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/chapterUpdate',
@@ -233,7 +233,7 @@ class OTree extends React.Component {
     if(attachFileId.length>0){
       aFileId = attachFileId[0].uid;
     }
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     debugger;
     dispatch({
@@ -267,7 +267,7 @@ class OTree extends React.Component {
     if(attachFileId.length>0){
       aFileId = attachFileId[0].uid;
     }
-    const roleInfo = JSON.parse(localStorage.getItem('roleInfo'));
+    const roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
     const createStaffId = roleInfo.staffId;
     dispatch({
       type: 'courseDetail/periodUpdate',
@@ -288,7 +288,7 @@ class OTree extends React.Component {
   HandleDelete = () => {
     const { dispatch, isSelectedNode, isLeaf, chapterDetail, periodDetail } = this.props;
     if (isSelectedNode && !isLeaf) {
-    
+
       dispatch({
         type: 'courseDetail/chapterDelete',
         payload: {

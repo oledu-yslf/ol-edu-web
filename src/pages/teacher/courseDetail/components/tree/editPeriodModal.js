@@ -125,8 +125,8 @@ const EditPeriodModal = Form.create({
       const { getFieldDecorator } = form;
       const { attachFileId, videoFileId, periodName, periodDesc, sort, fileuploading,videouploading } = this.state;
 
-      const roleInfo = localStorage.getItem('roleInfo')
-        ? JSON.parse(localStorage.getItem('roleInfo'))
+      const roleInfo = sessionStorage.getItem('roleInfo')
+        ? JSON.parse(sessionStorage.getItem('roleInfo'))
         : '';
       const staffId = roleInfo.staffId || '';
 

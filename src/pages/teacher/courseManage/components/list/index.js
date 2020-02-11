@@ -45,8 +45,8 @@ class OList extends React.Component {
   };
   handlePutawayCourse = () => {
     const { dispatch, optionCourseId, isPutaway,courseName,selectedNodes } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const modifyStaffId = roleInfo.staffId || '';
     dispatch({
@@ -92,8 +92,8 @@ class OList extends React.Component {
 
   searchCourse = value => {
     const { dispatch, selectedNodes } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const modifyStaffId = roleInfo.staffId || '';
     dispatch({
@@ -117,8 +117,8 @@ class OList extends React.Component {
   };
   pageChange = (page, pageSize) => {
     const { courseName, dispatch, selectedNodes } = this.props;
-    const roleInfo = localStorage.getItem('roleInfo')
-      ? JSON.parse(localStorage.getItem('roleInfo'))
+    const roleInfo = sessionStorage.getItem('roleInfo')
+      ? JSON.parse(sessionStorage.getItem('roleInfo'))
       : '';
     const modifyStaffId = roleInfo.staffId || '';
     dispatch({
