@@ -5,10 +5,11 @@ import moment from 'moment';
 import { Tabs, Descriptions, Spin, Button, Modal, Form, Input, Radio,DatePicker,Breadcrumb ,Divider } from 'antd';
 import router from 'umi/router';
 import styles from '@/style/common.less';
+import * as Util from '@/utils/util';
 
 const { TabPane } = Tabs;
 
-class Teacher extends React.Component {
+class StaffInfo extends React.Component {
   onTabClick = e => {
     router.push(e);
   };
@@ -16,7 +17,7 @@ class Teacher extends React.Component {
     e.preventDefault();
     const { dispatch } = this.props;
     dispatch({
-      type: 'teacher/save',
+      type: 'staffInfo/save',
       payload: {
         editInfoVisible: true,
       },
@@ -41,7 +42,7 @@ class Teacher extends React.Component {
       if (!err) {
         resetFields();
         dispatch({
-          type: 'teacher/staffUpdate',
+          type: 'staffInfo/staffUpdate',
           payload: {
             staffId,
             staffName,
@@ -62,16 +63,35 @@ class Teacher extends React.Component {
   handleCancel = e => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'teacher/save',
+      type: 'staffInfo/save',
       payload: {
         editInfoVisible: false,
       },
     });
   };
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+
+    const staffId = Util.getStaffId();
+    dispatch({
+      type: 'staffInfo/staffDetail',
+      payload: {
+        staffId
+      },
+    });
+    dispatch({
+      type:'staffInfo/save',
+      payload:{
+        staffId
+      }
+    })
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'teacher/save',
+      type: 'staffInfo/save',
       payload: {
         staffDetail:{},staffId:'',editInfoVisible:false
       },
@@ -169,9 +189,9 @@ class Teacher extends React.Component {
   }
 }
 
-const TeacherFrom = Form.create({ name: 'TeacherFrom' })(Teacher);
+const StaffInfoFrom = Form.create({ name: 'StaffInfoFrom' })(StaffInfo);
 
 export default connect(state => ({
-  ...state.teacher,
-  loading: state.loading.models.teacher,
-}))(TeacherFrom);
+  ...state.staffInfo,
+  loading: state.loading.models.staffInfo,
+}))(StaffInfoFrom);

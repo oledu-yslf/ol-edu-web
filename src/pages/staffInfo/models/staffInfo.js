@@ -1,8 +1,8 @@
-import * as service from '../services/teacher';
+import * as service from '../services/staffInfo';
 import { message } from 'antd';
 
 export default {
-  namespace: 'teacher',
+  namespace: 'staffInfo',
   state: {
     staffDetail:{},staffId:'',editInfoVisible:false
   },
@@ -10,22 +10,7 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/teacher') {
-          const roleInfo = sessionStorage.getItem('roleInfo')
-            ? JSON.parse(sessionStorage.getItem('roleInfo'))
-            : '';
-          const staffId = roleInfo ? roleInfo.staffId : '';
-          dispatch({
-            type: 'staffDetail',
-            payload: {
-              staffId
-            },
-          });
-          dispatch({
-            type:'save',
-            payload:{
-              staffId
-            }
-          })
+
         }
       });
     },
