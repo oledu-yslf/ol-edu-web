@@ -15,7 +15,7 @@ class NewPaperModal extends React.Component {
           type: 'paperList/paperSave',
           payload: {
             ...value,
-            createStaffId
+            createStaffId,
           },
         });
       }

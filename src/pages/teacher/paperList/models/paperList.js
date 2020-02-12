@@ -69,6 +69,14 @@ export default {
     *paperSave({ payload }, { call, put, select }){
       const { code,data } = yield call(service.paperSave, payload);
       if(code === 200 ){
+        yield put({
+          type: 'save',
+          payload: {
+            newPaperVisible:false,
+            paperName:payload.paperName,
+            paperId:data
+          },
+        });
         if(payload.genType === 0){
           message.success('新增试卷成功').then(()=>{
             router.push(`/teacher/newPaperManual?paperId=${data}`)
