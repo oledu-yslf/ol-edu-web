@@ -1,29 +1,11 @@
-import * as service from '../services/paperList';
+import * as service from '../services/favorite';
 export default {
-  namespace: 'favoriteList',
+  namespace: 'favorite',
   state: {
     list: []
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      const roleInfo = sessionStorage.getItem('roleInfo') ? JSON.parse(sessionStorage.getItem('roleInfo')) : '';
-      const staffId = roleInfo.staffId || '';
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/favorite') {
-          dispatch({
-            type: 'init',
-            payload:{
-              page: {
-                pageNum: 1,
-                pageSize: 10,
-              },
-              courseName:'',
-              createStaffId:staffId,
-            }
-          });
-        }
-      });
-    },
+
   },
   effects: {
     *init({ payload }, { call, put }) {

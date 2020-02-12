@@ -1,10 +1,28 @@
 import React from 'react';
-import style from './index.less';
-import { Card, List, Input,Tabs,Row, Col } from 'antd';
+import style from '@/style/common.less';
+import { Card, List, Input,Tabs,Row, Col,Spin } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import * as Util from '@/utils/util'
 
-class Index extends React.Component {
+class Favorite extends React.Component {
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    let staffId = Util.getStaffId();
+    dispatch({
+      type: 'favorite/init',
+      payload:{
+        page: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        courseName:'',
+        createStaffId:staffId,
+      }
+    });
+  }
+
   handleClick = (item, e) => {
     window.open(`/course/coursePlay?courseId=${item.courseId}`);
   };
@@ -18,7 +36,7 @@ class Index extends React.Component {
       : '';
     const staffId = roleInfo.staffId || '';
     dispatch({
-      type: 'favoriteList/listPage',
+      type: 'favorite/listPage',
       payload: {
         courseName,
         createStaffId:staffId,
@@ -37,7 +55,7 @@ class Index extends React.Component {
       : '';
     const staffId = roleInfo.staffId || '';
     dispatch({
-      type: 'favoriteList/listPage',
+      type: 'favorite/listPage',
       payload: {
         createStaffId:staffId,
         courseName: value,
@@ -54,16 +72,7 @@ class Index extends React.Component {
     const { list, total,loading } = this.props;
     return (
       <div className={style.box}>
-        <Tabs defaultActiveKey="/teacher/favorite" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher"></TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
+
         <Row>
           <Col span={8} offset={16}>
             <Search
@@ -74,6 +83,7 @@ class Index extends React.Component {
           </Col>
         </Row>
 
+        <Spin tip="Loading..." spinning={loading || false}>
         {sessionStorage.getItem('jwToken') && !loading ? (
           <List
             grid={{ gutter: 16, column: 4 }}
@@ -107,6 +117,8 @@ class Index extends React.Component {
         ) : (
           ''
         )}
+
+        </Spin>
       </div>
     );
   }
@@ -114,6 +126,6 @@ class Index extends React.Component {
 
 export default connect(state =>(
   {
-  ...state.favoriteList,
-  loading: state.loading.models.favoriteList
-}))(Index);
+  ...state.favorite,
+  loading: state.loading.models.favorite
+}))(Favorite);
