@@ -54,7 +54,7 @@ class coursePlay extends React.Component {
   //   window.open(`/api${item.attachFileInfo.url}/${item.videoFileInfo.fileName}`)
   // }
   handleFavorite = () => {
-    const { dispatch, courseId } = this.props;
+    const { dispatch, courseId,courseDetail } = this.props;
     let roleInfo;
     if (sessionStorage.getItem('roleInfo')) {
       roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
@@ -62,8 +62,12 @@ class coursePlay extends React.Component {
       router.push('/login');
       return;
     }
+
+    const { favorites } = courseDetail;
+
+    const type = favorites ? 'coursePlay/favoriteDelete':'coursePlay/favoriteSave';
     dispatch({
-      type: 'coursePlay/favoriteSave',
+      type: type,
       payload: {
         courseId,
         staffId: roleInfo.staffId,

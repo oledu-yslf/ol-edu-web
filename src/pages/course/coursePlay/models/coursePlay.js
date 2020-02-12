@@ -44,9 +44,13 @@ export default {
       });
     },
     *favoriteSave({ payload }, { call, put ,select}) {
-      // let courseId = yield select(state=>state.coursePlay.courseId);
       return yield call(service.favoriteSave,payload);
     },
+
+    *favoriteDelete({ payload }, { call, put ,select}) {
+      return yield call(service.favoriteDelete,payload);
+    },
+
     *studySave({ payload }, { call, put ,select}){
       yield call(service.studySave,payload)
     }

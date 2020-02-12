@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 /**
  * 课程详情
- * @param {*} params 
+ * @param {*} params
  */
 export function courseDetail (data) {
   return request('../api/course/detail',{
@@ -12,8 +12,8 @@ export function courseDetail (data) {
 }
 
 /**
- * 课程详情
- * @param {*} params 
+ * 课程收藏
+ * @param {*} params
  */
 export function favoriteSave (data) {
   return request('../api/course/favorite/save',
@@ -24,8 +24,20 @@ export function favoriteSave (data) {
 }
 
 /**
+ * 取消收藏
+ * @param {*} params
+ */
+export function favoriteDelete (data) {
+  return request('../api/course/favorite/delete',
+    {
+      method: 'POST',
+      data
+    })
+}
+
+/**
  * 更新用户学习课程
- * @param {*} params 
+ * @param {*} params
  */
 export function studySave (data) {
   return request('../api/course/study/save',
