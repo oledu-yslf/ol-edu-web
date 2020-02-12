@@ -6,6 +6,9 @@ import { connect } from 'dva';
 import avtor from '@/assets/avtor.jpeg';
 import styles from './header.css';
 import Link from 'umi/link';
+
+const { SubMenu } = Menu;
+
 class OHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -51,9 +54,30 @@ class OHeader extends React.Component {
     });
   }
 
+  renderMenu = (menusList) => {
+    if (menusList){
+      return menusList.map( (item)  => {
+        if (item.childMenuVOList){
+          return <SubMenu key={item.menuId}
+                          title={
+                            <span>{item.menuName}</span>
+                          }
+          >{this.renderMenu(item.childMenuVOList)}</SubMenu>
+        }else {
+          return <Menu.Item key={item.menuUrl}>{item.menuName}</Menu.Item>
+        }
+      }
+      )
+    }
+
+    return null;
+  }
   render() {
     const { roleInfo } = this.state;
     const { selectedMenu } = this.props;
+
+    let menusList = roleInfo.showMenuList;
+
     return (
       <div className={[styles.box, 'clearfix'].join(' ')}>
         <div className={styles.logo} />
@@ -65,9 +89,7 @@ class OHeader extends React.Component {
         >
           <Menu.Item key="/">首页</Menu.Item>
           <Menu.Item key="/course">课程中心</Menu.Item>
-          <Menu.Item key="/question">试题中心</Menu.Item>
-          <Menu.Item key="/result">成绩中心</Menu.Item>
-          <Menu.Item key="/task">作业中心</Menu.Item>
+          {this.renderMenu(menusList)}
         </Menu>
         {roleInfo ? (
           <div className={styles.pullright}>
