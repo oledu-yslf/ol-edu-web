@@ -31,3 +31,11 @@ export async function saveExam(data) {
     data:data
   })
 }
+
+export async function queryDetail(data) {
+  return request({
+    url: '/api/exam/paper/detailPaper',
+    method: 'POST',
+    data:data
+  })
+}

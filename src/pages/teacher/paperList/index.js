@@ -144,11 +144,6 @@ class PaperList extends React.Component {
     ];
     return (
       <div className={styles.box}>
-        <Tabs defaultActiveKey="/teacher/paperList" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher"></TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="试卷管理" key="/teacher/paperList">
             <Radio.Group
               defaultValue="/teacher/paperList"
               onChange={this.handleRouterChange}
@@ -193,12 +188,7 @@ class PaperList extends React.Component {
                 }}
               />
             </Spin>
-          </TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
+
         <NewPaperModal newPaperVisible={newPaperVisible} />
       </div>
     );
