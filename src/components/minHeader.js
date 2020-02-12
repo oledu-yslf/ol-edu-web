@@ -58,32 +58,16 @@ class OMinHeader extends React.Component{
     return (
       <div className={[styles.box,'clearfix'].join(' ')}>
         <div className={styles.logo} />
-        <Menu
-          onClick={this.handleClick}
-          mode="horizontal"
-          className={styles.menu}
-          selectedKeys={selectedMenu}
-        >
-          <Menu.Item key="/">首页</Menu.Item>
-          <Menu.Item key="/course">课程中心</Menu.Item>
-          <Menu.Item key="/question">试题中心</Menu.Item>
-          <Menu.Item key="/result">成绩中心</Menu.Item>
-          <Menu.Item key="/task">作业中心</Menu.Item>
-        </Menu>
         {roleInfo ? (
           <div className={styles.pullright}>
-            <span style={{ marginRight: '10px' }}>Hi,{roleInfo.staffName}</span>
-            <Button type="link" onClick={this.handleLogoutClick}>
-                退出
-              </Button>
-            <Button type="link" className={styles.right} onClick={this.handleAvatarClick}>
-              <Avatar icon="user" src={avtor} />
-            </Button>
+            <span style={{ marginRight: '5px' }}>Hi,{roleInfo.staffName}</span>
+            <span style={{ marginRight: '5px' }}></span>
+            <a href="/" >返回首页</a>
           </div>
         ) : (
-          <Button type="link" className={styles.pullright}>
-            <Link to="/login">登录</Link>
-          </Button>
+         <div className={styles.pullright}>
+          <a href="/login" >登录</a>
+          </div>
         )}
       </div>
     );

@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 
-import { Tabs, Descriptions, Spin, Button, Modal, Form, Input, Radio,DatePicker } from 'antd';
+import { Tabs, Descriptions, Spin, Button, Modal, Form, Input, Radio,DatePicker,Breadcrumb ,Divider } from 'antd';
 import router from 'umi/router';
-import styles from './index.less';
+import styles from '@/style/common.less';
 
 const { TabPane } = Tabs;
 
@@ -100,31 +100,20 @@ class Teacher extends React.Component {
     };
     return (
       <div className={styles.box}>
-        <Tabs defaultActiveKey="/teacher" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher">
-            <Spin tip="Loading..." spinning={loading || false}>
-              <Descriptions title={<UserInfoTitle />}>
-                <Descriptions.Item label="学号">{staffNo}</Descriptions.Item>
-                <Descriptions.Item label="姓名">{staffName}</Descriptions.Item>
-                <Descriptions.Item label="性别">{sex === '1' ? '男' : '女'}</Descriptions.Item>
-                <Descriptions.Item label="电话">{contactTel}</Descriptions.Item>
-                <Descriptions.Item label="出生日期">
-                  {moment(parseInt(birthday)).format('YYYY-MM-DD')}
-                </Descriptions.Item>
-                <Descriptions.Item label="地址">{address || '-'}</Descriptions.Item>
-                <Descriptions.Item label="院系">{departId}</Descriptions.Item>
-                <Descriptions.Item label="邮箱">{email || '-'}</Descriptions.Item>
-              </Descriptions>
-            </Spin>
-          </TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
+        <Spin tip="Loading..." spinning={loading || false}>
+          <Descriptions title={<UserInfoTitle />}>
+            <Descriptions.Item label="学号">{staffNo}</Descriptions.Item>
+            <Descriptions.Item label="姓名">{staffName}</Descriptions.Item>
+            <Descriptions.Item label="性别">{sex === '1' ? '男' : '女'}</Descriptions.Item>
+            <Descriptions.Item label="电话">{contactTel}</Descriptions.Item>
+            <Descriptions.Item label="出生日期">
+              {moment(parseInt(birthday)).format('YYYY-MM-DD')}
+            </Descriptions.Item>
+            <Descriptions.Item label="地址">{address || '-'}</Descriptions.Item>
+            <Descriptions.Item label="院系">{departId}</Descriptions.Item>
+            <Descriptions.Item label="邮箱">{email || '-'}</Descriptions.Item>
+          </Descriptions>
+        </Spin>
 
         <Modal
           visible={editInfoVisible}

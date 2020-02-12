@@ -94,18 +94,11 @@ class OHeader extends React.Component {
         {roleInfo ? (
           <div className={styles.pullright}>
             <span style={{ marginRight: '10px' }}>Hi,{roleInfo.staffName}</span>
-            <Button type="link" onClick={this.handleLogoutClick}>
-              退出
-            </Button>
-            <Button type="link" onClick={this.handleAvatarClick}>
-              <Avatar icon="user" src={avtor} />
-            </Button>
+            <a  onClick={this.handleLogoutClick}>退出</a>
           </div>
         ) : (
           <div className={styles.pullright}>
-            <Button type="link">
-              <Link to="/login">登录</Link>
-            </Button>
+            <a href="/login" >登录</a>
           </div>
         )}
       </div>

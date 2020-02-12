@@ -6,31 +6,35 @@ import OLoginHeader from '@/components/loginHeader';
 import OMinLoginHeader from '@/components/minLoginHeader';
 const { Header, Content } = Layout;
 
+const setMinHeaderPage = new Set([
+  '/course/coursePlay'
+  ]);
+
 function BasicLayout(props) {
   let Nav,content,header;
-  if (props.location.pathname === '/login'){
-    content = styles['login-content'];
-  }else if(props.location.pathname === '/'){
-    content = styles['content'];
-  }else{
-    content = styles['other-content'];
-  }
+
+  content = styles['other-content'];
 
   if (props.location.pathname === '/login'){
     Nav = OLoginHeader;
-  }else if(props.location.pathname === '/'){
+  }else {
+    if (setMinHeaderPage.has(props.location.pathname) == true){
+      Nav = OMinHeader;
+    } else {
+      Nav = OHeader;
+    }
+  }
+
+    /*if(props.location.pathname === '/'){
     Nav = OHeader;
   }else if(props.location.pathname === '/course' || props.location.pathname === '/course/coursePlay'){
     Nav = OMinHeader;
   }else{
     Nav = OMinLoginHeader;
-  }
+  }*/
 
-  if (props.location.pathname === '/login' || props.location.pathname === '/'){
-    header = styles.header;
-  }else{
-    header = styles['min-header'];
-  }
+  header = styles['min-header'];
+
   return (
     <Layout className={styles.noraml}>
       <Header className={header}>
