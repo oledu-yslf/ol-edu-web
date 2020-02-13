@@ -1,13 +1,11 @@
 import React from 'react';
 import {connect} from 'dva';
 import styles from './index.less';
-import {Form, Input, Icon, Select, Button, Checkbox, Row, Col, List, Radio} from 'antd';
+import {Form, Input, Icon, Spin, Button, Checkbox, Row, Col, List, Radio} from 'antd';
 import ExamListModal from './components/examListModal'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import OlBraftEditor from '@/components/olBraftEditor/OlBraftEditor'
-
-let examListArr = []
 
 const mapExamName = {};
 mapExamName[1] = "单选题";
@@ -15,7 +13,7 @@ mapExamName[2] = "多选题";
 mapExamName[3] = "判断题";
 mapExamName[4] = "问答题";
 mapExamName[5] = "填空题";
-
+let paperList = []
 class newPaperManual extends React.Component {
   constructor() {
     super()
@@ -35,6 +33,16 @@ class newPaperManual extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const { dispatch, history} = this.props;
+    dispatch({
+      type: 'newPaperManual/queryDetail',
+      payload: {
+        paperId:history.location.query.paperId ,
+      },
+    });
+  }
+
   addForm = e => {
     const {dispatch} = this.props;
     dispatch({
@@ -50,7 +58,7 @@ class newPaperManual extends React.Component {
     let selTrueOrFalseExamListTemp = []
     let selBlankExamListTemp = []
     let selQuestionExamListTemp = []
-    let tempTotalScore = 0
+    // let tempTotalScore = 0
     let selRadioExamFlagTemp = false
     let selCheckboxExamFlagTemp = false
     let selTrueOrFalseExamFlagTemp = false
@@ -58,7 +66,7 @@ class newPaperManual extends React.Component {
     let selBlankExamFlagTemp = false
     let tempSavePaperExamItems = []
     for (let item of value) {
-      tempTotalScore += parseInt(item.mark)
+      // tempTotalScore += parseInt(item.mark)
       tempSavePaperExamItems.push(item)
       if (item.examType == 1) {
         selRadioExamFlagTemp = true
@@ -85,7 +93,7 @@ class newPaperManual extends React.Component {
       selTrueOrFalseExamList: selTrueOrFalseExamListTemp,
       selBlankExamList: selBlankExamListTemp,
       selQuestionExamList: selQuestionExamListTemp,
-      totalScore: tempTotalScore,
+      // totalScore: tempTotalScore,
       selRadioExamFlag: selRadioExamFlagTemp,
       selCheckboxExamFlag: selCheckboxExamFlagTemp,
       selTrueOrFalseExamFlag: selTrueOrFalseExamFlagTemp,
@@ -107,7 +115,7 @@ class newPaperManual extends React.Component {
         <div style={{width: '100%'}}>
           <Form.Item style={{width: '100%'}}>
             <div dangerouslySetInnerHTML={{__html: value.examName}}></div>
-            {getFieldDecorator('radio', {initialValue: ''})(<Radio.Group style={{width: '100%'}}>
+            {(<Radio.Group style={{width: '100%'}}>
               <List
                 style={{width: '100%'}}
                 dataSource={value.baseExamAttrVOList}
@@ -123,7 +131,7 @@ class newPaperManual extends React.Component {
             }
           </Form.Item>
           <Form.Item label="分数：">
-            {getFieldDecorator(`${value.examId}`)(<Input id={value.examId}/>)}
+            <Input id={value.examId} onBlur={e=>this.constructorPaper(e,value.examId)}/>
           </Form.Item>
         </div>
       )
@@ -141,7 +149,7 @@ class newPaperManual extends React.Component {
           <Form.Item style={{width: '100%'}}>
             <div dangerouslySetInnerHTML={{__html: value.examName}}></div>
 
-            {getFieldDecorator(`checkbox`)(
+            {(
               <Checkbox.Group name='mycheck' style={{width: '100%'}}>
 
                 <Row key={value.examId} style={{width: '100%'}}>
@@ -161,7 +169,7 @@ class newPaperManual extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="分数：">
-            {getFieldDecorator(`${value.examId}`)(<Input id={value.examId}/>)}
+            <Input id={value.examId} onBlur={e=>this.constructorPaper(e,value.examId)}/>
           </Form.Item>
         </div>
       )
@@ -173,8 +181,7 @@ class newPaperManual extends React.Component {
         <div style={{width: '100%'}}>
           <Form.Item style={{width: '100%'}}>
             <div dangerouslySetInnerHTML={{__html: value.examName}}></div>
-
-            {getFieldDecorator('radio')(<Radio.Group style={{width: '100%'}}>
+            {(<Radio.Group style={{width: '100%'}}>
               <List
                 style={{width: '100%'}}
                 dataSource={value.baseExamAttrVOList}
@@ -190,7 +197,7 @@ class newPaperManual extends React.Component {
             }
           </Form.Item>
           <Form.Item label="分数：">
-            {getFieldDecorator(`${value.examId}`)(<Input id={value.examId}/>)}
+            <Input id={value.examId} onBlur={e=>this.constructorPaper(e,value.examId)}/>
           </Form.Item>
 
         </div>
@@ -201,14 +208,14 @@ class newPaperManual extends React.Component {
         <div style={{width: '100%'}}>
           <Form.Item style={{width: '100%'}}>
             <div dangerouslySetInnerHTML={{__html: value.examName}}></div>
-            {getFieldDecorator('braftEditor')(
+            {(
               <OlBraftEditor
                 contentStyle={{height: 200, overflow: 'scroll'}}
               />)
             }
           </Form.Item>
           <Form.Item label="分数：">
-            {getFieldDecorator(`${value.examId}`)(<Input id={value.examId}/>)}
+            <Input id={value.examId} onBlur={e=>this.constructorPaper(e,value.examId)}/>
           </Form.Item>
         </div>
       )
@@ -218,21 +225,41 @@ class newPaperManual extends React.Component {
         <div style={{width: '100%'}}>
           <Form.Item style={{width: '100%'}}>
             <div dangerouslySetInnerHTML={{__html: value.examName}}></div>
-            {getFieldDecorator('braftEditor')(
+            {(
               <OlBraftEditor
                 contentStyle={{height: 200, overflow: 'scroll'}}
               />)
             }
           </Form.Item>
           <Form.Item label="分数：">
-            {getFieldDecorator(`${value.examId}`)(<Input id={value.examId}/>)}
+            <Input id={value.examId} onBlur={e=>this.constructorPaper(e,value.examId)}/>
           </Form.Item>
         </div>
       )
     }
 
   }
+  constructorPaper = (value, examId)=>{
+    console.log(value.target.value,examId)
+    this.state.savePaperExamItems.map((item,index)=>{
+      if(item.examId == examId){
 
+        let temp={}
+        temp.examId = examId
+        temp.mark = value.target.value
+        temp.sort = index
+        paperList[index]= temp
+      }
+    })
+    let tempScore=0
+    for(let item of paperList){
+      tempScore += Number(item.mark)
+    }
+    this.setState({
+      totalScore:tempScore
+    })
+
+  }
   handleSubmit = e => {
     const {dispatch, paperId, history} = this.props;
     console.log(history.location.query.paperId)
@@ -248,14 +275,13 @@ class newPaperManual extends React.Component {
           ? JSON.parse(sessionStorage.getItem('roleInfo'))
           : '';
         const staffId = roleInfo ? roleInfo.staffId : '';
-        console.log("values:", values)
-        dispatch({
+          dispatch({
           type: 'newPaperManual/saveExam',
           payload: {
             paperId: history.location.query.paperId,
             createStaffId: staffId,
-            passScore: totalScore,
-            paperExamItems: savePaperExamItems
+            passScore: this.props.form.getFieldsValue().passScore,
+            paperExamItems: paperList
           },
         });
 
@@ -263,8 +289,24 @@ class newPaperManual extends React.Component {
     });
   };
 
+  showDetail = values =>{
+    this.props.form.setFieldsValue({ 'passScore':  values.passScore})
+    this.setState({
+      // selRadioExamList
+    })
+  }
+
   render() {
-    const {form,examListVisible} = this.props;
+    const {form,examListVisible,paperDetail,loading} = this.props;
+    console.log("paperDetail----",paperDetail)
+
+    // if(paperDetail){
+    //   // this.props.form.setFieldsValue({ 'passScore':  paperDetail.passScore})
+    //   this.setState({
+    //     totalScore:paperDetail.totalScore
+    //   })
+    //
+    // }
     const {getFieldDecorator} = form;
     const {
       selRadioExamList,
@@ -280,16 +322,22 @@ class newPaperManual extends React.Component {
       selQuestionExamFlag,
     } = this.state
 
+
+
+
+
+
     return (
+      <Spin spinning={loading}>
 
       <div className={styles.box}>
         <div className="clearfix">
           <div className="" style={{fontSize: '24px', lineHeight: '48px', textAlign: 'center'}}>
-            <span>111</span>
+            <span>{paperDetail?paperDetail.paperName:''}</span>
           </div>
           <div className="pullright" style={{fontSize: '20px', lineHeight: '28px'}}>
             <div style={{fontSize: '14px', lineHeight: '28px'}}>
-              总分：{totalScore}
+              总分：{paperDetail?paperDetail.totalScore:totalScore}
             </div>
           </div>
 
@@ -306,9 +354,9 @@ class newPaperManual extends React.Component {
                 <List
                   style={{width: '100%'}}
                   dataSource={selRadioExamList}
-                  renderItem={(tempRadio) =>
+                  renderItem={(tempRadio,index) =>
                     <List.Item style={{width: '100%'}}>
-                      {tempRadio ? tempRadio : ''}
+                      {index+1}、{tempRadio ? tempRadio : ''}
                     </List.Item>
                   }>
                 </List>
@@ -322,9 +370,9 @@ class newPaperManual extends React.Component {
                 <List
                   style={{width: '100%'}}
                   dataSource={selCheckboxExamList}
-                  renderItem={(temp1) =>
+                  renderItem={(temp1,index) =>
                     <List.Item style={{width: '100%'}}>
-                      {temp1}
+                      {selRadioExamList.length+index+1}、{temp1}
                     </List.Item>
                   }>
                 </List>
@@ -340,9 +388,9 @@ class newPaperManual extends React.Component {
                 <List
                   style={{width: '100%'}}
                   dataSource={selTrueOrFalseExamList}
-                  renderItem={(temp2) =>
+                  renderItem={(temp,index) =>
                     <List.Item style={{width: '100%'}}>
-                      {temp2}
+                      {selRadioExamList.length+selCheckboxExamList.length+index+1}、{temp}
                     </List.Item>
                   }>
                 </List>
@@ -360,9 +408,9 @@ class newPaperManual extends React.Component {
                 <List
                   style={{width: '100%'}}
                   dataSource={selQuestionExamList}
-                  renderItem={(temp3) =>
+                  renderItem={(temp,index) =>
                     <List.Item style={{width: '100%'}}>
-                      {temp3}
+                      {selRadioExamList.length+selCheckboxExamList.length+selTrueOrFalseExamList.length+index+1}、{temp}
                     </List.Item>
                   }>
                 </List>
@@ -388,9 +436,9 @@ class newPaperManual extends React.Component {
                 <List
                   style={{width: '100%'}}
                   dataSource={selBlankExamList}
-                  renderItem={(temp4) =>
+                  renderItem={(temp,index) =>
                     <List.Item style={{width: '100%'}}>
-                      {temp4}
+                      {selRadioExamList.length+selCheckboxExamList.length+selTrueOrFalseExamList.length+selQuestionExamList.length+index+1}、{temp}
                     </List.Item>
                   }>
                 </List>
@@ -412,6 +460,7 @@ class newPaperManual extends React.Component {
 
 
       </div>
+      </Spin>
     )
   }
 }

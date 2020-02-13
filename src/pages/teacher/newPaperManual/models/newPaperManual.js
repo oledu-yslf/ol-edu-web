@@ -52,7 +52,23 @@ export default {
             addExamVisible: false
           }
         })
+        router.push(`/teacher/paperList`)
+
       }
+    },
+    *queryDetail({payload},{call,put}){
+      debugger
+      const data = yield call(service.queryDetail, payload);
+      console.log("queryDetail",data)
+      if(data.successed){
+        yield put({
+          type:'save',
+          payload: {
+            paperDetail: data.data
+          }
+        })
+      }
+
     }
 
   },
