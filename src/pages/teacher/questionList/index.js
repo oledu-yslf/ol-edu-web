@@ -24,9 +24,8 @@ import PlusTypeModal from './components/plusTypeModal';
 import EditTypeModal from './components/editTypeModal';
 import AddExamModal from './components/addExamModal';
 import * as Util from '@/utils/util';
+import styles from '@/style/common.less';
 
-
-import styles from './index.less';
 const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 const { Option } = Select;
@@ -333,7 +332,7 @@ class QuestionList extends React.Component {
       uploadVisible,
       fileList,
     } = this.state;
-    const { getFieldDecorator } = form;
+    const {getFieldDecorator} = form;
 
     const renderTreeNodes = data => {
       if (data) {
@@ -365,8 +364,8 @@ class QuestionList extends React.Component {
         dataIndex: 'examName',
         key: 'examName',
         width: 200,
-        render: text =>(
-          <div dangerouslySetInnerHTML={{ __html: text }} />
+        render: text => (
+          <div dangerouslySetInnerHTML={{__html: text}}/>
         )
       },
       {
@@ -445,126 +444,115 @@ class QuestionList extends React.Component {
 
     return (
       <div className={styles.box}>
-        <Tabs defaultActiveKey="/teacher/questionList" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher"></TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="试题管理" key="/teacher/questionList">
-            <Spin spinning={loading}>
-              <Row gutter={24}>
-                <Col span={6}>
-                  <Button type="primary" icon="plus" size="small" onClick={this.plusType}>
-                    增加
-                  </Button>
+        <Spin spinning={loading}>
+          <Row gutter={24}>
+            <Col span={6}>
+              <Button type="primary" icon="plus" size="small" onClick={this.plusType}>
+                增加
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                icon="edit"
+                onClick={this.editType}
+                style={{marginLeft: '5px'}}
+              >
+                编辑
+              </Button>
+              <Button
+                size="small"
+                type="danger"
+                icon="delete"
+                onClick={this.deleteType}
+                style={{marginLeft: '5px'}}
+              >
+                删除
+              </Button>
+              <Tree
+                onSelect={this.onTypeSelect}
+                defaultExpandAll={true}
+                selectedKeys={selectedKeys}
+              >
+                {renderTreeNodes(typeList)}
+              </Tree>
+            </Col>
+            <Col span={18}>
+              <Form layout="inline" onSubmit={this.handleSubmit}>
+                <Form.Item label="试题类型:">
+                  {getFieldDecorator('examType', {
+                    initialValue: examType,
+                  })(
+                    <Select style={{width: '80px'}}>
+                      <Option value={''}>全部</Option>
+                      <Option value={1}>单选题</Option>
+                      <Option value={2}>多选题</Option>
+                      <Option value={3}>判断题</Option>
+                      <Option value={4}>问答题</Option>
+                      <Option value={5}>填空题</Option>
+                    </Select>,
+                  )}
+                </Form.Item>
+                <Form.Item label="难度等级:">
+                  {getFieldDecorator('difficultyLevel', {
+                    initialValue: difficultyLevel,
+                  })(
+                    <Select style={{width: '80px'}}>
+                      <Option value={''}>全部</Option>
+                      <Option value={0}>易</Option>
+                      <Option value={1}>较易</Option>
+                      <Option value={2}>中等</Option>
+                      <Option value={3}>偏难</Option>
+                      <Option value={4}>难</Option>
+                    </Select>,
+                  )}
+                </Form.Item>
+                <Form.Item label="试题名称:">
+                  {getFieldDecorator('examName', {
+                    initialValue: examName,
+                  })(<Input style={{width: '120px'}}/>)}
+                </Form.Item>
+                <Form.Item>
                   <Button
-                    size="small"
                     type="primary"
-                    icon="edit"
-                    onClick={this.editType}
-                    style={{ marginLeft: '5px' }}
+                    htmlType="submit"
+                    icon="search"
+                    onClick={this.handleSearchSubmit}
                   >
-                    编辑
+                    查询
                   </Button>
-                  <Button
-                    size="small"
-                    type="danger"
-                    icon="delete"
-                    onClick={this.deleteType}
-                    style={{ marginLeft: '5px' }}
-                  >
-                    删除
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" onClick={this.addExam}>
+                    新增试题
                   </Button>
-                  <Tree
-                    onSelect={this.onTypeSelect}
-                    defaultExpandAll={true}
-                    selectedKeys={selectedKeys}
-                  >
-                    {renderTreeNodes(typeList)}
-                  </Tree>
-                </Col>
-                <Col span={18}>
-                  <Form layout="inline" onSubmit={this.handleSubmit}>
-                    <Form.Item label="试题类型:">
-                      {getFieldDecorator('examType', {
-                        initialValue: examType,
-                      })(
-                        <Select style={{ width: '80px' }}>
-                          <Option value={''}>全部</Option>
-                          <Option value={1}>单选题</Option>
-                          <Option value={2}>多选题</Option>
-                          <Option value={3}>判断题</Option>
-                          <Option value={4}>问答题</Option>
-                          <Option value={5}>填空题</Option>
-                        </Select>,
-                      )}
-                    </Form.Item>
-                    <Form.Item label="难度等级:">
-                      {getFieldDecorator('difficultyLevel', {
-                        initialValue: difficultyLevel,
-                      })(
-                        <Select style={{ width: '80px' }}>
-                          <Option value={''}>全部</Option>
-                          <Option value={0}>易</Option>
-                          <Option value={1}>较易</Option>
-                          <Option value={2}>中等</Option>
-                          <Option value={3}>偏难</Option>
-                          <Option value={4}>难</Option>
-                        </Select>,
-                      )}
-                    </Form.Item>
-                    <Form.Item label="试题名称:">
-                      {getFieldDecorator('examName', {
-                        initialValue: examName,
-                      })(<Input style={{ width: '120px' }} />)}
-                    </Form.Item>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        icon="search"
-                        onClick={this.handleSearchSubmit}
-                      >
-                        查询
-                      </Button>
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit" onClick={this.addExam}>
-                        新增试题
-                      </Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" onClick={this.handleImport} >
-                          导入试题
-                        </Button>
-                    </Form.Item>
-                  </Form>
-                  <Divider />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" onClick={this.handleImport}>
+                    导入试题
+                  </Button>
+                </Form.Item>
+              </Form>
+              <Divider />
 
-                  <Table
-                    rowKey={record => record.examId}
-                    columns={columns}
-                    dataSource={questionList}
-                    pagination={{
-                      total,
-                      pageSize: 10,
-                      onChange: (page, pageSize) => {
-                        this.pageChange(page, pageSize);
-                      },
-                    }}
-                  />
-                </Col>
-              </Row>
-            </Spin>
-          </TabPane>
-          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
+              <Table
+                rowKey={record => record.examId}
+                columns={columns}
+                dataSource={questionList}
+                pagination={{
+                  total,
+                  pageSize: 10,
+                  onChange: (page, pageSize) => {
+                    this.pageChange(page, pageSize);
+                  },
+                }}
+              />
+            </Col>
+          </Row>
+        </Spin>
 
-        <PlusTypeModal plusTypeVisible={plusTypeVisible} selectedNodes={selectedNodes} />
-        <EditTypeModal editTypeVisible={editTypeVisible} selectedNodes={selectedNodes} />
-        <AddExamModal addExamVisible={addExamVisible} selectedNodes={selectedNodes} />
+        <PlusTypeModal plusTypeVisible={plusTypeVisible} selectedNodes={selectedNodes}/>
+        <EditTypeModal editTypeVisible={editTypeVisible} selectedNodes={selectedNodes}/>
+        <AddExamModal addExamVisible={addExamVisible} selectedNodes={selectedNodes}/>
 
         <Modal
           title="删除试题分类提示"
