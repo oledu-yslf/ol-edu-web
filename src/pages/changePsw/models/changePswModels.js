@@ -3,7 +3,7 @@ import { message } from 'antd';
 import router from 'umi/router';
 
 export default {
-  namespace: 'teacher',
+  namespace: 'changePsw',
   state: {
     staffDetail:{},staffId:'',editInfoVisible:false
   },

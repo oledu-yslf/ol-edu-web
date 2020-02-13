@@ -3,7 +3,7 @@ import moment from 'moment';
 import router from 'umi/router';
 import { Tabs, Button, Table, Spin, Form } from 'antd';
 import { connect } from 'dva';
-import styles from './index.less';
+import styles from '@/style/common.less';
 const { TabPane } = Tabs;
 
 class PaperList extends React.Component {
@@ -144,32 +144,21 @@ class PaperList extends React.Component {
       },
     ];
     return (
-      <div className={styles.box}>
-        <Tabs defaultActiveKey="/student/paperList" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/student"></TabPane>
-          <TabPane tab="学习记录" key="/student/recentList"></TabPane>
-          <TabPane tab="我的作业" key="/student/homeworkForStudent"></TabPane>
-          <TabPane tab="我的考试" key="/student/paperList">
-            <Spin spinning={loading}>
-              <Table
-                rowKey={record => `${record.paperId}-${record.planDetailId}`}
-                columns={columns}
-                dataSource={paperList}
-                pagination={{
-                  total:count,
-                  pageSize: 10,
-                  onChange: (page, pageSize) => {
-                    this.pageChange(page, pageSize);
-                  },
-                }}
-              />
-            </Spin>
-
-          </TabPane>
-          <TabPane tab="我的成绩" key="/student/achievement"></TabPane>
-          <TabPane tab="我的收藏" key="/student/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/student/changePsw"></TabPane>
-        </Tabs>
+      <div className={styles.boxmargin0}>
+        <Spin spinning={loading}>
+          <Table
+            rowKey={record => `${record.paperId}-${record.planDetailId}`}
+            columns={columns}
+            dataSource={paperList}
+            pagination={{
+              total: count,
+              pageSize: 10,
+              onChange: (page, pageSize) => {
+                this.pageChange(page, pageSize);
+              },
+            }}
+          />
+        </Spin>
       </div>
     );
   }

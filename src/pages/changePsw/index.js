@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './index.less';
+import style from '@/style/common.less';
 import { Form, Button,  Input,Tabs} from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -18,16 +18,18 @@ class ChangePsw extends React.Component {
 
   compareToFirstPassword = (rule, value, callback) => {
     const { dispatch, form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
+    let pwd1 = form.getFieldValue('password')
+    let pwd2 = form.getFieldValue('confirm')
+
+    console.log(pwd1)
+    console.log(pwd2)
+    if ((pwd2 && pwd1)  && pwd1 !== pwd2) {
       callback('两次输入的密码不相同!');
     } else {
       callback();
     }
   };
 
-  handleConfirmBlur = e => {
-    const { value } = e.target;
-  };
 
   handleSubmit = e => {
     const { dispatch } = this.props;
@@ -40,7 +42,7 @@ class ChangePsw extends React.Component {
         const staffId = roleInfo ? roleInfo.staffId : '';
         console.log('Received values of form: ', values);
         dispatch({
-          type: 'changepsw/staffUpdate',
+          type: 'changePsw/staffUpdate',
           payload: {
             staffId,
             oldStaffPwd:values.oldPassword,
@@ -82,16 +84,6 @@ class ChangePsw extends React.Component {
 
     return (
       <div className={style.box}>
-        <Tabs defaultActiveKey="/teacher/changePsw" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher"></TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="试题管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="试卷管理" key="/teacher/paperList"></TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList"></TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           <Form.Item label="旧密码" hasFeedback labelCol={{span: 3, offset: 1}}>
             {getFieldDecorator('oldPassword', {
@@ -114,7 +106,7 @@ class ChangePsw extends React.Component {
                   message: '请输入新密码!',
                 },
                 {
-                  validator: this.validateToNextPassword,
+                  validator: this.compareToFirstPassword,
                 },
               ],
             })(<Input.Password />)}
@@ -130,7 +122,7 @@ class ChangePsw extends React.Component {
                   validator: this.compareToFirstPassword,
                 },
               ],
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+            })(<Input.Password />)}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
@@ -138,17 +130,15 @@ class ChangePsw extends React.Component {
             </Button>
           </Form.Item>
         </Form>
-
-
       </div>
     );
   }
 }
 
 
-const TeacherFrom = Form.create({ name: 'TeacherFrom' })(ChangePsw);
+const ChangePswFrom = Form.create({ name: 'ChangePswFrom' })(ChangePsw);
 
 export default connect(state => ({
-  ...state.changepsw,
-  loading: state.loading.models.changepsw,
-}))(TeacherFrom);
+  ...state.changePsw,
+  loading: state.loading.models.changePsw,
+}))(ChangePswFrom);
