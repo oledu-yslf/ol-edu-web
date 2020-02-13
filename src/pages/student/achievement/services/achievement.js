@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 import getUserId from '@/utils/getUserId';
 
-export async function getExamListForStudent(params) {
+export async function getResultForStudent(params) {
   return request({
     url: '/api/exam/paperPlanDetail/getResultForStudent',
     method: 'post',
