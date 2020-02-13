@@ -8,18 +8,6 @@ export default {
     courseList:[]
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/student/recentList') {
-          dispatch({
-            type: 'listRecent',
-            payload:{
-              createStaffId:getUserId()
-            }
-          });
-        }
-      });
-    },
   },
   effects: {
     *listRecent({ payload }, { call, put }) {
@@ -30,16 +18,6 @@ export default {
         payload: {
           list: result,
           total:count
-        },
-      });
-    },
-    *courseListpage({ payload }, { call, put }) {
-      const {data} = yield call(service.courseListpage,payload)
-      const {result} = data;
-      yield put({
-        type: 'save',
-        payload: {
-          courseList: result,
         },
       });
     },

@@ -10,23 +10,6 @@ export async function listRecent(params) {
     data: Object.assign(
       {
         createStaffId: '',
-        courseId: '',
-        page: {
-          pageNum: 1,
-          pageSize: 12,
-        },
-      },
-      params,
-    ),
-  });
-}
-
-export async function courseListpage (params) {
-  return request('/api/course/listpage',{
-    method: 'POST',
-    data: Object.assign(
-      {
-        courseName: '',
         page: {
           pageNum: 1,
           pageSize: 10,
@@ -34,6 +17,7 @@ export async function courseListpage (params) {
       },
       params,
     ),
-  })
+  });
 }
+
 
