@@ -57,6 +57,16 @@ class StudentAchieveList extends React.Component {
   };
 
   handleExportAll =e=>{
+    const { dispatch } = this.props;
+    const {query} = this.props.location
+    dispatch({
+      type: 'studentAchieveList/avgDetailExport',
+      payload: {
+        planId:query.planId,
+        paperId:query.paperId,
+        departId:query.departId,
+      },
+    });
 
   }
 

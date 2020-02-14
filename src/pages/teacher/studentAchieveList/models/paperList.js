@@ -1,4 +1,5 @@
 import * as service from '../services/paperList';
+import { message } from 'antd';
 export default {
   namespace: 'studentAchieveList',
   state: {
@@ -41,6 +42,12 @@ export default {
           total: count,
         },
       });
+    },
+    *avgDetailExport({ payload }, { call, put }) {
+      const { data } = yield call(service.avgDetailExport, payload);
+      if (data.successed) {
+        message.success('导出成功');
+      }
     },
   },
   reducers: {
