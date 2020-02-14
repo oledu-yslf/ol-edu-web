@@ -1,26 +1,27 @@
 import React from 'react';
 import moment from 'moment';
 import router from 'umi/router';
-import { Tabs, Button, Table, Spin, Form, Input, Select } from 'antd';
-import { connect } from 'dva';
-import styles from './index.less';
-const { TabPane } = Tabs;
-const { Option } = Select;
+import {Tabs, Button, Table, Spin, Form, Input, Select} from 'antd';
+import {connect} from 'dva';
+import styles from '@/style/common.less';
+const {TabPane} = Tabs;
+const {Option} = Select;
 
 class HomeworkForTeacherList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
   onTabClick = e => {
     router.push(e);
   };
 
   handleSearchSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const {dispatch, form} = this.props;
     const value = form.getFieldsValue();
-    const { paperName, planName, state } = value;
+    const {paperName, planName, state} = value;
     dispatch({
       type: 'homeworkForTeacherList/listPage',
       payload: {
@@ -36,9 +37,9 @@ class HomeworkForTeacherList extends React.Component {
   };
 
   pageChange = (page, pageSize) => {
-    const { dispatch, form } = this.props;
+    const {dispatch, form} = this.props;
     const value = form.getFieldsValue();
-    const { paperName, planName, state } = value;
+    const {paperName, planName, state} = value;
     dispatch({
       type: 'homeworkForTeacherList/listPage',
       payload: {
@@ -52,8 +53,19 @@ class HomeworkForTeacherList extends React.Component {
       },
     });
   };
+
+  componentWillMount() {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'homeworkForTeacherList/listPage',
+      payload: {
+      },
+    });
+  }
+
+
   componentWillUnmount() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'homeworkForTeacherList/save',
       payload: {
@@ -62,28 +74,47 @@ class HomeworkForTeacherList extends React.Component {
       },
     });
   }
+
   render() {
-    const { paperList, total, loading, form } = this.props;
-    const { getFieldDecorator } = form;
+    const {paperList, total, loading, form,pageNum, pageSize} = this.props;
+    const {getFieldDecorator} = form;
+
     const columns = [
+      {
+        key: 'index',
+        title: '序号',
+        width: 80,
+        render: (text, record, index) => {
+          return (
+            `${(pageNum - 1) * pageSize + (index + 1)}` //当前页数减1乘以每一页页数再加当前页序号+1
+          )
+        }
+      },
+      {
+        title: '计划名称',
+        dataIndex: 'planName',
+        key: 'planName',
+      },
+
       {
         title: '试卷名称',
         dataIndex: 'paperName',
         key: 'paperName',
-        width:100
       },
       {
         title: '试卷类型',
         dataIndex: 'paperType',
         key: 'paperType',
-        render: text => <span>{text === 0 ? '作业' : '试卷'}</span>,
+        render: (text,record) => {
+          return <span>{text == 0 ? '作业' : '试卷'}</span>
+        }
       },
-    //   {
-    //     title: '创建时间',
-    //     dataIndex: 'createDate',
-    //     key: 'createDate',
-    //     render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
-    //   },
+      //   {
+      //     title: '创建时间',
+      //     dataIndex: 'createDate',
+      //     key: 'createDate',
+      //     render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+      //   },
       {
         title: '及格分数',
         dataIndex: 'passScore',
@@ -91,14 +122,14 @@ class HomeworkForTeacherList extends React.Component {
       },
 
       {
-        title: '分数',
+        title: '总分',
         dataIndex: 'totalScore',
         key: 'totalScore',
       },
       {
-        title: '创建人员',
-        key: 'createStaffName',
-        dataIndex: 'createStaffName',
+        title: '得分',
+        dataIndex: 'score',
+        key: 'score',
       },
       {
         title: '考试人员',
@@ -114,12 +145,18 @@ class HomeworkForTeacherList extends React.Component {
         title: '开始时间',
         key: 'effDate',
         dataIndex: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS')}</span>,
       },
       {
         title: '批卷老师',
         key: 'reviewStaffName',
         dataIndex: 'reviewStaffName',
+      },
+      {
+        title: '批卷时间',
+        key: 'reviewDate',
+        dataIndex: 'reviewDate',
+        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS') :'-'}</span>,
       },
       {
         title: '状态',
@@ -151,66 +188,55 @@ class HomeworkForTeacherList extends React.Component {
     ];
     return (
       <div className={styles.box}>
-        <Tabs defaultActiveKey="/teacher/homeworkForTeacherList" onTabClick={this.onTabClick}>
-          <TabPane tab="基础资料" key="/teacher"></TabPane>
-          <TabPane tab="课程管理" key="/teacher/courseManage"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/questionList"></TabPane>
-          <TabPane tab="考试管理" key="/teacher/paperList"></TabPane>
-          <TabPane tab="作业审阅" key="/teacher/homeworkForTeacherList">
-            <Form layout="inline">
-              <Form.Item label="试题名称:">
-                {getFieldDecorator('paperName', {})(<Input style={{ width: '120px' }} />)}
-              </Form.Item>
-              <Form.Item label="计划名称:">
-                {getFieldDecorator('planName', {})(<Input style={{ width: '120px' }} />)}
-              </Form.Item>
-              <Form.Item label="状态:">
-                {getFieldDecorator('state', { initialValue: '' })(
-                  <Select style={{ width: '80px' }}>
-                    <Option value={''}>全部</Option>
-                    <Option value={0}>新建</Option>
-                    <Option value={1}>进行中</Option>
-                    <Option value={2}>待审阅</Option>
-                    <Option value={3}>已审阅</Option>
-                  </Select>,
-                )}
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  icon="search"
-                  onClick={this.handleSearchSubmit}
-                >
-                  查询
-                </Button>
-              </Form.Item>
-            </Form>
-            <Spin spinning={loading}>
-              <Table
-                rowKey={record => `${record.paperId}-${record.planDetailId}`}
-                columns={columns}
-                dataSource={paperList}
-                pagination={{
-                  total,
-                  pageSize: 10,
-                  onChange: (page, pageSize) => {
-                    this.pageChange(page, pageSize);
-                  },
-                }}
-              />
-            </Spin>
-          </TabPane>
-          <TabPane tab="学生成绩" key="/teacher/resultList"></TabPane>
-          <TabPane tab="我的收藏" key="/teacher/favorite"></TabPane>
-          <TabPane tab="修改密码" key="/teacher/changePsw"></TabPane>
-        </Tabs>
+        <Form layout="inline">
+          <Form.Item label="试题名称:">
+            {getFieldDecorator('paperName', {})(<Input style={{width: '120px'}}/>)}
+          </Form.Item>
+          <Form.Item label="计划名称:">
+            {getFieldDecorator('planName', {})(<Input style={{width: '120px'}}/>)}
+          </Form.Item>
+          <Form.Item label="状态:">
+            {getFieldDecorator('state', {initialValue: ''})(
+              <Select style={{width: '80px'}}>
+                <Option value={''}>全部</Option>
+                <Option value={0}>新建</Option>
+                <Option value={1}>进行中</Option>
+                <Option value={2}>待审阅</Option>
+                <Option value={3}>已审阅</Option>
+              </Select>,
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon="search"
+              onClick={this.handleSearchSubmit}
+            >
+              查询
+            </Button>
+          </Form.Item>
+        </Form>
+        <Spin spinning={loading}>
+          <Table
+            rowKey={record => `${record.paperId}-${record.planDetailId}`}
+            columns={columns}
+            dataSource={paperList}
+            pagination={{
+              total,
+              pageSize: 10,
+              onChange: (page, pageSize) => {
+                this.pageChange(page, pageSize);
+              },
+            }}
+          />
+        </Spin>
       </div>
     );
   }
 }
 
-const HomeworkForTeacherListForm = Form.create({ name: 'homeworkForTeacherListForm' })(
+const HomeworkForTeacherListForm = Form.create({name: 'homeworkForTeacherListForm'})(
   HomeworkForTeacherList,
 );
 

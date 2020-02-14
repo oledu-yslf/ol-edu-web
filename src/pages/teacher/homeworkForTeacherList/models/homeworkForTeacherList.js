@@ -4,38 +4,25 @@ export default {
   state: {
     total: 10,
     paperList: [],
+    pageNum:1,
+    pageSize:10,
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/homeworkForTeacherList') {
-          dispatch({
-            type: 'init',
-          });
-        }
-      });
-    },
   },
   effects: {
-    *init({ payload }, { call, put }) {
-      const [paperRes] = yield [call(service.listPage)];
-      const { count, result } = paperRes.data;
-      yield put({
-        type: 'save',
-        payload: {
-          paperList: result,
-          total: count,
-        },
-      });
-    },
     *listPage({ payload }, { call, put }) {
-      const { data } = yield call(service.listPage, payload);
-      const { count, result } = data;
+      //const { data } = yield call(service.listPage, payload);
+      const [resp] = yield [call(service.listPage, payload)];
+
+      const { count, pageNum, pageSize, result } = resp.data;
+
       yield put({
         type: 'save',
         payload: {
           paperList: result,
           total: count,
+          pageNum,
+          pageSize,
         },
       });
     },
