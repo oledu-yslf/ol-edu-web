@@ -7,7 +7,7 @@ import styles from '@/style/common.less';
 const {TabPane} = Tabs;
 const {Option} = Select;
 
-class HomeworkForTeacherList extends React.Component {
+class PaperReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -23,7 +23,7 @@ class HomeworkForTeacherList extends React.Component {
     const value = form.getFieldsValue();
     const {paperName, planName, state} = value;
     dispatch({
-      type: 'homeworkForTeacherList/getHomeworkForTeacher',
+      type: 'homeworkForTeacherList/getPaperForTeacher',
       payload: {
         paperName,
         planName,
@@ -41,7 +41,7 @@ class HomeworkForTeacherList extends React.Component {
     const value = form.getFieldsValue();
     const {paperName, planName, state} = value;
     dispatch({
-      type: 'homeworkForTeacherList/getHomeworkForTeacher',
+      type: 'homeworkForTeacherList/getPaperForTeacher',
       payload: {
         paperName,
         planName,
@@ -57,7 +57,7 @@ class HomeworkForTeacherList extends React.Component {
   componentWillMount() {
     const {dispatch} = this.props;
     dispatch({
-      type: 'homeworkForTeacherList/getHomeworkForTeacher',
+      type: 'homeworkForTeacherList/getPaperForTeacher',
       payload: {
       },
     });
@@ -236,11 +236,11 @@ class HomeworkForTeacherList extends React.Component {
   }
 }
 
-const HomeworkForTeacherListForm = Form.create({name: 'homeworkForTeacherListForm'})(
-  HomeworkForTeacherList,
+const PaperReviewForm = Form.create({name: 'PaperReviewForm'})(
+  PaperReview,
 );
 
 export default connect(state => ({
   ...state.homeworkForTeacherList,
   loading: state.loading.models.homeworkForTeacherList,
-}))(HomeworkForTeacherListForm);
+}))(PaperReviewForm);

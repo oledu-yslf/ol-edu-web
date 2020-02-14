@@ -10,9 +10,26 @@ export default {
   subscriptions: {
   },
   effects: {
-    *listPage({ payload }, { call, put }) {
+    *getHomeworkForTeacher({ payload }, { call, put }) {
       //const { data } = yield call(service.listPage, payload);
-      const [resp] = yield [call(service.listPage, payload)];
+      const [resp] = yield [call(service.getHomeworkForTeacher, payload)];
+
+      const { count, pageNum, pageSize, result } = resp.data;
+
+      yield put({
+        type: 'save',
+        payload: {
+          paperList: result,
+          total: count,
+          pageNum,
+          pageSize,
+        },
+      });
+    },
+
+    *getPaperForTeacher({ payload }, { call, put }) {
+      //const { data } = yield call(service.listPage, payload);
+      const [resp] = yield [call(service.getPaperForTeacher, payload)];
 
       const { count, pageNum, pageSize, result } = resp.data;
 
