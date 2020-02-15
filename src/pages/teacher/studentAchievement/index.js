@@ -40,7 +40,7 @@ class StudentAchievement extends React.Component {
 
   queryPaper = record =>{
     router.push(
-      `/teacher/studentAchieveList?paperId=${record.paperId}&staffId=${record.reviewStaffId}&planId=${record.planId}&departId=${record.departId}`,
+      `/teacher/studentAchieveList?paperId=${record.paperId}&planId=${record.planId}&departId=${record.departId}`,
     );
   }
   paperZone = record => {
@@ -49,10 +49,21 @@ class StudentAchievement extends React.Component {
     );
   };
 
-  pageChange = (page,pageSize) => {
+  handleChange = (pager,filters,sorter) => {
+
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
     const { paperId, planId, departId } = value;
+
+    let orderBy = "";
+
+    if (sorter.order){
+      if (sorter.order === 'ascend'){
+        orderBy = `${sorter.column.sortField} asc`;
+      } else if (sorter.order === 'descend'){
+        orderBy = `${sorter.column.sortField} desc`;
+      }
+    }
 
     dispatch({
       type: 'studentAchievement/listPage',
@@ -60,9 +71,10 @@ class StudentAchievement extends React.Component {
         paperId,
         planId,
         departId,
+        orderBy,
         page: {
-          pageNum: page,
-          pageSize,
+          pageNum: pager.current,
+          pageSize:pager.pageSize
         },
       },
     });
@@ -87,58 +99,58 @@ class StudentAchievement extends React.Component {
       {
         title: '考试计划',
         dataIndex: 'planName',
-        key: 'planName',
       },
       {
         title: '试卷名称',
         dataIndex: 'paperName',
-        key: 'paperName',
       },
       {
         title: '及格分数',
         dataIndex: 'passScore',
-        key: 'passScore',
       },
 
       {
         title: '分数',
         dataIndex: 'totalScore',
-        key: 'totalScore',
       },
       {
         title: '平均分',
-        key: 'averageScore',
         dataIndex: 'averageScore',
+        sortField:'average_Score',
+        sorter : true
       },
       {
         title: '最高分',
-        key: 'highestScore',
         dataIndex: 'highestScore',
+        sortField:'highest_Score',
+        sorter : true
       },
       {
         title: '最低分',
-        key: 'minimumScore',
         dataIndex: 'minimumScore',
+        sortField:'minimum_Score',
+        sorter : true
       },
       {
         title: '拟定参与人数',
-        key: 'plannedNum',
         dataIndex: 'plannedNum',
       },
       {
         title: '实际参与人数',
-        key: 'totalNum',
         dataIndex: 'totalNum',
       },
       {
         title: '通过人数',
         dataIndex: 'passNum',
-        key: 'passNum',
+        sortField:'pass_Num',
+        sorter : true
       },
       {
         title: '通过率',
         dataIndex: 'passPercent',
-        key: 'passPercent',
+        sortField:'pass_Percent',
+        sorter : true,
+
         render:(text,record)=>(
           <span>{text+'%'}</span>
         )
@@ -146,28 +158,23 @@ class StudentAchievement extends React.Component {
       {
         title: '部门',
         dataIndex: 'departName',
-        key: 'departName',
       },
       {
         title: '开始时间',
         dataIndex: 'createDate',
-        key: 'createDate',
         render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
       },
       {
         title: '批卷老师',
         dataIndex: 'reviewStaffName',
-        key: 'reviewStaffName',
       },
       {
         title: '批卷时间',
         dataIndex: 'effDate',
-        key: 'effDate',
         render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
       },
       {
         title: '操作',
-        key: 'action',
         dataIndex: 'action',
         width:110,
         render: (text, record) => (
@@ -275,10 +282,8 @@ class StudentAchievement extends React.Component {
                 pagination={{
                   total,
                   pageSize,
-                  onChange: (page,pageSize) => {
-                    this.pageChange(page,pageSize);
-                  },
                 }}
+                onChange={this.handleChange}
               />
             </Spin>
       </div>
