@@ -10,7 +10,9 @@ const { Option } = AutoComplete;
 class StudentAchievement extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+
+    };
   }
   onTabClick = e => {
     router.push(e);
@@ -18,90 +20,68 @@ class StudentAchievement extends React.Component {
 
   handleSearchSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form,pageSize } = this.props;
     const value = form.getFieldsValue();
     const { paperId, planId, departId } = value;
-    const roleInfo = sessionStorage.getItem('roleInfo')
-      ? JSON.parse(sessionStorage.getItem('roleInfo'))
-      : '';
-    const staffId = roleInfo ? roleInfo.staffId : '';
     dispatch({
       type: 'studentAchievement/listPage',
       payload: {
         paperId,
         planId,
         departId,
-        staffId: staffId,
+        page: {
+          pageNum: 1,
+          pageSize,
+        },
+
       },
     });
   };
 
   queryPaper = record =>{
-    debugger
     router.push(
       `/teacher/studentAchieveList?paperId=${record.paperId}&staffId=${record.reviewStaffId}&planId=${record.planId}&departId=${record.departId}`,
     );
   }
   paperZone = record => {
     router.push(
-      `../paperZone?planId=${record.planId}&paperId=${record.paperId}&departId=${record.departId}&staffId=${record.reviewStaffId}`,
+      `/paperZone?planId=${record.planId}&paperId=${record.paperId}&departId=${record.departId}`,
     );
   };
 
-  onPlanSearch = searchText => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'resultList/planListPage',
-      payload: {
-        planName: searchText,
-      },
-    });
-  };
-  onPaperSearch = searchText => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'resultList/paperListPage',
-      payload: {
-        paperName: searchText,
-      },
-    });
-  };
-
-  pageChange = (page, pageSize) => {
+  pageChange = (page,pageSize) => {
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
     const { paperId, planId, departId } = value;
-    const roleInfo = sessionStorage.getItem('roleInfo')
-      ? JSON.parse(sessionStorage.getItem('roleInfo'))
-      : '';
-    const staffId = roleInfo ? roleInfo.staffId : '';
+
     dispatch({
       type: 'studentAchievement/listPage',
       payload: {
         paperId,
         planId,
         departId,
-        staffId:staffId,
         page: {
           pageNum: page,
-          pageSize: 10,
+          pageSize,
         },
       },
     });
   };
-  componentWillUnmount() {
-    const { dispatch } = this.props;
+  componentWillMount() {
+    const { dispatch, pageSize} = this.props;
     dispatch({
-      type: 'studentAchievement/save',
+      type: 'studentAchievement/init',
       payload: {
-        paperList: [],
-        treeDepartData:[],
-        total: 10,
+        page: {
+          pageNum: 1,
+          pageSize,
+        },
       },
     });
   }
+
   render() {
-    const { paperList, total, loading, form, treeDepartData, planList} = this.props;
+    const { achievementList, total,pageSize, loading, form, treeDepartData, condPlanList,condPaperList} = this.props;
     const { getFieldDecorator } = form;
     const columns = [
       {
@@ -189,15 +169,16 @@ class StudentAchievement extends React.Component {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
-        width:170,
+        width:110,
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.queryPaper(record, e)}>
+            <a  onClick={e => this.queryPaper(record, e)}>
               详情
-            </Button>
-            <Button type="link" onClick={e => this.paperZone(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a  onClick={e => this.paperZone(record, e)}>
               分布图
-            </Button>
+            </a>
           </span>
         ),
       },
@@ -229,8 +210,8 @@ class StudentAchievement extends React.Component {
         });
       }
     };
-    const planNode = paperList?paperList.map(item => <Option key={item.planId}>{item.planName}</Option>):'';
-    const paperNode = paperList?paperList.map(item => <Option key={item.paperId}>{item.paperName}</Option>):'';
+    const planNode = condPlanList?condPlanList.map(item => <Option key={item.planId}>{item.planName}</Option>):'';
+    const paperNode = condPaperList?condPaperList.map(item => <Option key={item.paperId}>{item.paperName}</Option>):'';
     return (
 
     <div className={styles.box}>
@@ -238,11 +219,11 @@ class StudentAchievement extends React.Component {
             <Form layout="inline">
               <Form.Item label="考试计划:">
                 {getFieldDecorator('planId', {
-                  rules: [{ required: true, message: '请输入考试计划！' }],
                 })(
                   <AutoComplete
-                    dataSource={planList}
-                    onSearch={this.onPlanSearch}
+                    filterOption={(inputValue, option) =>
+                      option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
                   >
                     {planNode}
                   </AutoComplete>,
@@ -251,11 +232,11 @@ class StudentAchievement extends React.Component {
 
               <Form.Item label="试卷名称:">
                 {getFieldDecorator('paperId', {
-                  rules: [{ required: true, message: '请输入试卷名称！' }],
                 })(
                   <AutoComplete
-                    dataSource={paperList}
-                    onSearch={this.onPaperSearch}
+                    filterOption={(inputValue, option) =>
+                    option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
                   >
                     {paperNode}
                   </AutoComplete>,
@@ -263,7 +244,6 @@ class StudentAchievement extends React.Component {
               </Form.Item>
               <Form.Item label="发布部门">
                 {getFieldDecorator('departId', {
-                  rules: [{ required: true, message: '请选择发布部门！' }],
                 })(
                   <TreeSelect
                     showSearch
@@ -291,12 +271,12 @@ class StudentAchievement extends React.Component {
               <Table
                 rowKey={record => `${record.paperId}-${record.planDetailId}`}
                 columns={columns}
-                dataSource={paperList}
+                dataSource={achievementList}
                 pagination={{
                   total,
-                  pageSize: 10,
-                  onChange: (page, pageSize) => {
-                    this.pageChange(page, pageSize);
+                  pageSize,
+                  onChange: (page,pageSize) => {
+                    this.pageChange(page,pageSize);
                   },
                 }}
               />
