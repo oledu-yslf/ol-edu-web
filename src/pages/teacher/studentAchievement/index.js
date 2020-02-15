@@ -40,7 +40,7 @@ class StudentAchievement extends React.Component {
 
   queryPaper = record =>{
     router.push(
-      `/teacher/studentAchieveList?paperId=${record.paperId}&planId=${record.planId}&departId=${record.departId}`,
+      `/teacher/studentAchieveList?paperId=${record.paperId}&planId=${record.planId}&departId=${record.departId}&departName=${record.departName}`,
     );
   }
   paperZone = record => {

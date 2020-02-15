@@ -1,34 +1,27 @@
-import * as service from '../services/paperList';
+import * as service from '../services/studentAchieveList';
 import { message } from 'antd';
 export default {
   namespace: 'studentAchieveList',
   state: {
     total: 10,
-    paperList: [],
+    achieveList: [],    //结果
+    pageSize:10,
+    studentList:[],   //查询条件中的学生列表
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/studentAchieveList') {
-          dispatch({
-            type: 'init',
-            payload:{
-              ...query
-            }
-          });
-        }
-      });
-    },
+
   },
   effects: {
     *init({ payload }, { call, put }) {
-      const [paperRes] = yield [call(service.listPage,payload)];
+      const [paperRes,studentRes] = yield [call(service.listPage,payload),call(service.getStudentList,payload)];
       const { count, result } = paperRes.data;
+
       yield put({
         type: 'save',
         payload: {
-          paperList: result,
+          achieveList: result,
           total: count,
+          studentList:paperRes.data.result,
         },
       });
     },
@@ -38,15 +31,20 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          paperList: result,
+          achieveList: result,
           total: count,
         },
       });
     },
-    *avgDetailExport({ payload }, { call, put }) {
-      const { data } = yield call(service.avgDetailExport, payload);
-      if (data.successed) {
-        message.success('导出成功');
+    *avgDetailExport({ payload,callback }, { call, put }) {
+      const response = yield call(service.avgDetailExport, payload);
+
+      if (response instanceof Blob) {
+        if (callback && typeof callback === 'function') {
+          callback(response);
+        }
+      } else {
+        message.warning('Some error messages...', 5);
       }
     },
   },

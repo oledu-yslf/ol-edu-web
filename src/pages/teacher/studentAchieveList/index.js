@@ -17,7 +17,7 @@ class StudentAchieveList extends React.Component {
 
   handleSearchSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form,pageSize } = this.props;
     const value = form.getFieldsValue();
     const { staffId } = value;
     const {query} = this.props.location;
@@ -28,6 +28,10 @@ class StudentAchieveList extends React.Component {
         paperId:query.paperId,
         planId:query.planId,
         departId:query.departId,
+        page: {
+          pageNum: 1,
+          pageSize,
+        },
       },
     });
   };
@@ -41,24 +45,41 @@ class StudentAchieveList extends React.Component {
   pageChange = (page, pageSize) => {
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
-    const { paperId, planId, departId } = value;
+    const { staffId} = value;
+    const {query} = this.props.location;
     dispatch({
       type: 'studentAchieveList/listPage',
       payload: {
-        paperId,
-        planId,
-        departId,
+        staffId,
+        paperId:query.paperId,
+        planId:query.planId,
+        departId:query.departId,
         page: {
           pageNum: page,
-          pageSize: 10,
+          pageSize,
         },
       },
     });
   };
 
-  handleExportAll =e=>{
-    const { dispatch } = this.props;
-    const {query} = this.props.location
+  handleExportAll = e =>{
+    e.preventDefault();
+
+/*    dispatch({
+      type: 'studentAchieveList/avgDetailExport',
+      payload: {
+        planId:query.planId,
+        paperId:query.paperId,
+        departId:query.departId,
+      },
+    });*/
+
+
+    const { dispatch} = this.props;
+    const {query} = this.props.location;
+
+    const fileName = `${query.departName}_成绩.xlsx`;
+
     dispatch({
       type: 'studentAchieveList/avgDetailExport',
       payload: {
@@ -66,53 +87,68 @@ class StudentAchieveList extends React.Component {
         paperId:query.paperId,
         departId:query.departId,
       },
+      callback: blob => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          navigator.msSaveBlob(blob, fileName);
+        } else {
+          const link = document.createElement('a');
+          const evt = document.createEvent('MouseEvents');
+          link.style.display = 'none';
+          link.href = window.URL.createObjectURL(blob);
+          link.download = fileName;
+          document.body.appendChild(link); // 此写法兼容可火狐浏览器
+          evt.initEvent('click', false, false);
+          link.dispatchEvent(evt);
+          document.body.removeChild(link);
+        }
+      }
     });
 
   }
 
-  componentWillUnmount() {
-    const { dispatch } = this.props;
+  componentWillMount() {
+    const { dispatch,pageSize } = this.props;
+    const {query} = this.props.location
+
     dispatch({
-      type: 'studentAchieveList/save',
+      type: 'studentAchieveList/init',
       payload: {
-        paperList: [],
-        total: 10,
+        page:{
+          pageNum:1,
+          pageSize,
+        },
+        ...query
       },
     });
   }
+
   render() {
-    const { paperList, total, loading, form,planList } = this.props;
+    const { achieveList, pageSize,total, loading, form,studentList } = this.props;
     const { getFieldDecorator } = form;
     const columns = [
       {
         title: '考试计划',
         dataIndex: 'planName',
-        key: 'planName',
       },
       {
         title: '试卷名称',
         dataIndex: 'paperName',
-        key: 'paperName',
       },
       {
         title: '学生',
         dataIndex: 'staffName',
-        key: 'staffName',
       },
 
       {
         title: '及格分数',
         dataIndex: 'passScore',
-        key: 'passScore',
       },
       {
         title: '分数',
-        key: 'totalScore',
         dataIndex: 'totalScore',
       },
       {
         title: '是否通过',
-        key: 'highestScore',
         dataIndex: 'highestScore',
         render: (text, record) => (
           <span>{record.score>=record.passScore?'是':'否'}</span>
@@ -120,29 +156,24 @@ class StudentAchieveList extends React.Component {
       },
       {
         title: '得分',
-        key: 'score',
         dataIndex: 'score',
       },
       {
         title: '时长(分钟)',
-        key: 'duration',
         dataIndex: 'duration',
       },
       {
         title: '部门',
-        key: 'departName',
         dataIndex: 'departName',
       },
       {
         title: '开始时间',
         dataIndex: 'effDate',
-        key: 'effDate',
         render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
       },
       {
         title: '批卷老师',
         dataIndex: 'reviewStaffName',
-        key: 'reviewStaffName',
         render:(text,record)=>(
           <span>{text+'%'}</span>
         )
@@ -150,12 +181,10 @@ class StudentAchieveList extends React.Component {
       {
         title: '批卷时间',
         dataIndex: 'reviewDate',
-        key: 'reviewDate',
         render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
       },
       {
         title: '操作',
-        key: 'action',
         dataIndex: 'action',
         width:100,
         render: (text, record) => (
@@ -169,20 +198,25 @@ class StudentAchieveList extends React.Component {
 
     ];
 
-    const planNode = paperList?paperList.map(item => <Option key={item.staffId}>{item.staffName}</Option>):'';
+    const studentNode = studentList ? studentList.map(item => {
+        if (item.staffId && item.staffName) {
+          return <Option key={item.staffId}>{item.staffName}</Option>
+        }
+      }
+    ) : '';
 
     return (
       <div className={styles.box}>
         <Form layout="inline">
           <Form.Item label="学生名字:">
             {getFieldDecorator('staffId', {
-              rules: [{ required: true, message: '请输入考试计划！' }],
             })(
               <AutoComplete
-                dataSource={planList}
-                onSearch={this.onPlanSearch}
+                filterOption={(inputValue, option) =>
+                  option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                }
               >
-                {planNode}
+                {studentNode}
               </AutoComplete>,
             )}
           </Form.Item>
@@ -210,10 +244,10 @@ class StudentAchieveList extends React.Component {
           <Table
             rowKey={record => `${record.paperId}-${record.planDetailId}`}
             columns={columns}
-            dataSource={paperList}
+            dataSource={achieveList}
             pagination={{
               total,
-              pageSize: 10,
+              pageSize,
               onChange: (page, pageSize) => {
                 this.pageChange(page, pageSize);
               },

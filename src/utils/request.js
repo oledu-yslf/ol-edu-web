@@ -110,7 +110,7 @@ request.interceptors.response.use(
     }
     if (data.code !== 200 && isTokenExpired(data) === false) {
       const { msg } = data;
-      if (config.url.indexOf('/sys/staff/export') !== -1) {
+      if (config.url.indexOf('/sys/staff/export') !== -1 || config.url.indexOf('/exam/paperPlanDetail/avgDetailExport') !== -1) {
         //文件下载。
       } else {
         notification.error({
