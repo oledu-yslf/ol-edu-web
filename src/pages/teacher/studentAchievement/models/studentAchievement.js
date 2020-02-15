@@ -7,7 +7,7 @@ export default {
     condPlanList:[],
     condPaperList:[],
     treeDepartData:[],
-    pageSize:1,
+    pageSize:10,
 
   },
   subscriptions: {
