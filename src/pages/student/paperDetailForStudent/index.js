@@ -1,7 +1,7 @@
 import React from 'react';
 import {Divider, List} from 'antd';
 import {connect} from 'dva';
-import styles from './index.less';
+import styles from '@/style/common.less';
 import moment from 'moment';
 
 class PaperDetailForStudent extends React.Component {
@@ -39,8 +39,9 @@ class PaperDetailForStudent extends React.Component {
           <List.Item key={item.examId}>
             <List.Item.Meta
               title={
-                <div className="clearfix">
-                  <div className="pullleft">{index + 1}.</div>
+                <div className={(item.mark && item.studentExamResult && item.mark !== item.studentExamResult.score)
+                  ? styles.red :styles.black}>
+                  <div className={`pullleft`}>{index + 1}.</div>
                   <div
                     className="pullleft"
                     dangerouslySetInnerHTML={{__html: item.examName}}
