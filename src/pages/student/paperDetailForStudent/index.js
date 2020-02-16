@@ -24,6 +24,11 @@ class PaperDetailForStudent extends React.Component {
     if (exam.examType == 5) return <div>填空题</div>
     if (exam.examType == 4) return <div>问答题</div>
   }
+
+  isCollect = (item) => {
+    return (item.mark && item.studentExamResult && item.mark !== item.studentExamResult.score) ? styles.red :styles.black;
+  }
+
   renderExamList(paperExamSummery) {
     const listItems = paperExamSummery.map( (paperExam) => {
 
@@ -39,8 +44,7 @@ class PaperDetailForStudent extends React.Component {
           <List.Item key={item.examId}>
             <List.Item.Meta
               title={
-                <div className={(item.mark && item.studentExamResult && item.mark !== item.studentExamResult.score)
-                  ? styles.red :styles.black}>
+                <div className={this.isCollect(item)}>
                   <div className={`pullleft`}>{index + 1}.</div>
                   <div
                     className="pullleft"

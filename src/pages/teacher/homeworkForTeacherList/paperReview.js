@@ -37,7 +37,7 @@ class PaperReview extends React.Component {
   }
 
   queryPaper = record => {
-    router.push(`/teacher/homeworkForTeacherDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
+    router.push(`/teacher/studentAchieveDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
   };
 
   pageChange = (page, pageSize) => {
