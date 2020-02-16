@@ -75,7 +75,7 @@ class PaperDetailForStudent extends React.Component {
             )
             }
 
-            {item.passPercent &&(
+            {(item.passPercent != null) &&(
               <div className="clearfix">
                 <div className="pullleft">正确率：{item.passPercent}%</div>
               </div>

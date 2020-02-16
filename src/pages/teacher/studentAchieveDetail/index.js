@@ -39,8 +39,9 @@ class StudentAchieveDetail extends React.Component {
                      <List.Item key={item.examId}>
                        <List.Item.Meta
                          title={
-                           <div className="clearfix">
-                             <div className="pullleft">{index + 1}.</div>
+                           <div className={(item.mark && item.studentExamResult && item.mark !== item.studentExamResult.score)
+                             ? styles.red :styles.black}>
+                             <div className={`pullleft`}>{index + 1}.</div>
                              <div
                                className="pullleft"
                                dangerouslySetInnerHTML={{__html: item.examName}}
@@ -74,7 +75,7 @@ class StudentAchieveDetail extends React.Component {
                        )
                        }
 
-                       {item.passPercent &&(
+                       {(item.passPercent != null) &&(
                          <div className="clearfix">
                            <div className="pullleft">正确率：{item.passPercent}%</div>
                          </div>
