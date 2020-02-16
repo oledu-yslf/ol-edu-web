@@ -9,12 +9,10 @@ class PaperDetailForStudent extends React.Component {
   renderEvaluate(paperPlanDetailVO){
     return (paperPlanDetailVO && paperPlanDetailVO.evaluate && (
       <div>
+        <Divider style={{marginBottom:'5px'}}/>
         <div className="clearfix">
-          <div className="pullleft">评价：</div>
-        </div>
-        <Divider />
-        <div className="clearfix">
-          <div className="pullleft">{paperPlanDetailVO.evaluate}</div>
+          <div className="pullleft" style={{fontSize:'20px',fontWeight:'700'}}>评价：</div>
+          <div >{paperPlanDetailVO.evaluate}</div>
         </div>
       </div>
     ))
@@ -78,12 +76,12 @@ class PaperDetailForStudent extends React.Component {
 
             {item.passPercent &&(
               <div className="clearfix">
-                <div className="pullleft">正确率：{item.passPercent}</div>
+                <div className="pullleft">正确率：{item.passPercent}%</div>
               </div>
             )
             }
 
-            {item.studentExamResult && item.studentExamResult.score && (
+            {item.studentExamResult && (
               <div className="clearfix">
                 <div className="pullleft">得分：{item.studentExamResult.score}</div>
               </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Divider, List} from 'antd';
 import {connect} from 'dva';
-import styles from '../../../style/common.less';
+import styles from '@/style/common.less';
 import moment from 'moment';
 
 class StudentAchieveDetail extends React.Component {
@@ -9,12 +9,10 @@ class StudentAchieveDetail extends React.Component {
   renderEvaluate(paperPlanDetailVO){
     return (paperPlanDetailVO && paperPlanDetailVO.evaluate && (
       <div>
+        <Divider style={{marginBottom:'5px'}}/>
         <div className="clearfix">
-          <div className="pullleft">评价：</div>
-        </div>
-        <Divider />
-        <div className="clearfix">
-          <div className="pullleft">{paperPlanDetailVO.evaluate}</div>
+          <div className="pullleft" style={{fontSize:'20px',fontWeight:'700'}}>评价：</div>
+          <div >{paperPlanDetailVO.evaluate}</div>
         </div>
       </div>
     ))
@@ -62,7 +60,7 @@ class StudentAchieveDetail extends React.Component {
                        <Divider />
                        {item.studentExamResult && item.studentExamResult.result && (
                          <div className="clearfix">
-                           <div className="pullleft">您的答案：</div>
+                           <div className="pullleft">考生答案：</div>
                            <div className="pullleft" dangerouslySetInnerHTML={{__html: item.studentExamResult.result}}/>
                          </div>
                        )
@@ -78,12 +76,12 @@ class StudentAchieveDetail extends React.Component {
 
                        {item.passPercent &&(
                          <div className="clearfix">
-                           <div className="pullleft">正确率：{item.passPercent}</div>
+                           <div className="pullleft">正确率：{item.passPercent}%</div>
                          </div>
                        )
                        }
 
-                       {item.studentExamResult && item.studentExamResult.score && (
+                       {item.studentExamResult && (
                          <div className="clearfix">
                            <div className="pullleft">得分：{item.studentExamResult.score}</div>
                          </div>
@@ -118,7 +116,7 @@ class StudentAchieveDetail extends React.Component {
   }
 
   render() {
-    const {paperDetail} = this.props;
+    const {paperDetail,staffInfo} = this.props;
     const {paperName, totalScore, paperPlanDetailVO, mapPaperExamSummary} = paperDetail;
 
     let exam = [];
@@ -141,10 +139,12 @@ class StudentAchieveDetail extends React.Component {
             <span>{paperName}</span>
           </div>
           <div className="pullright" style={{fontSize: '12px', lineHeight: '20px'}}>
+            <div>姓名：{staffInfo.staffName ? staffInfo.staffName : '-'}</div>
+            <div>学号：{staffInfo.staffNo ? staffInfo.staffNo : '-'}</div>
             <div>总分：{totalScore}</div>
+            <div>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</div>
             <div>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
             <div>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
-            <div>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</div>
           </div>
         </div>
         <Divider />
