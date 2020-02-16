@@ -143,7 +143,7 @@ class PaperList extends React.Component {
       },
     ];
     return (
-      <div className={styles.box}>
+      <div className={styles.box} style={{marginTop:'20px'}}>
             <Radio.Group
               defaultValue="/teacher/paperList"
               onChange={this.handleRouterChange}
