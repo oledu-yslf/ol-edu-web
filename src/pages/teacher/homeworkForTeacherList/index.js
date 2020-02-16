@@ -32,6 +32,9 @@ class HomeworkForTeacherList extends React.Component {
     });
   };
 
+  PaperReview = record =>{
+    router.push(`/teacher/paperReview?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
+  }
   queryPaper = record => {
     router.push(`/teacher/homeworkForTeacherDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
   };
@@ -62,7 +65,6 @@ class HomeworkForTeacherList extends React.Component {
       },
     });
   }
-
 
   componentWillUnmount() {
     const {dispatch} = this.props;
