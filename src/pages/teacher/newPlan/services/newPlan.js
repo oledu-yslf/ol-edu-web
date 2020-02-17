@@ -33,3 +33,34 @@ export async function departListAll (params) {
     data: params,
   })
 }
+export async function staffList (params) {
+  return request({
+    url:  '/api/sys/staff/list',
+    method: 'post',
+    data: Object.assign(
+      {
+        page:{
+          pageNum:1,
+          pageSize:10000
+        },
+        "staffId":"",
+        "departId":"",
+        "staffNo":"",
+        "staffName":"",
+        "sex":"",
+        "staffType":"1",
+        "state":"1"
+      }
+    ),
+  })
+}
+
+
+
+export async function savePaperPlan (params) {
+  return request({
+    url:  '/api/exam/paperPlan/save',
+    method: 'post',
+    data: params,
+  })
+}

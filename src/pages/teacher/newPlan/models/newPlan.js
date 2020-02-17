@@ -1,13 +1,15 @@
 import * as service from '../services/newPlan';
+import { message } from 'antd';
+import router from 'umi/router';
+
 export default {
   namespace: 'newPlan',
   state: {
-    total: 10,
-    achievementList: [],
-    condPlanList:[],
-    condPaperList:[],
+    examListTotal: 10,
+    examList: [],
     treeDepartData:[],
     pageSize:10,
+    paperPlanListVOList:[]
 
   },
   subscriptions: {
@@ -15,20 +17,24 @@ export default {
   },
   effects: {
     *init({ payload }, { call, put }) {
-      const [respResult,respDepartData,resExamList] = yield [
+      const [respResult,respDepartData,resExamList,resStaffList] = yield [
         payload.planId?call(service.listPage, payload):'',
         call(service.departListAll),
         call(service.getExamList),
+        call(service.staffList)
       ];
       const { paperPlanListVOList } = respResult.data?respResult.data:{};
       const examList = resExamList.data
+      const staffList = resStaffList.data
       yield put({
         type: 'save',
         payload: {
           paperPlanListVOList: paperPlanListVOList?paperPlanListVOList:[],
           treeDepartData:respDepartData.data,
           examList:examList.result,
-          examListTotal:examList.count
+          examListTotal:examList.count,
+          staffList:staffList.result,
+          planDetail:respResult.data
         },
       });
     },
@@ -39,6 +45,8 @@ export default {
         type: 'save',
         payload: {
           paperPlanListVOList: paperPlanListVOList,
+          planDetail:data
+
         },
       });
     },
@@ -52,6 +60,13 @@ export default {
           examListTotal:examList.count
         },
       });
+    },
+    *savePaperPlan({ payload }, { call, put }) {
+      const data = yield call(service.savePaperPlan, payload);
+      if (data.successed) {
+        message.success('提交成功', 3);
+        router.push('/teacher/paperPlan')
+      }
     },
   },
   reducers: {
