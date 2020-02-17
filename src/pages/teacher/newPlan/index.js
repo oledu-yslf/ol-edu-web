@@ -73,7 +73,7 @@ class NewPlan extends React.Component {
     });
   };
   componentWillMount() {
-    const { dispatch} = this.props;
+    const { dispatch,paperPlanListVOList} = this.props;
     const { query } = this.props.location
     dispatch({
       type: 'newPlan/init',
@@ -82,6 +82,7 @@ class NewPlan extends React.Component {
       },
     });
   }
+
   selExam= e =>{
     const { dispatch} = this.props;
     dispatch({
@@ -124,12 +125,16 @@ class NewPlan extends React.Component {
 
   deletePlan = (record, index) =>{
     const {dispatch, paperPlanListVOList } = this.props;
-    dispatch({
-      type: 'save',
-      payload: {
-        paperPlanListVOList: paperPlanListVOList.splice(index,1)
-      },
-    });
+    // dispatch({
+    //   type: 'save',
+    //   payload: {
+    //     paperPlanListVOList: paperPlanListVOList.splice(index,1)
+    //   },
+    // });
+
+    this.setState({
+      paperPlanListVOList:paperPlanListVOList.splice(index,1)
+    })
 
   }
   handleCancel = e =>{
@@ -140,7 +145,7 @@ class NewPlan extends React.Component {
 
     const { dispatch, form,paperPlanListVOList } = this.props;
     const { resetFields } = form;
-
+    const {query} = this.props.location
     const getValues = this.props.form.getFieldsValue();
 
     for(let i=0;i<paperPlanListVOList.length;i++){
@@ -148,6 +153,10 @@ class NewPlan extends React.Component {
       getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:mm:ss')).getTime()
     }
     getValues.createStaffId = Util.getStaffId()
+    if(query.planId){
+      getValues.planId = query.planId
+    }
+
     console.log(getValues)
     dispatch({
       type: 'newPlan/savePaperPlan',
@@ -163,8 +172,14 @@ class NewPlan extends React.Component {
     const { getFieldDecorator } = form;
 
     console.log(planDetail)
-    const planNode = staffList?staffList.map(item => <Option key={item.staffId}>{item.staffName}</Option>):'';
 
+    let startValue = []
+    for(let item of paperPlanListVOList){
+      startValue.push(parseInt(item.effDate))
+    }
+
+    console.log("startValue",startValue)
+    const planNode = staffList?staffList.map(item => <Option key={item.staffId}>{item.staffName}</Option>):'';
     const columns = [
       {
         title: '试卷名称',
@@ -213,9 +228,9 @@ class NewPlan extends React.Component {
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
-                // {initialValue:moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss')}
+                {initialValue:''}
                 )(
-                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />,
+                <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:mm:ss")} showTime format="YYYY-MM-DD HH:mm:ss" />,
               )}
             </Form.Item>
           </span>
