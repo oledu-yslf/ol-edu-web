@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Form, Input,Row,Col,Select,Radio,Checkbox } from 'antd';
 import { connect } from 'dva';
 import getUserId from '@/utils/getUserId';
-
+import OlBraftEditor from '@/components/olBraftEditor/OlBraftEditor'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 
@@ -333,7 +333,7 @@ class AddExamModal extends React.Component {
                   message: '请输入试题名称!',
                 }
               ],
-            })(<BraftEditor
+            })(<OlBraftEditor
               contentStyle={{height:150,overflow:'scroll'}}
               onChange={this.handleEditorChange}
             />)}
@@ -403,7 +403,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'1'}>A</Radio>
                 {getFieldDecorator('attrName1',{initialValue:examDetail&&examDetail.baseExamAttrVOList[0]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[0].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -412,7 +412,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'2'}>B</Radio>
                 {getFieldDecorator('attrName2',{initialValue:examDetail&&examDetail.baseExamAttrVOList[1]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[1].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -421,7 +421,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'3'}>C</Radio>
                 {getFieldDecorator('attrName3',{initialValue:examDetail&&examDetail.baseExamAttrVOList[2]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[2].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -430,7 +430,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'4'}>D</Radio>
                 {getFieldDecorator('attrName4',{initialValue:examDetail&&examDetail.baseExamAttrVOList[3]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[3].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -439,7 +439,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'5'}>E</Radio>
                 {getFieldDecorator('attrName5',{initialValue:examDetail&&examDetail.baseExamAttrVOList[4]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[4].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -448,7 +448,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'6'}>F</Radio>
                 {getFieldDecorator('attrName6',{initialValue:examDetail&&examDetail.baseExamAttrVOList[5]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[5].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -457,7 +457,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'7'}>G</Radio>
                 {getFieldDecorator('attrName7',{initialValue:examDetail&&examDetail.baseExamAttrVOList[6]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[6].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -466,7 +466,7 @@ class AddExamModal extends React.Component {
               <Form.Item label="">
                 <Radio value={'8'}>H</Radio>
                 {getFieldDecorator('attrName8',{initialValue:examDetail&&examDetail.baseExamAttrVOList[7]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[7].attrName):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -481,7 +481,7 @@ class AddExamModal extends React.Component {
 
               <Form.Item label="试题解析">
                 {getFieldDecorator('examSolution',{initialValue:examDetail&&examDetail.examSolution?BraftEditor.createEditorState(examDetail.examSolution):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
 
@@ -497,7 +497,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
               <Checkbox value={'A'}>A</Checkbox>
               {getFieldDecorator('attrName1',{initialValue:examDetail&&examDetail.baseExamAttrVOList[0]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[0].attrName):'' })(
-                <BraftEditor
+                <OlBraftEditor
                   contentStyle={{height:150,overflow:'scroll'}}
                   onChange={this.handleEditorChange}
                 />
@@ -507,7 +507,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
               <Checkbox value={'B'}>B</Checkbox>
           {getFieldDecorator('attrName2',{initialValue:examDetail&&examDetail.baseExamAttrVOList[1]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[1].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -516,7 +516,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'C'}>C</Checkbox>
           {getFieldDecorator('attrName3',{initialValue:examDetail&&examDetail.baseExamAttrVOList[2]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[2].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -525,7 +525,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'D'}>D</Checkbox>
           {getFieldDecorator('attrName4',{initialValue:examDetail&&examDetail.baseExamAttrVOList[3]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[3].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -534,7 +534,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'E'}>E</Checkbox>
           {getFieldDecorator('attrName5',{initialValue:examDetail&&examDetail.baseExamAttrVOList[4]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[4].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -543,7 +543,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'F'}>F</Checkbox>
           {getFieldDecorator('attrName6',{initialValue:examDetail&&examDetail.baseExamAttrVOList[5]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[5].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -552,7 +552,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'G'}>G</Checkbox>
           {getFieldDecorator('attrName7',{initialValue:examDetail&&examDetail.baseExamAttrVOList[6]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[6].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -561,7 +561,7 @@ class AddExamModal extends React.Component {
             <Form.Item label="">
             <Checkbox value={'H'}>H</Checkbox>
           {getFieldDecorator('attrName8',{initialValue:examDetail&&examDetail.baseExamAttrVOList[7]?BraftEditor.createEditorState(examDetail.baseExamAttrVOList[7].attrName):'' })(
-            <BraftEditor
+            <OlBraftEditor
             contentStyle={{height:150,overflow:'scroll'}}
             onChange={this.handleEditorChange}
             />
@@ -579,7 +579,7 @@ class AddExamModal extends React.Component {
 
             <Form.Item label="试题解析">
             {getFieldDecorator('examSolution',{initialValue:examDetail&&examDetail.examSolution?BraftEditor.createEditorState(examDetail.examSolution):'' })(
-              <BraftEditor
+              <OlBraftEditor
                 contentStyle={{height:150,overflow:'scroll'}}
                 onChange={this.handleEditorChange}
 
@@ -608,7 +608,7 @@ class AddExamModal extends React.Component {
 
               <Form.Item label="试题解析">
                 {getFieldDecorator('examSolution',{initialValue:examDetail&&examDetail.examSolution?BraftEditor.createEditorState(examDetail.examSolution):'' })(
-                  <BraftEditor
+                  <OlBraftEditor
                     contentStyle={{height:150,overflow:'scroll'}}
                     onChange={this.handleEditorChange}
                   />
@@ -658,7 +658,7 @@ class AddExamModal extends React.Component {
           {(this.state.questionAndAnswerVisible||(examDetail&&examDetail.examType=='4'))?
             <Form.Item label="正确答案">
               {getFieldDecorator('result',{initialValue:examDetail&&examDetail.result?BraftEditor.createEditorState(examDetail.result):'' })(
-                <BraftEditor
+                <OlBraftEditor
                   contentStyle={{height:150,overflow:'scroll'}}
                   onChange={this.handleEditorChange}
                 />

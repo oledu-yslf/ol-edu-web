@@ -45,6 +45,20 @@ class QuestionList extends React.Component {
       fileList:[],
     };
   }
+
+  componentWillMount() {
+    const { dispatch,pageSize } = this.props;
+    dispatch({
+      type: 'questionList/init',
+      payload:{
+        page:{
+          pageNum:1,
+          pageSize,
+      }
+    }
+  });
+  }
+
   onTabClick = e => {
     router.push(e);
   };
@@ -53,7 +67,7 @@ class QuestionList extends React.Component {
    * tree option
    */
   onTypeSelect = (selectedKeys, info) => {
-    const { dispatch, form } = this.props;
+    const { dispatch, form,pageSize } = this.props;
     const value = form.getFieldsValue();
     const { examType, difficultyLevel, examName } = value;
     if (selectedKeys.length > 0) {
@@ -65,6 +79,10 @@ class QuestionList extends React.Component {
           examType,
           difficultyLevel,
           examName,
+          page:{
+            pageNum: 1,
+            pageSize,
+          }
         },
       });
     } else {
@@ -165,7 +183,7 @@ class QuestionList extends React.Component {
 
   handleSearchSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form ,pageSize } = this.props;
     const { selectedNodes } = this.state;
     const value = form.getFieldsValue();
     const { examType, difficultyLevel, examName } = value;
@@ -177,6 +195,10 @@ class QuestionList extends React.Component {
         examType,
         difficultyLevel,
         examName,
+        page:{
+          pageNum: 1,
+          pageSize,
+        }
       },
     });
   };
@@ -280,7 +302,7 @@ class QuestionList extends React.Component {
         examName,
         page: {
           pageNum: page,
-          pageSize: 10,
+          pageSize
         },
       },
     });
@@ -321,6 +343,7 @@ class QuestionList extends React.Component {
       plusTypeVisible,
       editTypeVisible,
       addExamVisible,
+      pageSize,
     } = this.props;
     const {
       selectedKeys,
@@ -363,7 +386,7 @@ class QuestionList extends React.Component {
         title: '试题名称',
         dataIndex: 'examName',
         key: 'examName',
-        width: 200,
+        width: 300,
         render: text => (
           <div dangerouslySetInnerHTML={{__html: text}}/>
         )
@@ -385,12 +408,6 @@ class QuestionList extends React.Component {
               : '填空题'}
           </span>
         ),
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createDate',
-        key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
       },
       {
         title: '难度',
@@ -418,9 +435,15 @@ class QuestionList extends React.Component {
         // render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
       },
       {
-        title: '上传人员',
+        title: '创建人员',
         key: 'createStaffName',
         dataIndex: 'createStaffName',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createDate',
+        key: 'createDate',
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS')}</span>,
       },
       {
         title: '操作',
@@ -428,15 +451,17 @@ class QuestionList extends React.Component {
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.editExam(record, e)}>
+            <a type="link" onClick={e => this.editExam(record, e)}>
               编辑
-            </Button>
-            <Button type="link" onClick={e => this.queryExam(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.queryExam(record, e)}>
               查看
-            </Button>
-            <Button type="link" onClick={e => this.deleteExam(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.deleteExam(record, e)}>
               删除
-            </Button>
+            </a>
           </span>
         ),
       },
@@ -532,7 +557,7 @@ class QuestionList extends React.Component {
                   </Button>
                 </Form.Item>
               </Form>
-              <Divider />
+              <Divider style = {{marginTop: '2px',marginBottom: '2px'}}/>
 
               <Table
                 rowKey={record => record.examId}
@@ -540,7 +565,7 @@ class QuestionList extends React.Component {
                 dataSource={questionList}
                 pagination={{
                   total,
-                  pageSize: 10,
+                  pageSize,
                   onChange: (page, pageSize) => {
                     this.pageChange(page, pageSize);
                   },

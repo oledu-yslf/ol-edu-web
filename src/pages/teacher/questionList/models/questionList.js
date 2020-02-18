@@ -10,22 +10,15 @@ export default {
     questionList: [],
     total: 10,
     plusTypeVisible:false,
-    editTypeVisible:false
+    editTypeVisible:false,
+    pageSize:10,
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/questionList') {
-          dispatch({
-            type: 'init',
-          });
-        }
-      });
-    },
+
   },
   effects: {
     *init({ payload }, { call, put }) {
-      const [typeListRes, questionRes] = yield [call(service.listAll), call(service.listPage)];
+      const [typeListRes, questionRes] = yield [call(service.listAll), call(service.listPage,payload)];
       const { count, result } = questionRes.data;
       yield put({
         type: 'save',

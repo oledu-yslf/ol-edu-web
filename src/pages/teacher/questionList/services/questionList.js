@@ -13,16 +13,7 @@ export async function listPage (data) {
   return request({
     url:  '/api/exam/listPage',
     method: 'post',
-    data:Object.assign({
-      categoryId:'',
-      examType:'',
-      difficultyLevel:'',
-      examName:'',
-      page:{
-        pageNum:1,
-        pageSize:10
-      }
-    },data)
+    data,
   })
 }
 
