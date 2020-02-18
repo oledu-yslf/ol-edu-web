@@ -1,6 +1,6 @@
-import * as service from '../services/paperReview';
+import * as service from '../services/paperReviewDetail';
 export default {
-  namespace:'paperReview',
+  namespace:'paperReviewDetail',
   state: {
     paperDetail: {},
     cursorExamIndex : 1,    //当前试题

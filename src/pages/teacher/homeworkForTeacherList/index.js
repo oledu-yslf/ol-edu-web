@@ -33,7 +33,7 @@ class HomeworkForTeacherList extends React.Component {
   };
 
   PaperReview = record =>{
-    router.push(`/teacher/paperReview?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
+    router.push(`/teacher/paperReviewDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);
   }
   queryPaper = record => {
     router.push(`/teacher/studentAchieveDetail?paperId=${record.paperId}&staffId=${record.staffId}&planDetailId=${record.planDetailId}`);

@@ -83,7 +83,7 @@ class ExamStartDetail extends React.Component {
     } else {
       //进行了答题,需要提交
       let sureCommit = 0; //是否最后一题标志，0否，1是
-      if (cursorExamIndex === maxCount){
+      if (cursorExamIndex === maxCount && step >= 0){
         sureCommit = 1;     //最后一题
       }
 
@@ -105,7 +105,15 @@ class ExamStartDetail extends React.Component {
           //成功，
           if (sureCommit === 1){
             //提交成功后，需要跳转。
-            router.push('/student')
+            dispatch({
+              type: 'paperReviewDetail/save',
+              payload: {
+                cursorExamIndex: nextIndex,
+                sureCommit:false
+              }
+            })
+
+            window.history.go(-2);
             return ;
           }
 
@@ -119,7 +127,8 @@ class ExamStartDetail extends React.Component {
           dispatch({
             type: 'examStartDetail/save',
             payload: {
-              cursorExamIndex: nextIndex
+              cursorExamIndex: nextIndex,
+              sureCommit:false
             }
           })
 
