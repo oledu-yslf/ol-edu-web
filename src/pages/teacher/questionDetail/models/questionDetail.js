@@ -21,10 +21,6 @@ export default {
   effects: {
     *init({ payload }, { call, put }) {
       const [examDetailRes] = yield [call(service.examDetail,payload)];
-      console.log(examDetailRes);
-
-      // console.log(examDetail);/
-
       yield put({
         type: 'save',
         payload: {
