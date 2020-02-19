@@ -5,7 +5,9 @@ export default {
   namespace: 'newPaperManual',
   state: {
     typeList:[],
-    paperId:''
+    paperId:'',
+    paperDetail:{},
+    questionList:[]
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -45,21 +47,12 @@ export default {
     *saveExam({payload},{call,put}){
       const data = yield call(service.saveExam, payload);
       if (data.successed) {
-        message.success('试卷保存成功');
-        yield put({
-          type:'save',
-          payload: {
-            addExamVisible: false
-          }
-        })
+        message.success('试卷保存成功',3);
         router.push(`/teacher/paperList`)
-
       }
     },
     *queryDetail({payload},{call,put}){
-      debugger
       const data = yield call(service.queryDetail, payload);
-      console.log("queryDetail",data)
       if(data.successed){
         yield put({
           type:'save',

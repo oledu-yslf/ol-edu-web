@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Table, Row, Col,Divider,Input, Select,Button } from 'antd';
+import { Modal, Form, Table, Row, Col,Divider,Input, Select,Button,Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import getUserId from '@/utils/getUserId';
@@ -13,19 +13,20 @@ class ExamListModal extends React.Component {
       examType: '',
       difficultyLevel: '',
       examName: '',
+      questionList:[]
     };
   }
   pageChange = (page, pageSize) => {
-    const { dispatch, form } = this.props;
-    const value = form.getFieldsValue();
-    const { paperName } = value;
+    const { dispatch } = this.props;
+    let result = this.props.form.getFieldsValue();
     dispatch({
       type: 'newPaperManual/listPage',
       payload: {
-        paperName,
+        examType:result.examType,
+        difficultyLevel:result.difficultyLevel,
         page: {
           pageNum: page,
-          pageSize: 10,
+          pageSize: pageSize,
         },
       },
     });
@@ -48,18 +49,20 @@ class ExamListModal extends React.Component {
         typeList: [],
         questionList: [],
         total: 10,
-        plusTypeVisible: false,
-        editTypeVisible: false,
-        addExamVisible: false,
       },
     });
   }
-  handleSubmit = e =>{
+
+
+  handleSearchSubmit = e =>{
     const { dispatch } = this.props;
+    let result = this.props.form.getFieldsValue();
     dispatch({
-      type: 'newPaperManual/save',
+      type: 'newPaperManual/listPage',
       payload: {
-        examListVisible: false,
+        examType:result.examType,
+        difficultyLevel:result.difficultyLevel
+
       },
     });
   }
@@ -143,7 +146,99 @@ class ExamListModal extends React.Component {
         const state = this.state;
         state.searchHistory = selectedRows;
         this.setState(state);
-        this.props.getStockInfo(selectedRows)
+
+        let selRowExam = {}
+        let radioTemp = []
+        let checkBoxTemp = []
+        let trueOfalseTemp = []
+        let blankTemp = []
+        let questionTemp = []
+        let radioTempSel={}
+        let checkBoxTempSel={}
+        let trueOfalseTempSel={}
+        let questionTempSel={}
+        let blankTempSel={}
+        radioTempSel.totalScore = 0
+        checkBoxTempSel.totalScore = 0
+        trueOfalseTempSel.totalScore = 0
+        questionTempSel.totalScore = 0
+        blankTempSel.totalScore = 0
+        let count = 0
+        for(let item of selectedRows){
+          item.paperExamAttrVOS = item.baseExamAttrVOList
+          if(item.examType=='1'){
+            radioTemp.push(item)
+            radioTempSel.totalScore += Number(item.mark)
+            radioTempSel.examType =item.examType
+          }else if(item.examType=='2'){
+            checkBoxTemp.push(item)
+            checkBoxTempSel.totalScore += Number(item.mark)
+            checkBoxTempSel.examType =item.examType
+          }else if(item.examType=='3'){
+            trueOfalseTemp.push(item)
+            trueOfalseTempSel.totalScore += Number(item.mark)
+            trueOfalseTempSel.examType =item.examType
+          }else if(item.examType=='4'){
+            questionTemp.push(item)
+            questionTempSel.totalScore += Number(item.mark)
+            questionTempSel.examType =item.examType
+          }else if(item.examType=='5'){
+            blankTemp.push(item)
+            blankTempSel.totalScore += Number(item.mark)
+            blankTempSel.examType =item.examType
+          }
+        }
+
+        if(radioTemp.length>0){
+          radioTempSel.count = radioTemp.length
+          radioTempSel.paperExamVOList = radioTemp
+          selRowExam[0] = radioTempSel
+        }
+        if(checkBoxTemp.length>0){
+          checkBoxTempSel.count = radioTemp.length
+          checkBoxTempSel.paperExamVOList = radioTemp
+          selRowExam[1] = checkBoxTempSel
+        }
+        if(trueOfalseTemp.length>0){
+          trueOfalseTempSel.count = trueOfalseTemp.length
+          trueOfalseTempSel.paperExamVOList = trueOfalseTemp
+          selRowExam[2] = trueOfalseTempSel
+        }
+        if(questionTemp.length>0){
+          questionTempSel.count = questionTemp.length
+          questionTempSel.paperExamVOList = questionTemp
+          selRowExam[3] = questionTempSel
+        }
+        if(blankTemp.length>0){
+          blankTempSel.count = blankTemp.length
+          blankTempSel.paperExamVOList = blankTemp
+          selRowExam[4] = blankTempSel
+        }
+
+
+
+
+        console.log("selRowExam",selRowExam)
+
+
+        let temp={}
+        temp.mapPaperExamSummary = selRowExam
+
+
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'newPaperManual/save',
+          payload: {
+            paperDetail:temp
+          },
+        });
+
+        // this.props.getStockInfo(selRowExam)
+
+
+
+
+
       },
       getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -162,14 +257,15 @@ class ExamListModal extends React.Component {
         confirmLoading={loading}
         width={1000}
       >
+        <Spin spinning={loading}>
         <Row>
         <Col span={24}>
-          <Form layout="inline" onSubmit={this.handleSubmit}>
+          <Form layout="inline">
             <Form.Item label="试题类型:">
               {getFieldDecorator('examType', {
                 initialValue: examType,
               })(
-                <Select style={{ width: '80px' }}>
+                <Select style={{ width: '120px' }}>
                   <Option value={''}>全部</Option>
                   <Option value={1}>单选题</Option>
                   <Option value={2}>多选题</Option>
@@ -183,7 +279,7 @@ class ExamListModal extends React.Component {
               {getFieldDecorator('difficultyLevel', {
                 initialValue: difficultyLevel,
               })(
-                <Select style={{ width: '80px' }}>
+                <Select style={{ width: '120px' }}>
                   <Option value={''}>全部</Option>
                   <Option value={0}>易</Option>
                   <Option value={1}>较易</Option>
@@ -210,7 +306,6 @@ class ExamListModal extends React.Component {
             </Form.Item>
           </Form>
           <Divider />
-
           <Table
             rowSelection={rowSelection}
             rowKey={record => record.examId}
@@ -224,8 +319,10 @@ class ExamListModal extends React.Component {
               },
             }}
           />
+
         </Col>
         </Row>
+      </Spin>
       </Modal>
     );
   }

@@ -53,7 +53,7 @@ class LoginForm extends React.Component {
     const usernameError = isFieldTouched('username') && getFieldError('username');
     const passwordError = isFieldTouched('password') && getFieldError('password');
     return (
-      <div className={styles.box}>
+      <div className={styles.box} style={{marginTop:'10%'}}>
         <Row>
           <Col offset={9} span={6}>
             <Form onSubmit={this.handleSubmit} className={styles['login-form']}>
