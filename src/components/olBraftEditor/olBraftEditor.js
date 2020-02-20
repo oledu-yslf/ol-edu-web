@@ -94,7 +94,6 @@ class OlBraftEditor extends React.Component {
       placeholder="请输入"
       onReachMaxLength={this.handleMaxLength}
       excludeControls={excludeControls}
-
       media={
         {
           accepts: {

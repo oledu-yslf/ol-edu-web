@@ -62,7 +62,7 @@ class QuestionDetail extends React.Component {
             })
               : ''}
 
-            <Descriptions.Item label="正确答案">{result}</Descriptions.Item>
+            <Descriptions.Item label="正确答案"><div  dangerouslySetInnerHTML={{__html: result}}/></Descriptions.Item>
             <Descriptions.Item label="试题讲解"><div  dangerouslySetInnerHTML={{__html: examSolution}}/></Descriptions.Item>
           </Descriptions>
         </Spin>

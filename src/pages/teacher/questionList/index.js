@@ -109,7 +109,7 @@ class QuestionList extends React.Component {
         },
       });
     } else {
-      message.warning('请先选择操作节点！');
+      message.warning('请先选择试题分类！');
     }
   };
   addExam = e => {
@@ -120,10 +120,11 @@ class QuestionList extends React.Component {
         type: 'questionList/save',
         payload: {
           addExamVisible: true,
+          examDetail:{}
         },
       });
     } else {
-      message.warning('请先选择操作节点！');
+      message.warning('请先选择试题分类！');
     }
   };
 
@@ -134,7 +135,7 @@ class QuestionList extends React.Component {
         deleteTypeVisible: true,
       });
     } else {
-      message.warning('请先选择操作节点！');
+      message.warning('请先选择试题分类！');
     }
   };
 
@@ -147,7 +148,7 @@ class QuestionList extends React.Component {
       });
       this.props.form.resetFields();
     } else {
-      message.warning('请先选择操作节点！');
+      message.warning('请先选择试题分类！');
     }
   };
 
@@ -228,17 +229,19 @@ class QuestionList extends React.Component {
         examId:`${record.examId}`
       },
 
+    }).then (res => {
+      dispatch({
+        type: 'questionList/save',
+        payload: {
+          categoryId: selectedNodes.categoryId,
+          addExamVisible: true,
+          examId:`${record.examId}`
+        },
+
+      });
     });
 
-    dispatch({
-      type: 'questionList/save',
-      payload: {
-        categoryId: selectedNodes.categoryId,
-        addExamVisible: true,
-        examId:`${record.examId}`
-      },
 
-    });
   };
 
   handleImportExam=()=>{
@@ -344,6 +347,7 @@ class QuestionList extends React.Component {
       editTypeVisible,
       addExamVisible,
       pageSize,
+      pageNum,
     } = this.props;
     const {
       selectedKeys,
@@ -382,6 +386,16 @@ class QuestionList extends React.Component {
       }
     };
     const columns = [
+      {
+        key:'index',
+        title: '序号',
+        width:80,
+        render:(text,record,index)=> {
+          return(
+            `${(pageNum-1)*pageSize+(index+1)}` //当前页数减1乘以每一页页数再加当前页序号+1
+          )
+        }
+      },
       {
         title: '试题名称',
         dataIndex: 'examName',

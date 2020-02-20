@@ -11,7 +11,10 @@ export default {
     total: 10,
     plusTypeVisible:false,
     editTypeVisible:false,
+    addExamVisible: false,
     pageSize:10,
+    pageNum:1,
+    examDetail:{},
   },
   subscriptions: {
 
@@ -19,13 +22,15 @@ export default {
   effects: {
     *init({ payload }, { call, put }) {
       const [typeListRes, questionRes] = yield [call(service.listAll), call(service.listPage,payload)];
-      const { count, result } = questionRes.data;
+      const { count, result,pageNum,pageSize } = questionRes.data;
       yield put({
         type: 'save',
         payload: {
           typeList: typeListRes.data,
           questionList: result,
           total: count,
+          pageNum,
+          pageSize,
         },
       });
     },
@@ -41,12 +46,14 @@ export default {
     },
     *listPage({ payload }, { call, put }) {
       const { data } = yield call(service.listPage, payload);
-      const { count, result } = data;
+      const { count, result,pageNum,pageSize } = data;
       yield put({
         type: 'save',
         payload: {
           questionList: result,
           total: count,
+          pageNum,
+          pageSize,
         },
       });
     },
@@ -142,8 +149,6 @@ export default {
           type:'save',
           payload: {
             examDetail:data.data ,
-            editTypeVisible:false
-
           },
         })
       }
