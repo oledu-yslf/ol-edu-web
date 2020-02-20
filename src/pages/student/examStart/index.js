@@ -54,9 +54,9 @@ class examStart extends React.Component {
           </div>
           <div className="pullright" style={{fontSize: '20px', lineHeight: '28px'}}>
             <div style={{fontSize: '14px', lineHeight: '28px'}}>
-              开始时间：{paperPlanDetailVO ? moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS') : ''}</div>
+              开始时间：{paperPlanDetailVO ? moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:ss') : ''}</div>
             <div style={{fontSize: '14px', lineHeight: '28px'}}>
-              结束时间：{paperPlanDetailVO ? moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS') : ''}</div>
+              结束时间：{paperPlanDetailVO ? moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:ss') : ''}</div>
           </div>
 
         </div>

@@ -149,7 +149,7 @@ class PaperReview extends React.Component {
         title: '开始时间',
         key: 'effDate',
         dataIndex: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss')}</span>,
       },
       {
         title: '批卷老师',
@@ -160,7 +160,7 @@ class PaperReview extends React.Component {
         title: '批卷时间',
         key: 'reviewDate',
         dataIndex: 'reviewDate',
-        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS') :'-'}</span>,
+        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss') :'-'}</span>,
       },
       {
         title: '状态',

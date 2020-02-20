@@ -162,7 +162,7 @@ class StudentAchievement extends React.Component {
       {
         title: '开始时间',
         dataIndex: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:ss')}</span>,
       },
       {
         title: '批卷老师',
@@ -171,7 +171,7 @@ class StudentAchievement extends React.Component {
       {
         title: '批卷时间',
         dataIndex: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:ss')}</span>,
       },
       {
         title: '操作',

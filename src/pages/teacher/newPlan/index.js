@@ -150,7 +150,7 @@ class NewPlan extends React.Component {
 
     for(let i=0;i<paperPlanListVOList.length;i++){
       getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
-      getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:mm:ss')).getTime()
+      getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
     }
     getValues.createStaffId = Util.getStaffId()
     if(query.planId){
@@ -196,7 +196,7 @@ class NewPlan extends React.Component {
       {
         title: '创建时间',
         dataIndex: 'createDate',
-        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS') :'-'}</span>,
+        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss') :'-'}</span>,
       },
       {
         title: '分数',
@@ -230,7 +230,7 @@ class NewPlan extends React.Component {
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
                 {initialValue:''}
                 )(
-                <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:mm:ss")} showTime format="YYYY-MM-DD HH:mm:ss" />,
+                <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:MM:ss")} showTime format="YYYY-MM-DD HH:MM:ss" />,
               )}
             </Form.Item>
           </span>

@@ -147,8 +147,8 @@ class StudentAchieveDetail extends React.Component {
             <div>学号：{staffInfo.staffNo ? staffInfo.staffNo : '-'}</div>
             <div>总分：{totalScore}</div>
             <div>得分：{paperPlanDetailVO.score ? paperPlanDetailVO.score : '-'}</div>
-            <div>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
-            <div>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:SS'):''}</div>
+            <div>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:ss'):''}</div>
+            <div>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:ss'):''}</div>
           </div>
         </div>
         <Divider />

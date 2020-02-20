@@ -82,14 +82,14 @@ class Achievement extends React.Component {
         title: '开始时间',
         dataIndex: 'effDate',
         key: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:ss')}</span>,
       },
 
       {
         title: '结束时间',
         dataIndex: 'expDate',
         key: 'expDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY/MM/DD HH:MM:ss')}</span>,
       },
 
       {

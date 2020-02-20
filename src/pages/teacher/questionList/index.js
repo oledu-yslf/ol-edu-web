@@ -457,7 +457,7 @@ class QuestionList extends React.Component {
         title: '创建时间',
         dataIndex: 'createDate',
         key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:SS')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss')}</span>,
       },
       {
         title: '操作',
