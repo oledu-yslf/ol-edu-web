@@ -3,95 +3,115 @@ import { message } from 'antd';
 import { cloneDeep } from 'lodash';
 import router from 'umi/router'
 export default {
-  namespace: 'paperList',
+  namespace: 'teacherPaperList',
   state: {
     paperList: [],
     total: 10,
-    newPaperVisible:false
+    newPaperVisible:false,
+    pageSize:10,
+    pageNum : 1,
+    newPaperStep:1,
+    categoryTree:[],    //试题分类试卷列表
+    paperId:'',   //新增的试卷ID
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/paperList') {
-          dispatch({
-            type: 'init',
-          });
-        }
-      });
-    },
+
   },
   effects: {
-    *init({ payload }, { call, put }) {
-      const [paperRes] = yield [call(service.listPage)];
-      const { count, result } = paperRes.data;
+    *paperListPage({ payload }, { call, put }) {
+      const [paperRes] = yield [call(service.paperListPage,payload)];
+      const { pageNum,pageSize,count, result } = paperRes.data;
+
       yield put({
         type: 'save',
         payload: {
           paperList: result,
           total: count,
+          pageNum,
+          pageSize
         },
       });
     },
-    *listPage({ payload }, { call, put }) {
-      const { data } = yield call(service.listPage, payload);
-      const { count, result } = data;
-      yield put({
-        type: 'save',
-        payload: {
-          paperList: result,
-          total: count,
-        },
-      });
-    },
+
     *paperDelete({ payload }, { call, put, select }) {
       const { data } = yield call(service.paperDelete, payload);
 
       if (data === 1) {
         message.success('删除成功');
-        const paperList = yield select(state => state.paperList.paperList);
-        let clonePaperList = cloneDeep(paperList);
-        let index;
-        for (let i = 0; i < clonePaperList.length; i++) {
-          if (clonePaperList[i].paperId === payload.paperId) {
-            index = i;
-            break;
-          }
-        }
-        clonePaperList.splice(index, 1);
-        yield put({
-          type: 'save',
-          payload: {
-            paperList: clonePaperList,
-          },
-        });
       }
     },
     *paperSave({ payload }, { call, put, select }){
+      //保存前，先清空原来的paperId，
+      yield put({
+        type: 'save',
+        payload: {
+          paperId:''
+        },
+      });
+
       const { code,data } = yield call(service.paperSave, payload);
       if(code === 200 ){
         yield put({
           type: 'save',
           payload: {
-            newPaperVisible:false,
             paperName:payload.paperName,
             paperId:data
           },
         });
+        message.success('新增试卷成功');
+
         if(payload.genType === 0){
-          message.success('新增试卷成功').then(()=>{
-            router.push(`/teacher/newPaperManual?paperId=${data}`)
-          })
+          yield put({
+            type: 'save',
+            payload: {
+              newPaperVisible:false,
+              newPaperStep:1
+            },
+          });
+
+          router.push(`/teacher/newPaperManual?paperId=${data}`)
+
         }else{
-          message.success('新增试卷成功').then(()=>{
-            router.push(`/teacher/newPaperAuto?paperId=${data}`)
-          })
+
+          yield put({
+            type: 'save',
+            payload: {
+              newPaperStep:2
+            },
+          });
         }
       }
+    },
+
+    *listAllExamCategory({ payload }, { call, put }) {
+      const {data} = yield call(service.listAllExamCategory);
+      yield put({
+        type: 'save',
+        payload: {
+          categoryTree: data,
+        },
+      });
+    },
+
+    *paperExamRand({ payload }, { call, put }){
+      console.log(payload);
+      const { code } = yield call(service.paperExamRand,payload);
+      if(code === 200){
+        message.success('随机试题生成成功')
+        router.push(`/teacher/newPaperManual?paperId=${payload.paperId}`)
+        yield put({
+          type: 'save',
+          payload: {
+            newPaperVisible:false,
+            newPaperStep:1
+          },
+        });
+      }
     }
+
   },
   reducers: {
     save(state, action) {
-      console.log(action);
       return { ...state, ...action.payload };
     },
   },

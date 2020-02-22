@@ -3,7 +3,7 @@ import moment from 'moment';
 import router from 'umi/router';
 import { Tabs, Button, Table, Spin, Form, Input, Radio } from 'antd';
 import { connect } from 'dva';
-import styles from './index.less';
+import styles from '@/style/common.less';
 import NewPaperModal from './components/newPaperModal';
 const { TabPane } = Tabs;
 
@@ -23,13 +23,17 @@ class PaperList extends React.Component {
   };
   handleSearchSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form ,pageSize} = this.props;
     const value = form.getFieldsValue();
     const { paperName } = value;
     dispatch({
-      type: 'paperList/listPage',
+      type: 'teacherPaperList/paperListPage',
       payload: {
         paperName,
+        page :{
+          pageNum:1,
+          pageSize,
+        }
       },
     });
   };
@@ -37,9 +41,10 @@ class PaperList extends React.Component {
     // router.push('/teacher/paperEdit');
     const { dispatch } = this.props;
     dispatch({
-      type: 'paperList/save',
+      type: 'teacherPaperList/save',
       payload: {
         newPaperVisible: true,
+        newPaperStep:1
       },
     });
   };
@@ -52,10 +57,24 @@ class PaperList extends React.Component {
   deletePaper = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'paperList/paperDelete',
+      type: 'teacherPaperList/paperDelete',
       payload: {
         paperId: record.paperId,
       },
+    }).then (res => {
+      const { form ,pageSize,pageNum} = this.props;
+      const value = form.getFieldsValue();
+      const { paperName } = value;
+      dispatch({
+        type: 'teacherPaperList/paperListPage',
+        payload: {
+          paperName,
+          page :{
+            pageNum,
+            pageSize,
+          }
+        },
+      });
     });
   };
 
@@ -64,20 +83,34 @@ class PaperList extends React.Component {
     const value = form.getFieldsValue();
     const { paperName } = value;
     dispatch({
-      type: 'paperList/listPage',
+      type: 'teacherPaperList/paperListPage',
       payload: {
         paperName,
         page: {
           pageNum: page,
-          pageSize: 10,
+          pageSize
         },
       },
     });
   };
+
+  componentWillMount() {
+    const { dispatch,pageNum,pageSize } = this.props;
+    dispatch({
+      type: 'teacherPaperList/paperListPage',
+      payload: {
+        page:{
+          pageNum,
+          pageSize,
+        }
+      },
+    });
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'paperList/save',
+      type: 'teacherPaperList/save',
       payload: {
         paperList: [],
         total: 10,
@@ -86,10 +119,20 @@ class PaperList extends React.Component {
     });
   }
   render() {
-    const { paperList, total, newPaperVisible, loading, form } = this.props;
+    const { paperList, total, newPaperVisible, loading, form ,pageNum,pageSize} = this.props;
     const { getFieldDecorator } = form;
     const { paperName } = this.state;
     const columns = [
+      {
+        key:'index',
+        title: '序号',
+        width:80,
+        render:(text,record,index)=> {
+          return(
+            `${(pageNum-1)*pageSize+(index+1)}` //当前页数减1乘以每一页页数再加当前页序号+1
+          )
+        }
+      },
       {
         title: '试卷名称',
         dataIndex: 'paperName',
@@ -105,7 +148,7 @@ class PaperList extends React.Component {
         title: '创建时间',
         dataIndex: 'createDate',
         key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss')}</span>,
       },
       {
         title: '及格分数',
@@ -127,17 +170,20 @@ class PaperList extends React.Component {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
+        width:140,
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.editPaper(record, e)}>
+            <a type="link" onClick={e => this.editPaper(record, e)}>
               编辑
-            </Button>
-            <Button type="link" onClick={e => this.querypaper(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.querypaper(record, e)}>
               查看
-            </Button>
-            <Button type="link" onClick={e => this.deletePaper(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.deletePaper(record, e)}>
               删除
-            </Button>
+            </a>
           </span>
         ),
       },
@@ -181,7 +227,7 @@ class PaperList extends React.Component {
                 dataSource={paperList}
                 pagination={{
                   total,
-                  pageSize: 10,
+                  pageSize,
                   onChange: (page, pageSize) => {
                     this.pageChange(page, pageSize);
                   },
@@ -198,6 +244,6 @@ class PaperList extends React.Component {
 const PaperListForm = Form.create({ name: 'PaperListForm' })(PaperList);
 
 export default connect(state => ({
-  ...state.paperList,
-  loading: state.loading.models.paperList,
+  ...state.teacherPaperList,
+  loading: state.loading.models.teacherPaperList,
 }))(PaperListForm);
