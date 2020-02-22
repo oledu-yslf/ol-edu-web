@@ -4,6 +4,8 @@ import moment from 'moment';
 import router from 'umi/router';
 import { Button, Table, Spin, Form, Input, Divider, Radio, Tabs } from 'antd';
 import styles from './index.less';
+import NewPlanModal from './components/newPlanModal'
+
 const { TabPane } = Tabs;
 
 class PaperPlan extends React.Component {
@@ -19,14 +21,41 @@ class PaperPlan extends React.Component {
     router.push(e.target.value);
   };
   newPaperPlan = e => {
-    router.push('/teacher/newPlan');
+    const { dispatch } = this.props;
+    // this.setState({
+    //   paperPlanListVOList:[]
+    // })
+    dispatch({
+      type: 'paperPlan/save',
+      payload: {
+        newPlanVisible: true,
+        planId:'',
+        paperPlanListVOList:[],
+        planDetail:{}
+      },
+    });
+
   };
 
   queryPlan = record => {
     router.push(`/teacher/planDetail?planId=${record.planId}`);
   };
   editPlan = record => {
-    router.push(`/teacher/newPlan?planId=${record.planId}`);
+    // router.push(`/teacher/newPlan?planId=${record.planId}`);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'paperPlan/listDetailPage',
+      payload: {
+        planId:record.planId,
+        newPlanVisible: true,
+      },
+    });
+    dispatch({
+      type: 'paperPlan/save',
+      payload: {
+        newPlanVisible: true,
+      },
+    });
   };
   deletePlan = record => {
     const { dispatch } = this.props;
@@ -37,6 +66,19 @@ class PaperPlan extends React.Component {
       },
     });
   };
+
+  componentWillMount() {
+    const { dispatch, pageSize} = this.props;
+    dispatch({
+      type: 'paperPlan/init',
+      payload: {
+        page: {
+          pageNum: 1,
+          pageSize,
+        },
+      },
+    });
+  }
 
   handleSearchSubmit = e => {
     e.preventDefault();
@@ -69,7 +111,7 @@ class PaperPlan extends React.Component {
   };
 
   render() {
-    const { planList, total, loading, form } = this.props;
+    const { planList, total, loading, form, newPlanVisible,planId } = this.props;
     const { getFieldDecorator } = form;
 
     const columns = [
@@ -161,6 +203,8 @@ class PaperPlan extends React.Component {
                 }}
               />
             </Spin>
+
+        <NewPlanModal newPlanVisible={newPlanVisible} planId={planId}></NewPlanModal>
       </div>
     );
   }
