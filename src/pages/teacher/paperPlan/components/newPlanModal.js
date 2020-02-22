@@ -229,7 +229,7 @@ class NewPlan extends React.Component {
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
-                {initialValue:''}
+                {initialValue:moment(startValue[index])}
               )(
                 <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:MM:ss")} showTime format="YYYY-MM-DD HH:MM:ss" />,
               )}
