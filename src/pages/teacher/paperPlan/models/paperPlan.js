@@ -16,15 +16,6 @@ export default {
     staffList:[]
   },
   subscriptions: {
-    // setup({ dispatch, history }) {
-    //   return history.listen(({ pathname, query }) => {
-    //     if (pathname === '/teacher/paperPlan') {
-    //       dispatch({
-    //         type: 'listPage',
-    //       });
-    //     }
-    //   });
-    // },
   },
   effects: {
     *init({ payload }, { call, put }){
@@ -54,28 +45,7 @@ export default {
         },
       });
     },
-    // *modalInit({ payload }, { call, put }) {
-    //   const [respResult,respDepartData,resExamList,resStaffList] = yield [
-    //     payload.planId?call(service.listPage, payload):'',
-    //     call(service.departListAll),
-    //     call(service.getExamList),
-    //     call(service.staffList)
-    //   ];
-    //   const { paperPlanListVOList } = respResult.data?respResult.data:{};
-    //   const examList = resExamList.data
-    //   const staffList = resStaffList.data
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       paperPlanListVOList: paperPlanListVOList?paperPlanListVOList:[],
-    //       treeDepartData:respDepartData.data,
-    //       examList:examList.result,
-    //       examListTotal:examList.count,
-    //       staffList:staffList.result,
-    //       planDetail:respResult.data
-    //     },
-    //   });
-    // },
+
     *listPage({ payload }, { call, put }) {
       const { data } = yield call(service.listPage, payload);
       const { count, result } = data;

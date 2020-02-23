@@ -142,17 +142,20 @@ class PaperPlan extends React.Component {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
+        width:'140px',
         render: (text, record) => (
           <span>
-            <Button type="link" onClick={e => this.editPlan(record, e)}>
+            <a type="link" onClick={e => this.editPlan(record, e)}>
               编辑
-            </Button>
-            <Button type="link" onClick={e => this.queryPlan(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.queryPlan(record, e)}>
               查看
-            </Button>
-            <Button type="link" onClick={e => this.deletePlan(record, e)}>
+            </a>
+            <span style={{ marginRight: '5px' }}></span>
+            <a type="link" onClick={e => this.deletePlan(record, e)}>
               删除
-            </Button>
+            </a>
           </span>
         ),
       },
@@ -188,7 +191,6 @@ class PaperPlan extends React.Component {
                 </Button>
               </Form.Item>
             </Form>
-            <Divider />
             <Spin spinning={loading}>
               <Table
                 rowKey={record => record.planId}
