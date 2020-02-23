@@ -3,11 +3,12 @@ import {Divider, List} from 'antd';
 import {connect} from 'dva';
 import styles from '@/style/common.less';
 import moment from 'moment';
+import * as Util from '@/utils/util';
 
 class PaperDetailForStudent extends React.Component {
   //渲染评价
   renderEvaluate(paperPlanDetailVO){
-    return (paperPlanDetailVO && paperPlanDetailVO.evaluate && (
+    return  (
       <div>
         <Divider style={{marginBottom:'5px'}}/>
         <div className="clearfix">
@@ -15,14 +16,14 @@ class PaperDetailForStudent extends React.Component {
           <div >{paperPlanDetailVO.evaluate}</div>
         </div>
       </div>
-    ))
+    )
   }
-  renderExamType(exam){
-    if (exam.examType == 1) return <div>单选题</div>
-    if (exam.examType == 2) return <div>多选题</div>
-    if (exam.examType == 3) return <div>判断题</div>
-    if (exam.examType == 5) return <div>填空题</div>
-    if (exam.examType == 4) return <div>问答题</div>
+  renderExamType(exam,index){
+    if (exam.examType == 1) return <div className={styles.examTypeLabel}>{Util.toChinesNum(index)}. 单选题</div>
+    if (exam.examType == 2) return <div className={styles.examTypeLabel}>{Util.toChinesNum(index)}. 多选题</div>
+    if (exam.examType == 3) return <div className={styles.examTypeLabel}>{Util.toChinesNum(index)}. 判断题</div>
+    if (exam.examType == 5) return <div className={styles.examTypeLabel}>{Util.toChinesNum(index)}. 填空题</div>
+    if (exam.examType == 4) return <div className={styles.examTypeLabel}>{Util.toChinesNum(index)}. 问答题</div>
   }
 
   isCollect = (item) => {
@@ -30,12 +31,15 @@ class PaperDetailForStudent extends React.Component {
   }
 
   renderExamList(paperExamSummery) {
-    const listItems = paperExamSummery.map( (paperExam) => {
+    let examTypeIndex = 0;
+    const listItems = paperExamSummery.map( (paperExam,i) => {
+
+      examTypeIndex ++;
 
       return <List key={paperExam.examType}
         style={{marginTop: '20px'}}
         header={
-          this.renderExamType(paperExam)
+          this.renderExamType(paperExam,examTypeIndex)
         }
         bordered
         dataSource={paperExam.paperExamVOList}
@@ -140,10 +144,10 @@ class PaperDetailForStudent extends React.Component {
     return (
       <div className={styles.box}>
         <div className="clearfix">
-          <div className="pullleft" style={{fontSize: '24px', lineHeight: '40px',textAlign: 'center'}}>
+          <div className="pullleft" style={{width:'85%',fontSize: '24px', lineHeight: '40px',textAlign: 'center',fontWeight:'700'}}>
             <span>{paperName}</span>
           </div>
-          <div className="pullright" style={{fontSize: '12px', lineHeight: '20px'}}>
+          <div className="pullright" style={{fontSize: '12px', lineHeight: '20px',width:'15%'}}>
             <div>总分：{totalScore}</div>
             <div>开始时间：{paperPlanDetailVO.effDate?moment(paperPlanDetailVO.effDate).format('YYYY/MM/DD HH:MM:ss'):''}</div>
             <div>结束时间：{paperPlanDetailVO.expDate?moment(paperPlanDetailVO.expDate).format('YYYY/MM/DD HH:MM:ss'):''}</div>

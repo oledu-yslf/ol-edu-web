@@ -31,6 +31,7 @@ class NewPaperModal extends React.Component {
         onCancel={this.handleCancel}
         confirmLoading={loading}
         footer={null}
+        destroyOnClose
       >
         {newPaperStep == 1 ? <NewPaper></NewPaper> : null}
         {newPaperStep == 2 ? <NewPaperAuto></NewPaperAuto> : null}
