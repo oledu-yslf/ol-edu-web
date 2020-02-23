@@ -1,29 +1,30 @@
 import React from 'react';
-import { Modal, Form, Table, Row, Col,Divider,Input, Select,Button,Spin } from 'antd';
+import { Modal, Form, Table, Row, Col,Divider,Input, Select,Button,Spin,TreeSelect } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import getUserId from '@/utils/getUserId';
 import style from '../index.less'
+import { cloneDeep } from 'lodash';
+
 const { Option } = Select;
+const {TreeNode} = TreeSelect;
+
 class ExamListModal extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      examType: '',
-      difficultyLevel: '',
-      examName: '',
-      questionList:[]
-    };
   }
   pageChange = (page, pageSize) => {
     const { dispatch } = this.props;
     let result = this.props.form.getFieldsValue();
     dispatch({
-      type: 'newPaperManual/listPage',
+      type: 'newPaperManual/listPageExam',
       payload: {
+        categoryId:result.examCategory,
         examType:result.examType,
         difficultyLevel:result.difficultyLevel,
+        examName:result.examName,
+
         page: {
           pageNum: page,
           pageSize: pageSize,
@@ -41,14 +42,16 @@ class ExamListModal extends React.Component {
       },
     });
   };
-  componentWillUnmount() {
-    const { dispatch } = this.props;
+
+  componentWillMount() {
+    const { dispatch,pageNum,pageSize } = this.props;
     dispatch({
-      type: 'save',
+      type: 'newPaperManual/initExamModal',
       payload: {
-        typeList: [],
-        questionList: [],
-        total: 10,
+        page:{
+          pageNum,
+          pageSize,
+        }
       },
     });
   }
@@ -58,16 +61,125 @@ class ExamListModal extends React.Component {
     const { dispatch } = this.props;
     let result = this.props.form.getFieldsValue();
     dispatch({
-      type: 'newPaperManual/listPage',
+      type: 'newPaperManual/listPageExam',
       payload: {
+        categoryId:result.examCategory,
         examType:result.examType,
-        difficultyLevel:result.difficultyLevel
-
+        difficultyLevel:result.difficultyLevel,
+        examName:result.examName,
       },
     });
   }
+
+  initChecked = (record) => {
+    const { paperExamSummery } = this.props;
+    for (let i in paperExamSummery){
+      const {paperExamVOList} = paperExamSummery[i];
+      for(let j in paperExamVOList){
+        if (paperExamVOList[j].examId == record.examId){
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+  addExamToPaper = (record) => {
+    const { paperExamSummery,dispatch} = this.props;
+    //////////////////////////////
+    if(paperExamSummery[record.examType] == null){
+      //构造试题对象
+      let obj = {};
+      obj.count = 1;
+      obj.totalScore = record.mark;
+      obj.examType = record.examType;
+
+      let paperExamVOList = [];
+      //试题的选项数组数据需要转化为试卷试题的数组。
+
+      record.paperExamAttrVOS = cloneDeep(record.baseExamAttrVOList);
+      paperExamVOList.push(record);
+      obj.paperExamVOList = paperExamVOList;
+
+      paperExamSummery[record.examType] = obj;
+
+    } else {
+      //判断下试题是否存在，
+      for (let i in paperExamSummery[record.examType].paperExamVOList){
+        if(paperExamSummery[record.examType].paperExamVOList[i].examId == record.examId){
+          //会提已经存在数组中直接返回成功。
+          return ;
+        }
+      }
+
+      paperExamSummery[record.examType].count = paperExamSummery[record.examType].count + 1;
+      paperExamSummery[record.examType].totalScore = paperExamSummery[record.examType].totalScore + record.mark;
+
+      record.paperExamAttrVOS = cloneDeep(record.baseExamAttrVOList);
+
+      paperExamSummery[record.examType].paperExamVOList.push(record);
+    }
+
+    let newPaperExamSummery = [];
+    paperExamSummery.map((item,k) => {
+      newPaperExamSummery[k] = cloneDeep(item);
+    })
+
+    dispatch({
+      type: 'newPaperManual/save',
+      payload: {
+        paperExamSummery:newPaperExamSummery
+      },
+    });
+
+  }
+  removeExamToPaper = (record) => {
+    const { paperExamSummery,dispatch} = this.props;
+    //////////////////////////////
+    if(paperExamSummery[record.examType] == null){
+      return ;
+    } else {
+      paperExamSummery[record.examType].count = paperExamSummery[record.examType].count - 1;
+      paperExamSummery[record.examType].totalScore = paperExamSummery[record.examType].totalScore - record.mark;
+
+      let paperExamVOList = paperExamSummery[record.examType].paperExamVOList;
+
+      for (let i in paperExamVOList){
+        if (paperExamVOList[i].examId == record.examId){
+          paperExamVOList.splice(i,1);
+          break;
+        }
+      }
+
+      let newPaperExamSummery = [];
+      paperExamSummery.map((item,k) => {
+        if (item.paperExamVOList.length != 0){
+          newPaperExamSummery[k] = cloneDeep(item);
+        }
+
+      })
+
+      dispatch({
+        type: 'newPaperManual/save',
+        payload: {
+          paperExamSummery:newPaperExamSummery
+        },
+      });
+    }
+  }
+  selectAll = (selected,changeRows) => {
+    if (selected == true){
+      for (let i in changeRows){
+        this.addExamToPaper(changeRows[i]);
+      }
+    } else {
+      for (let i in changeRows){
+        this.removeExamToPaper(changeRows[i]);
+      }
+    }
+  }
   render() {
-    const {  questionList, total, examListVisible, loading, form } = this.props;
+    const {  examList, total, examListVisible, loading, form,categoryTree,pageSize, paperExamSummery,dispatch} = this.props;
     const { getFieldDecorator } = form;
     const columns = [
       {
@@ -93,7 +205,9 @@ class ExamListModal extends React.Component {
                   ? '判断题'
                   : text === 4
                     ? '问答题'
-                    : '填空题'}
+                    : text === 5
+                    ? '填空题'
+                      :'未知'}
           </span>
         ),
       },
@@ -134,118 +248,55 @@ class ExamListModal extends React.Component {
         dataIndex: 'createStaffName',
       },
     ];
-    const {
-      examType,
-      difficultyLevel,
-      examName,
-    } = this.state;
+
     // rowSelection object indicates the need for row selection
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        const state = this.state;
-        state.searchHistory = selectedRows;
-        this.setState(state);
-
-        let selRowExam = {}
-        let radioTemp = []
-        let checkBoxTemp = []
-        let trueOfalseTemp = []
-        let blankTemp = []
-        let questionTemp = []
-        let radioTempSel={}
-        let checkBoxTempSel={}
-        let trueOfalseTempSel={}
-        let questionTempSel={}
-        let blankTempSel={}
-        radioTempSel.totalScore = 0
-        checkBoxTempSel.totalScore = 0
-        trueOfalseTempSel.totalScore = 0
-        questionTempSel.totalScore = 0
-        blankTempSel.totalScore = 0
-        let count = 0
-        for(let item of selectedRows){
-          item.paperExamAttrVOS = item.baseExamAttrVOList
-          if(item.examType=='1'){
-            radioTemp.push(item)
-            radioTempSel.totalScore += Number(item.mark)
-            radioTempSel.examType =item.examType
-          }else if(item.examType=='2'){
-            checkBoxTemp.push(item)
-            checkBoxTempSel.totalScore += Number(item.mark)
-            checkBoxTempSel.examType =item.examType
-          }else if(item.examType=='3'){
-            trueOfalseTemp.push(item)
-            trueOfalseTempSel.totalScore += Number(item.mark)
-            trueOfalseTempSel.examType =item.examType
-          }else if(item.examType=='4'){
-            questionTemp.push(item)
-            questionTempSel.totalScore += Number(item.mark)
-            questionTempSel.examType =item.examType
-          }else if(item.examType=='5'){
-            blankTemp.push(item)
-            blankTempSel.totalScore += Number(item.mark)
-            blankTempSel.examType =item.examType
-          }
+      onSelect:(record, selected, selectedRows, nativeEvent) => {
+        if (selected == true){
+          this.addExamToPaper(record)
+        } else {
+          this.removeExamToPaper(record)
         }
-
-        if(radioTemp.length>0){
-          radioTempSel.count = radioTemp.length
-          radioTempSel.paperExamVOList = radioTemp
-          selRowExam[0] = radioTempSel
-        }
-        if(checkBoxTemp.length>0){
-          checkBoxTempSel.count = radioTemp.length
-          checkBoxTempSel.paperExamVOList = radioTemp
-          selRowExam[1] = checkBoxTempSel
-        }
-        if(trueOfalseTemp.length>0){
-          trueOfalseTempSel.count = trueOfalseTemp.length
-          trueOfalseTempSel.paperExamVOList = trueOfalseTemp
-          selRowExam[2] = trueOfalseTempSel
-        }
-        if(questionTemp.length>0){
-          questionTempSel.count = questionTemp.length
-          questionTempSel.paperExamVOList = questionTemp
-          selRowExam[3] = questionTempSel
-        }
-        if(blankTemp.length>0){
-          blankTempSel.count = blankTemp.length
-          blankTempSel.paperExamVOList = blankTemp
-          selRowExam[4] = blankTempSel
-        }
-
-
-
-
-        console.log("selRowExam",selRowExam)
-
-
-        let temp={}
-        temp.mapPaperExamSummary = selRowExam
-
-
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'newPaperManual/save',
-          payload: {
-            paperDetail:temp
-          },
-        });
-
-        // this.props.getStockInfo(selRowExam)
-
-
-
-
 
       },
+      onSelectAll:(selected, selectedRows, changeRows) => {
+        this.selectAll(selected,changeRows);
+      },
+
       getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name,
+        /*disabled: record.name === 'Disabled User', // Column configuration not to be checked
+        name: record.name,*/
+
+        defaultChecked:this.initChecked(record),    //设置默认选中项
       }),
     };
-    // const hasSelected = selectedRowKeys.length > 0;
+
+    const renderTreeNodes = data => {
+      if (data) {
+        return data.map(item => {
+          if (item.childExamCategoryList) {
+            return (
+              <TreeNode
+                value={item.categoryId}
+                title={item.categoryName}
+                key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
+                dataRef={item}
+              >
+                {renderTreeNodes(item.childExamCategoryList)}
+              </TreeNode>
+            );
+          }
+          return (
+            <TreeNode
+              value={item.categoryId}
+              title={item.categoryName}
+              key={`${item.categoryName}-${item.categoryId}-${item.floor}`}
+              dataRef={item}
+            />
+          );
+        });
+      }
+    };
 
     return (
       <Modal
@@ -253,17 +304,35 @@ class ExamListModal extends React.Component {
         title="新增试卷"
         visible={examListVisible}
         onCancel={this.handleCancel}
-        onOk={this.handlePaperPlus}
+        onOk={this.handleCancel}
         confirmLoading={loading}
         width={1000}
+        destroyOnClose
       >
         <Spin spinning={loading}>
         <Row>
         <Col span={24}>
           <Form layout="inline">
+            <Form.Item label="试题分类:">
+              {getFieldDecorator('examCategory', {
+
+              })(
+                <TreeSelect
+                  showSearch
+                  style={{ width: '120px' }}
+                  dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
+                  placeholder="请选择试题分类!"
+                  allowClear
+                  onChange={this.treeChange}
+                >
+                  {renderTreeNodes(categoryTree)}
+                </TreeSelect>,
+              )}
+            </Form.Item>
+
             <Form.Item label="试题类型:">
               {getFieldDecorator('examType', {
-                initialValue: examType,
+                initialValue: '',
               })(
                 <Select style={{ width: '120px' }}>
                   <Option value={''}>全部</Option>
@@ -277,7 +346,7 @@ class ExamListModal extends React.Component {
             </Form.Item>
             <Form.Item label="难度等级:">
               {getFieldDecorator('difficultyLevel', {
-                initialValue: difficultyLevel,
+                initialValue: '',
               })(
                 <Select style={{ width: '120px' }}>
                   <Option value={''}>全部</Option>
@@ -291,13 +360,12 @@ class ExamListModal extends React.Component {
             </Form.Item>
             <Form.Item label="试题名称:">
               {getFieldDecorator('examName', {
-                initialValue: examName,
+                initialValue: '',
               })(<Input style={{ width: '120px' }} />)}
             </Form.Item>
             <Form.Item>
               <Button
                 type="primary"
-                htmlType="submit"
                 icon="search"
                 onClick={this.handleSearchSubmit}
               >
@@ -305,15 +373,15 @@ class ExamListModal extends React.Component {
               </Button>
             </Form.Item>
           </Form>
-          <Divider />
+
           <Table
             rowSelection={rowSelection}
             rowKey={record => record.examId}
             columns={columns}
-            dataSource={questionList}
+            dataSource={examList}
             pagination={{
               total,
-              pageSize: 10,
+              pageSize,
               onChange: (page, pageSize) => {
                 this.pageChange(page, pageSize);
               },

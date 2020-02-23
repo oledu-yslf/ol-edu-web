@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-export async function listAll (data) {
+export async function listAllExamCategory (data) {
   return request({
     url:  '/api/exam/category/listAll',
     method: 'post',
@@ -8,7 +8,7 @@ export async function listAll (data) {
   })
 }
 
-export async function listPage (data) {
+export async function listPageExam (data) {
   return request({
     url:  '/api/exam/listPage',
     method: 'post',
@@ -24,7 +24,8 @@ export async function listPage (data) {
     },data)
   })
 }
-export async function saveExam(data) {
+
+export async function paperExamSave(data) {
   return request({
     url: '/api/exam/paperExam/save',
     method: 'POST',
@@ -32,7 +33,7 @@ export async function saveExam(data) {
   })
 }
 
-export async function queryDetail(data) {
+export async function paperExamDetail(data) {
   return request({
     url: '/api/exam/paper/detailPaper',
     method: 'POST',

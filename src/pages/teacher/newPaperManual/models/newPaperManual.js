@@ -4,64 +4,82 @@ import router from 'umi/router'
 export default {
   namespace: 'newPaperManual',
   state: {
-    typeList:[],
-    paperId:'',
     paperDetail:{},
-    questionList:[]
+    paperExamSummery:[],    //paperDetail.mapPaperExamSummary转为为数组，后续就用这个数组去渲染。
+
+
+    ////////////////////////
+    categoryTree:[],    //试题分类试卷列表
+    examList:[],
+    total:0,
+    pageNum:1,
+    pageSize:10,
+    examListVisible:false,
+
+    ////////////////////
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        if (pathname === '/teacher/newPaperManual') {
-          dispatch({
-            type: 'init',
-          });
-        }
-      });
-    },
+
   },
   effects: {
-    *init({ payload }, { call, put }) {
-      const [typeListRes, questionRes] = yield [call(service.listAll), call(service.listPage)];
-      const { count, result } = questionRes.data;
+    *listPageExam({ payload }, { call, put }) {
+      const { data } = yield call(service.listPageExam, payload);
+      const { count, pageNum,pageSize,result  } = data;
       yield put({
         type: 'save',
         payload: {
-          typeList: typeListRes.data,
-          questionList: result,
+          examList: result,
           total: count,
+          pageNum,
+          pageSize,
         },
       });
     },
-    *listPage({ payload }, { call, put }) {
-      const { data } = yield call(service.listPage, payload);
-      const { count, result } = data;
-      yield put({
-        type: 'save',
-        payload: {
-          questionList: result,
-          total: count,
-        },
-      });
-    },
-    *saveExam({payload},{call,put}){
-      const data = yield call(service.saveExam, payload);
+    *paperExamSave({payload},{call,put}){
+      const data = yield call(service.paperExamSave, payload);
       if (data.successed) {
         message.success('试卷保存成功',3);
         router.push(`/teacher/paperList`)
       }
     },
-    *queryDetail({payload},{call,put}){
-      const data = yield call(service.queryDetail, payload);
+
+    *initExamModal({ payload }, { call, put }) {
+      const [resExamCategory,resExam] = yield [call(service.listAllExamCategory),call(service.listPageExam,payload)]
+
+      const { count, pageNum,pageSize,result } = resExam.data;
+      yield put({
+        type: 'save',
+        payload: {
+          categoryTree: resExamCategory.data,
+          examList: result,
+          total: count,
+          pageNum,
+          pageSize,
+        },
+      });
+    },
+
+    *paperExamDetail({payload},{call,put}){
+      const data = yield call(service.paperExamDetail, payload);
+
+      const paperDetail = data.data;
+
+      const {mapPaperExamSummary} = paperDetail;
+
+      let paperExamSummery = [];
+      for (let i in mapPaperExamSummary) {
+        paperExamSummery[i] = mapPaperExamSummary[i];
+      }
+
       if(data.successed){
         yield put({
           type:'save',
           payload: {
-            paperDetail: data.data
+            paperDetail,
+            paperExamSummery
           }
         })
       }
-
     }
 
   },
