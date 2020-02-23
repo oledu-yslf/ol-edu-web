@@ -96,21 +96,29 @@ class NewPlan extends React.Component {
     // console.log("examListMakeUp",value)
     const { dispatch,paperPlanListVOList} = this.props;
 
-    let tempArr = []
-    for(let i=0;i<value.length;i++){
-      let temp = {}
-      temp.paperVO = {}
-      temp.paperVO.paperName = value[i].paperName
-      temp.paperVO.paperType = value[i].paperType
-      temp.paperVO.totalScore = value[i].totalScore
-      temp.paperVO.createStaffName = value[i].createStaffName
-      temp.createDate = value[i].createDate
-      temp.paperId = value[i].paperId
-      paperPlanListVOList.push(temp)
 
+    let tempArr = []
+    // paperPlanListVOList=[]
+    if(paperPlanListVOList.length>0){
+      for(let i=0;i<paperPlanListVOList.length;i++){
+        tempArr.push(paperPlanListVOList[i].paperId)
+      }
     }
 
 
+    for(let i=0;i<value.length;i++){
+        if(!tempArr.includes(value[i].paperId)){
+          let temp = {}
+          temp.paperVO = {}
+          temp.paperVO.paperName = value[i].paperName
+          temp.paperVO.paperType = value[i].paperType
+          temp.paperVO.totalScore = value[i].totalScore
+          temp.paperVO.createStaffName = value[i].createStaffName
+          temp.createDate = value[i].createDate
+          temp.paperId = value[i].paperId
+          paperPlanListVOList.push(temp)
+        }
+    }
     dispatch({
       type: 'save',
       payload: {
@@ -150,24 +158,28 @@ class NewPlan extends React.Component {
     const { dispatch, form,paperPlanListVOList,planId } = this.props;
     const { resetFields } = form;
     // const {query} = this.props.location
-    const getValues = this.props.form.getFieldsValue();
+    this.props.form.validateFields((err, value) => {
+      if (!err) {
+        const getValues = this.props.form.getFieldsValue();
 
-    for(let i=0;i<paperPlanListVOList.length;i++){
-      getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
-      getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
-    }
-    getValues.createStaffId = Util.getStaffId()
-    if(planId){
-      getValues.planId = planId
-    }
+        for (let i = 0; i < paperPlanListVOList.length; i++) {
+          getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
+          getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
+        }
+        getValues.createStaffId = Util.getStaffId()
+        if (planId) {
+          getValues.planId = planId
+        }
 
-    console.log(getValues)
-    dispatch({
-      type: 'paperPlan/savePaperPlan',
-      payload: {
-        ...getValues
-      },
-    });
+        console.log(getValues)
+        dispatch({
+          type: 'paperPlan/savePaperPlan',
+          payload: {
+            ...getValues
+          },
+        });
+      }
+    })
 
   }
 
@@ -229,7 +241,7 @@ class NewPlan extends React.Component {
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
-                {initialValue:moment(startValue[index])}
+                {initialValue:startValue[index]?moment(startValue[index]):''}
               )(
                 <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:MM:ss")} showTime format="YYYY-MM-DD HH:MM:ss" />,
               )}
@@ -311,18 +323,22 @@ class NewPlan extends React.Component {
         <div className={styles.box}>
           <Spin spinning={loading}>
             <Form layout="inline">
+              <div>
               <Form.Item label="计划名称:">
                 {getFieldDecorator('planName', {
                   initialValue:planDetail?planDetail.planName:'' ,
+                  rules: [{ required: true, message: '请输入计划名称!' }],
+
                 })(
                   <Input/>
                 )}
               </Form.Item>
-
-
+              </div>
+              <div>
               <Form.Item label="发布部门">
                 {getFieldDecorator('planDepartId', {
                   initialValue:planDetail?planDetail.planDepartId:'' ,
+                  rules: [{ required: true, message: '请选择发布部门!' }],
                 })(
                   <TreeSelect
                     showSearch
@@ -335,7 +351,10 @@ class NewPlan extends React.Component {
                   </TreeSelect>,
                 )}
               </Form.Item>
+              </div>
+              <div>
               <span className={styles.chooseExam} onClick={this.selExam}>试卷选择</span>
+              </div>
               {/*<Form.Item>*/}
               {/*<Button*/}
               {/*type="primary"*/}
