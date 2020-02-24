@@ -31,10 +31,6 @@ export default {
       const examList = resExamList.data
       const staffList = resStaffList.data
       const { count, result } = data.data;
-      let newArr = examList.result.map(v=>{
-        return {...v,key:v.paperId}
-      })
-
       yield put({
         type: 'save',
         payload: {
@@ -42,7 +38,7 @@ export default {
           total: count,
           paperPlanListVOList: paperPlanListVOList?paperPlanListVOList:[],
           treeDepartData:respDepartData.data,
-          examList: newArr,
+          examList:examList.result,
           examListTotal:examList.count,
           staffList:staffList.result,
           planDetail:respResult.data
