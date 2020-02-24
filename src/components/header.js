@@ -52,6 +52,14 @@ class OHeader extends React.Component {
     this.setState({
       roleInfo,
     });
+
+    //获取logo信息
+    const {dispatch} = this.props;
+
+    dispatch({
+      type: 'global/queryLogo',
+    });
+
   }
 
   renderMenu = (menusList) => {
@@ -72,15 +80,24 @@ class OHeader extends React.Component {
 
     return null;
   }
+
   render() {
     const { roleInfo } = this.state;
-    const { selectedMenu } = this.props;
+    const { selectedMenu,logoFileInfo } = this.props;
 
     let menusList = roleInfo.showMenuList;
 
+    let imageUrl = '';
+    if (logoFileInfo) {
+      imageUrl = `api${logoFileInfo.url}\/${logoFileInfo.fileName}`;
+    }
+
+
     return (
       <div className={[styles.box, 'clearfix'].join(' ')}>
-        <div className={styles.logo} />
+        <div className={styles.logo}>
+          <img src={imageUrl} alt="avatar" style={{width: '96px', height: '48px'}}/>
+        </div>
         <Menu
           onClick={this.handleClick}
           mode="horizontal"

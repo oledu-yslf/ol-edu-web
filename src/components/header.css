@@ -1,21 +1,21 @@
 .box{
   width:100%;
-  line-height: 40px;
+  line-height: 80px;
   min-width: 1200px;
+
 }
 
 .logo{
-  width: 120px;
-  height: 30px;
-  background: rgb(192, 96, 96);
-  margin: 5px 24px;
+  width: 96px;
+  height: 48px;
+  margin:5px 96px;
   float: left;
 }
 
 .menu{
   line-height: 40px;
   float: left;
-
+  margin-top:20px;
 }
 
 

@@ -1,10 +1,8 @@
 import React from 'react';
 import { Menu, Button, Avatar } from 'antd';
 import styles from './minHeader.css';
-import Link from 'umi/link';
 import router from 'umi/router';
 import { connect } from 'dva';
-import avtor from '@/assets/avtor.jpeg';
 
 class OMinHeader extends React.Component{
   constructor(props) {
@@ -50,14 +48,32 @@ class OMinHeader extends React.Component{
     this.setState({
       roleInfo,
     });
+
+    //获取logo信息
+    const {dispatch} = this.props;
+
+    dispatch({
+      type: 'global/queryLogo',
+    });
+
   }
 
   render(){
     const { roleInfo } = this.state;
-    const {selectedMenu} = this.props;
+    const {selectedMenu,logoFileInfo} = this.props;
+
+    let imageUrl = '';
+    if (logoFileInfo) {
+      imageUrl = `api${logoFileInfo.url}\/${logoFileInfo.fileName}`;
+    }
+
+
     return (
       <div className={[styles.box,'clearfix'].join(' ')}>
-        <div className={styles.logo} />
+        <div className={styles.logo}>
+          <img src={imageUrl} alt="avatar" style={{width: '96px', height: '48px'}}/>
+        </div>
+
         {roleInfo ? (
           <div className={styles.pullright}>
             <span style={{ marginRight: '5px' }}>Hi,{roleInfo.staffName}</span>

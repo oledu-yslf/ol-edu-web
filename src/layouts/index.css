@@ -3,15 +3,15 @@
   /* font-family: Georgia, sans-serif; */
   min-width: 1200px;
 }
-.header{
+/*.header{
   position: fixed;
   z-index: 1;
   width: 100%;
   background: #fff;
   padding: 0 ;
-  height: 40px;
+  height: 80px;
   justify-content: space-between;
-}
+}*/
 
 .min-header{
   position: fixed;
@@ -19,21 +19,21 @@
   width: 100%;
   background: #fff;
   padding: 0 ;
-  height: 40px;
+  height: 80px;
   justify-content: space-between;
 }
 
-.content{
+/*.content{
   width: 100%;
   background: #fff;
-  margin:50px 0 10px 0;
+  margin:90px 0 10px 0;
   padding: 0;
-}
+}*/
 
 .other-content{
   width: 100%;
   background: #fff;
-  margin:50px 0 0 0;
+  margin:90px 0 10px 0;
   padding: 0;
 }
 

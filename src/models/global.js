@@ -58,7 +58,18 @@ export default {
       });
     },
   },
+  effects: {
+    *queryLogo({ payload }, { call, put ,select}){
+      const {data} = yield call(service.queryLogo);
 
+      yield put({
+        type: 'save',
+        payload: {
+          logoFileInfo: data,
+        },
+      });
+    },
+  },
   reducers: {
     save(state, action) {
       return {...state, ...action.payload};

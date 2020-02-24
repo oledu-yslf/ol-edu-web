@@ -50,3 +50,9 @@ export async function upLoadFile(formData,progressFn) {
   });
 }
 
+export async function queryLogo () {
+  return request({
+    url:  '/api/sys/logo/query',
+    method: 'post',
+  })
+}
