@@ -1,11 +1,9 @@
 .box{
-  display: flex;
-  justify-content: space-between;
   width:100%;
   line-height: 40px;
   min-width: 1200px;
-
 }
+
 .left{
   width: 120px;
   height: 30px;
@@ -13,7 +11,18 @@
   margin: 5px 24px;
 }
 
-
 .right{
   line-height: 40px;
+}
+
+.logo{
+  width: 96px;
+  height: 48px;
+  margin-right:96px;
+  float: left;
+}
+
+.pullright{
+  float: right;
+  margin-left: 20px;
 }

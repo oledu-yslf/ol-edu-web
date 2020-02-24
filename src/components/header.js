@@ -94,7 +94,7 @@ class OHeader extends React.Component {
 
 
     return (
-      <div className={[styles.box, 'clearfix'].join(' ')}>
+      <div className={[styles.box, 'clearfix'].join(' ')} style={{width: '1200px', margin: '0 auto'}}>
         <div className={styles.logo}>
           <img src={imageUrl} alt="avatar" style={{width: '96px', height: '48px'}}/>
         </div>

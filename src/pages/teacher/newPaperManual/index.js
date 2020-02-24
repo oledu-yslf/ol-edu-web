@@ -308,7 +308,7 @@ class newPaperManual extends React.Component {
         <div className={styles.box}>
           <div className="clearfix">
             <div className="pullleft" style={{width: '10%'}}>
-              <Button type="dashed" onClick={this.addForm} style={{width: '60%'}}>
+              <Button type="dashed" onClick={this.addForm} style={{width: '100%'}}>
                 <Icon type="plus"/> 选择试题
               </Button>
             </div>

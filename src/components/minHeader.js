@@ -64,16 +64,15 @@ class OMinHeader extends React.Component{
 
     let imageUrl = '';
     if (logoFileInfo) {
-      imageUrl = `api${logoFileInfo.url}\/${logoFileInfo.fileName}`;
+      imageUrl = `../api${logoFileInfo.url}\/${logoFileInfo.fileName}`;
     }
 
 
     return (
-      <div className={[styles.box,'clearfix'].join(' ')}>
+      <div className={[styles.box, 'clearfix'].join(' ')} style={{width: '1200px', margin: '0 auto',marginTop:'20px'}}>
         <div className={styles.logo}>
           <img src={imageUrl} alt="avatar" style={{width: '96px', height: '48px'}}/>
         </div>
-
         {roleInfo ? (
           <div className={styles.pullright}>
             <span style={{ marginRight: '5px' }}>Hi,{roleInfo.staffName}</span>
