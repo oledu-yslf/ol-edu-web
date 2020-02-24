@@ -93,13 +93,14 @@ export default {
       });
     },
     *examList({ payload }, { call, put }) {
-      const {resExamList} = yield call(service.getExamList, payload);
+      const resExamList = yield call(service.getExamList, payload);
+      console.log("resExamList",resExamList)
       const examList = resExamList.data
       yield put({
         type: 'save',
         payload: {
           examList:examList.result,
-          examListTotal:examList.count
+          examListTotal:examList.count,
         },
       });
     },

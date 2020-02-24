@@ -1,9 +1,9 @@
 import React from 'react';
-import { Modal, Form, Table,Input,Select,Button } from 'antd';
+import { Modal, Form, Table,Input,Select,Button,Spin } from 'antd';
 import moment from 'moment';
 import * as Util from '@/utils/util';
 import { connect } from 'dva';
-
+import { cloneDeep } from 'lodash';
 
 const { Option } = Select;
 let selList = []
@@ -16,7 +16,7 @@ const ExamListModal = Form.create({
     }
     onOk = () => {
       const {dispatch} = this.props;
-      this.props.getStockInfo(selList)
+      // this.props.getStockInfo(selList)
       dispatch({
         type:'paperPlan/save',
         payload:{
@@ -34,7 +34,7 @@ const ExamListModal = Form.create({
       })
     };
     queryExamList = e =>{
-      const { dispatch, form } = this.props;
+      const { dispatch, form, pageSize } = this.props;
       const value = form.getFieldsValue();
       dispatch({
         type: 'paperPlan/examList',
@@ -43,15 +43,15 @@ const ExamListModal = Form.create({
           paperName:value.paperName,
           page: {
             pageNum: 1,
-            pageSize: 10,
+            pageSize,
           },
           createStaffId: Util.getStaffId(),
         },
       });
     }
 
-    pageChange = (page, pageSize) => {
-      const { dispatch, form } = this.props;
+    pageChange = (page) => {
+      const { dispatch, form, pageSize } = this.props;
       const value = form.getFieldsValue();
       dispatch({
         type: 'paperPlan/examList',
@@ -60,16 +60,113 @@ const ExamListModal = Form.create({
           paperName:value.paperName,
           page: {
             pageNum: page,
-            pageSize: pageSize,
+            pageSize,
           },
           createStaffId: Util.getStaffId(),
         },
       });
     };
+    initChecked = (record) => {
+      const { paperPlanListVOList } = this.props;
+      for (let i in paperPlanListVOList){
+        if (paperPlanListVOList[i].paperId == record.paperId){
+          return true;
+        }
+      }
+      return false;
+    }
+    addExamToPaper = (record) => {
+      const { paperPlanListVOList,dispatch} = this.props;
+      //////////////////////////////
+      if(paperPlanListVOList.length == 0){
+        //构造试题对象
+        let obj = {};
+        obj.paperVO = {};
+        obj.paperVO.paperName = record.paperName;
+        obj.paperVO.paperType = record.paperType;
+        obj.paperVO.totalScore = record.totalScore;
+        obj.paperVO.createStaffName = record.createStaffName;
+        obj.createDate = record.createDate
+        obj.paperId = record.paperId
 
 
+        paperPlanListVOList.push(obj);
+
+      } else {
+        for (let i in paperPlanListVOList){
+          if(paperPlanListVOList[i].paperId == record.paperId){
+            return ;
+          }
+        }
+        let obj = {};
+        obj.paperVO = {};
+        obj.paperVO.paperName = record.paperName;
+        obj.paperVO.paperType = record.paperType;
+        obj.paperVO.totalScore = record.totalScore;
+        obj.paperVO.createStaffName = record.createStaffName;
+        obj.createDate = record.createDate
+        obj.paperId = record.paperId
+        paperPlanListVOList.push(obj);
+      }
+
+      let newPaperExamSummery = [];
+      paperPlanListVOList.map((item,k) => {
+        newPaperExamSummery[k] = cloneDeep(item);
+      })
+
+      dispatch({
+        type: 'paperPlan/save',
+        payload: {
+          paperPlanListVOList:newPaperExamSummery
+        },
+      });
+
+    }
+    removeExamToPaper = (record) => {
+      const { paperPlanListVOList,dispatch} = this.props;
+      //////////////////////////////
+      if(paperPlanListVOList == null){
+        return ;
+      } else {
+
+
+        for (let i in paperPlanListVOList){
+          if (paperPlanListVOList[i].paperId == record.paperId){
+            paperPlanListVOList.splice(i,1);
+            break;
+          }
+        }
+
+        let newPaperExamSummery = [];
+        paperPlanListVOList.map((item,k) => {
+          if (item){
+            newPaperExamSummery[k] = cloneDeep(item);
+          }
+
+        })
+
+        dispatch({
+          type: 'paperPlan/save',
+          payload: {
+            paperExamSummery:newPaperExamSummery
+          },
+        });
+      }
+    }
+
+    selectAll = (selected,changeRows) => {
+      if (selected == true){
+        for (let i in changeRows){
+          this.addExamToPaper(changeRows[i]);
+        }
+      } else {
+        for (let i in changeRows){
+          this.removeExamToPaper(changeRows[i]);
+        }
+      }
+    }
     render() {
-      const { confirmLoading, examList,examListVisible,examListTotal, form} = this.props;
+      const { confirmLoading, examList,examListVisible,examListTotal, form, paperPlanListVOList, dispatch, pageSize, loading} = this.props;
       const { getFieldDecorator } = form;
 
       const columns = [
@@ -114,20 +211,24 @@ const ExamListModal = Form.create({
       ];
 
       const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        onSelect:(record, selected, selectedRows, nativeEvent) => {
+
+          if (selected == true){
+            this.addExamToPaper(record)
+          } else {
+            this.removeExamToPaper(record)
+          }
 
 
-          console.log(examList.findIndex((item,index) => item.paperId == selectedRowKeys))
-
-          // examList.splice(examList.findIndex((item,index) => item.paperId == selectedRowKeys), 1)
-          selList = []
-          selList = selectedRows
         },
+        onSelectAll:(selected, selectedRows, changeRows) => {
+          this.selectAll(selected,changeRows);
+        },
+
         getCheckboxProps: record => ({
-          disabled: record.name === 'Disabled User', // Column configuration not to be checked
-          name: record.name,
+          defaultChecked:this.initChecked(record),    //设置默认选中项
         }),
+
       };
 
       return (
@@ -138,15 +239,17 @@ const ExamListModal = Form.create({
           cancelText="取消"
           onCancel={this.onClose}
           onOk={this.onOk}
-          confirmLoading={confirmLoading}
+          confirmLoading={loading}
           width={1000}
         >
+          <Spin spinning={loading}>
+
           <Form layout="inline">
             <Form.Item label="试题名称:">
-              {getFieldDecorator('paperType')(<Input style={{ width: '120px' }} />)}
+              {getFieldDecorator('paperName')(<Input style={{ width: '120px' }} />)}
             </Form.Item>
             <Form.Item label="试题类型:">
-              {getFieldDecorator('paperName')
+              {getFieldDecorator('paperType')
               (<Select style={{ width: '120px' }}>
                 <Option value={''}>全部</Option>
                 <Option value={0}>作业</Option>
@@ -171,12 +274,13 @@ const ExamListModal = Form.create({
             dataSource={examList}
             pagination={{
               total:examListTotal,
-              pageSize: 10,
+              pageSize: pageSize,
               onChange: page => {
                 this.pageChange(page);
               },
             }}
           />
+          </Spin>
         </Modal>
       );
     }

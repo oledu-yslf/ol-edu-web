@@ -41,7 +41,7 @@ class NewPlan extends React.Component {
 
   handleChange = (pager,filters,sorter) => {
 
-    const { dispatch, form } = this.props;
+    const { dispatch, form, pageSize } = this.props;
     const value = form.getFieldsValue();
     const { paperId, planId, departId } = value;
 
@@ -64,7 +64,7 @@ class NewPlan extends React.Component {
         orderBy,
         page: {
           pageNum: pager.current,
-          pageSize:pager.pageSize
+          pageSize
         },
       },
     });
@@ -92,33 +92,6 @@ class NewPlan extends React.Component {
 
   }
 
-  examListMakeUp = (value) => {
-    // console.log("examListMakeUp",value)
-    const { dispatch,paperPlanListVOList} = this.props;
-
-    let tempArr = []
-    for(let i=0;i<value.length;i++){
-      let temp = {}
-      temp.paperVO = {}
-      temp.paperVO.paperName = value[i].paperName
-      temp.paperVO.paperType = value[i].paperType
-      temp.paperVO.totalScore = value[i].totalScore
-      temp.paperVO.createStaffName = value[i].createStaffName
-      temp.createDate = value[i].createDate
-      temp.paperId = value[i].paperId
-      paperPlanListVOList.push(temp)
-
-    }
-
-
-    dispatch({
-      type: 'save',
-      payload: {
-        paperPlanListVOList:paperPlanListVOList
-      },
-    });
-
-  }
 
   deletePlan = (record, index) =>{
     const {dispatch, paperPlanListVOList } = this.props;
@@ -150,24 +123,28 @@ class NewPlan extends React.Component {
     const { dispatch, form,paperPlanListVOList,planId } = this.props;
     const { resetFields } = form;
     // const {query} = this.props.location
-    const getValues = this.props.form.getFieldsValue();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const getValues = this.props.form.getFieldsValue();
 
-    for(let i=0;i<paperPlanListVOList.length;i++){
-      getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
-      getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
-    }
-    getValues.createStaffId = Util.getStaffId()
-    if(planId){
-      getValues.planId = planId
-    }
+        for (let i = 0; i < paperPlanListVOList.length; i++) {
+          getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
+          getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
+        }
+        getValues.createStaffId = Util.getStaffId()
+        if (planId) {
+          getValues.planId = planId
+        }
 
-    console.log(getValues)
-    dispatch({
-      type: 'paperPlan/savePaperPlan',
-      payload: {
-        ...getValues
-      },
-    });
+        console.log(getValues)
+        dispatch({
+          type: 'paperPlan/savePaperPlan',
+          payload: {
+            ...getValues
+          },
+        });
+      }
+    })
 
   }
 
@@ -229,7 +206,7 @@ class NewPlan extends React.Component {
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
-                {initialValue:moment(startValue[index])}
+                {initialValue:startValue[index]?moment(startValue[index]):null}
               )(
                 <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:MM:ss")} showTime format="YYYY-MM-DD HH:MM:ss" />,
               )}
@@ -311,18 +288,23 @@ class NewPlan extends React.Component {
         <div className={styles.box}>
           <Spin spinning={loading}>
             <Form layout="inline">
-              <Form.Item label="计划名称:">
-                {getFieldDecorator('planName', {
-                  initialValue:planDetail?planDetail.planName:'' ,
-                })(
-                  <Input/>
-                )}
-              </Form.Item>
+              <Row>
+                <Col span={24}>
+                  <Form.Item label="计划名称:">
+                    {getFieldDecorator('planName', {
+                      initialValue:planDetail?planDetail.planName:'' ,
+                      rules: [{ required: true, message: '请输入计划名称！' }],
+                    })(
+                      <Input style={{ width: '200px' }}/>
+                    )}
+                  </Form.Item>
 
-
+                </Col>
+                  <Col span={24}>
               <Form.Item label="发布部门">
                 {getFieldDecorator('planDepartId', {
                   initialValue:planDetail?planDetail.planDepartId:'' ,
+                  rules: [{ required: true, message: '请选择发布部门！' }],
                 })(
                   <TreeSelect
                     showSearch
@@ -335,17 +317,11 @@ class NewPlan extends React.Component {
                   </TreeSelect>,
                 )}
               </Form.Item>
+                  </Col>
+                <Col span={24}>
               <span className={styles.chooseExam} onClick={this.selExam}>试卷选择</span>
-              {/*<Form.Item>*/}
-              {/*<Button*/}
-              {/*type="primary"*/}
-              {/*htmlType="submit"*/}
-              {/*icon="search"*/}
-              {/*onClick={this.handleSearchSubmit}*/}
-              {/*>*/}
-              {/*查询*/}
-              {/*</Button>*/}
-              {/*</Form.Item>*/}
+                </Col>
+              </Row>
               <Table
                 rowKey={record => `${record.paperId}`}
                 columns={columns}
@@ -358,21 +334,6 @@ class NewPlan extends React.Component {
           </Spin>
 
           <ExmaListModal examListVisible={examListVisible} getStockInfo={(e) => {this.examListMakeUp(e)}}></ExmaListModal>
-
-
-          <Row style={{width:'100%'}}>
-            <Col style={{textAlign: 'center', marginTop: '30px'}}>
-
-              {/*{*/}
-              {/*<div>*/}
-              {/*<Button style={{marginLeft: '10px'}} type="default"*/}
-              {/*onClick={e => this.handleCancel()}>取消</Button>*/}
-              {/*<Button style={{marginLeft: '10px'}} type="primary"*/}
-              {/*onClick={e => this.handleCommit()}>提交</Button>*/}
-              {/*</div>*/}
-              {/*}*/}
-            </Col>
-          </Row>
 
         </div>
       </Modal>
