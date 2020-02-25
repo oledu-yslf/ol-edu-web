@@ -241,14 +241,16 @@ const ExamListModal = Form.create({
           onOk={this.onOk}
           confirmLoading={loading}
           width={1000}
+          destroyOnClose
+          footer={null}
         >
           <Spin spinning={loading}>
 
           <Form layout="inline">
-            <Form.Item label="试题名称:">
-              {getFieldDecorator('paperName')(<Input style={{ width: '120px' }} />)}
+            <Form.Item label="试卷名称:">
+              {getFieldDecorator('paperName')(<Input style={{ width: '200px' }} />)}
             </Form.Item>
-            <Form.Item label="试题类型:">
+            <Form.Item label="试卷类型:">
               {getFieldDecorator('paperType')
               (<Select style={{ width: '120px' }}>
                 <Option value={''}>全部</Option>

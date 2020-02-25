@@ -11,9 +11,12 @@ export default {
     examListTotal: 10,
     examList: [],
     treeDepartData:[],
+    pageNum:1,
     pageSize:10,
     paperPlanListVOList:[],
-    staffList:[]
+    staffList:[],
+
+    planId:null,    //用这个来衡量是新增还是更新。
   },
   subscriptions: {
   },
@@ -30,7 +33,7 @@ export default {
       const { paperPlanListVOList } = respResult.data?respResult.data:{};
       const examList = resExamList.data
       const staffList = resStaffList.data
-      const { count, result } = data.data;
+      const { count, result,pageNum, pageSize } = data.data;
       yield put({
         type: 'save',
         payload: {
@@ -41,45 +44,28 @@ export default {
           examList:examList.result,
           examListTotal:examList.count,
           staffList:staffList.result,
-          planDetail:respResult.data
+          planDetail:respResult.data,
+          pageNum,
+          pageSize,
         },
       });
     },
 
     *listPage({ payload }, { call, put }) {
       const { data } = yield call(service.listPage, payload);
-      const { count, result } = data;
+      const { count, result,pageNum, pageSize} = data;
       yield put({
         type: 'save',
         payload: {
           planList: result,
           total: count,
+          pageNum,
+          pageSize,
         },
       });
     },
-    *paperPlanUpdate({ payload }, { call, put, select }) {
-      const { data } = yield call(service.paperPlanUpdate, payload);
 
-      if (data === 1) {
-        message.success('删除成功');
-        const planList = yield select(state => state.paperList.planList);
-        let clonePlanList = cloneDeep(planList);
-        let index;
-        for (let i = 0; i < clonePlanList.length; i++) {
-          if (clonePlanList[i].planId === payload.planId) {
-            index = i;
-            break;
-          }
-        }
-        clonePlanList.splice(index, 1);
-        yield put({
-          type: 'save',
-          payload: {
-            planList: clonePlanList,
-          },
-        });
-      }
-    },
+
     *listDetailPage({ payload }, { call, put }) {
       const { data } = yield call(service.listDetailPage, payload);
       const { paperPlanListVOList } = data;
@@ -87,8 +73,8 @@ export default {
         type: 'save',
         payload: {
           paperPlanListVOList: paperPlanListVOList,
-          planDetail:data
-
+          planDetail:data,
+          planId:data.planId,
         },
       });
     },
@@ -108,6 +94,25 @@ export default {
       const data = yield call(service.savePaperPlan, payload);
       if (data.successed) {
         message.success('计划提交成功', 3);
+        yield put({
+          type: 'save',
+          payload: {
+            newPlanVisible:false
+          },
+        });
+      }
+    },
+    *paperPlanDelete({ payload }, { call, put, select }) {
+      const { data } = yield call(service.paperPlanDelete, payload);
+
+      if (data === 1) {
+        message.success('删除成功');
+      }
+    },
+    *paperPlanUpdate({ payload }, { call, put }) {
+      const data = yield call(service.paperPlanUpdate, payload);
+      if (data.successed) {
+        message.success('计划更新成功', 3);
         yield put({
           type: 'save',
           payload: {

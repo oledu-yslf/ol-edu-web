@@ -15,10 +15,13 @@ class PlanDetail extends React.Component {
     const { dispatch, form } = this.props;
     const value = form.getFieldsValue();
     const { paperName } = value;
+    const {query} = this.props.location;
+
     dispatch({
       type: 'planDetail/listPage',
       payload: {
         paperName,
+        planId:query.planId,
       },
     });
   };
@@ -53,6 +56,11 @@ class PlanDetail extends React.Component {
     const { getFieldDecorator } = form;
     const columns = [
       {
+        title: '计划名称',
+        dataIndex: 'planName',
+      },
+
+      {
         title: '试卷名称',
         dataIndex: 'paperName',
         key: 'paperName',
@@ -67,7 +75,7 @@ class PlanDetail extends React.Component {
         title: '创建时间',
         dataIndex: 'createDate',
         key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '及格分数',
@@ -99,7 +107,7 @@ class PlanDetail extends React.Component {
         title: '开始时间',
         key: 'effDate',
         dataIndex: 'effDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss')}</span>,
 
       },
       {
@@ -125,7 +133,7 @@ class PlanDetail extends React.Component {
               查询
             </Button>
           </Form.Item>
-          
+
         </Form>
         <Spin spinning={loading}>
           <Table

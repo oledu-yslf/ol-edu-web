@@ -18,7 +18,7 @@ export async function listPage(data) {
   });
 }
 
-export async function paperPlanUpdate(data) {
+export async function paperPlanDelete(data) {
   return request({
     url: '/api/exam/paperPlan/delete',
     method: 'post',
@@ -26,6 +26,13 @@ export async function paperPlanUpdate(data) {
   });
 }
 
+export async function paperPlanUpdate(data) {
+  return request({
+    url: '/api/exam/paperPlan/update',
+    method: 'post',
+    data,
+  });
+}
 
 
 

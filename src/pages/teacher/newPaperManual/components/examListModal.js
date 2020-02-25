@@ -301,13 +301,14 @@ class ExamListModal extends React.Component {
     return (
       <Modal
         class={style.box}
-        title="新增试卷"
+        title="试题列表"
         visible={examListVisible}
         onCancel={this.handleCancel}
         onOk={this.handleCancel}
         confirmLoading={loading}
         width={1000}
         destroyOnClose
+        footer={null}
       >
         <Spin spinning={loading}>
         <Row>

@@ -58,12 +58,27 @@ class PaperPlan extends React.Component {
     });
   };
   deletePlan = record => {
-    const { dispatch } = this.props;
+    const { dispatch ,pageNum ,pageSize} = this.props;
     dispatch({
-      type: 'paperPlan/paperPlanUpdate',
+      type: 'paperPlan/paperPlanDelete',
       payload: {
         planId: record.planId,
       },
+    }).then (res => {
+      const {  form } = this.props;
+      const value = form.getFieldsValue();
+      const { planName } = value;
+
+      dispatch({
+        type: 'paperPlan/listPage',
+        payload: {
+          planName,
+          page: {
+            pageNum,
+            pageSize,
+          },
+        },
+      });
     });
   };
 
@@ -119,7 +134,6 @@ class PaperPlan extends React.Component {
         title: '计划名称',
         dataIndex: 'planName',
         key: 'planName',
-        width: 200,
       },
       {
         title: '部门',
@@ -130,7 +144,7 @@ class PaperPlan extends React.Component {
         title: '创建时间',
         dataIndex: 'createDate',
         key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss')}</span>,
       },
 
       {

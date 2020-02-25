@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import router from 'umi/router';
-import { Button, Table, Spin, Form, AutoComplete, TreeSelect, Input, DatePicker, Row, Col, Modal } from 'antd';
+import { Button, Table, Spin, Form, AutoComplete, TreeSelect, Input, DatePicker, Row, Col, Modal ,message} from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../style/common.less';
 import ExmaListModal from './examListModal'
@@ -18,68 +18,6 @@ class NewPlan extends React.Component {
     router.push(e);
   };
 
-  handleSearchSubmit = e => {
-    e.preventDefault();
-    const { dispatch, form,pageSize } = this.props;
-    const value = form.getFieldsValue();
-    const { paperId, planId, departId } = value;
-    dispatch({
-      type: 'paperPlan/listPage',
-      payload: {
-        paperId,
-        planId,
-        departId,
-        page: {
-          pageNum: 1,
-          pageSize,
-        },
-
-      },
-    });
-  };
-
-
-  handleChange = (pager,filters,sorter) => {
-
-    const { dispatch, form, pageSize } = this.props;
-    const value = form.getFieldsValue();
-    const { paperId, planId, departId } = value;
-
-    let orderBy = "";
-
-    if (sorter.order){
-      if (sorter.order === 'ascend'){
-        orderBy = `${sorter.column.sortField} asc`;
-      } else if (sorter.order === 'descend'){
-        orderBy = `${sorter.column.sortField} desc`;
-      }
-    }
-
-    dispatch({
-      type: 'paperPlan/listPage',
-      payload: {
-        paperId,
-        planId,
-        departId,
-        orderBy,
-        page: {
-          pageNum: pager.current,
-          pageSize
-        },
-      },
-    });
-  };
-  // componentWillMount() {
-  //   const { dispatch, planId } = this.props;
-  //   // const { query } = this.props.location
-  //     dispatch({
-  //       type: 'paperPlan/modalInit',
-  //       payload: {
-  //         planId:planId
-  //       },
-  //     });
-  //
-  // }
 
   selExam= e =>{
     const { dispatch} = this.props;
@@ -131,17 +69,48 @@ class NewPlan extends React.Component {
           getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
           getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
         }
-        getValues.createStaffId = Util.getStaffId()
-        if (planId) {
-          getValues.planId = planId
+
+        if (!getValues.paperPlanListSaves){
+          message.error("请选择需要发布的试卷!")
+          return ;
         }
 
-        console.log(getValues)
+
+
+        let type = '';
+        if (planId) {
+          //更新
+          type = 'paperPlan/paperPlanUpdate'
+
+          getValues.planId = planId;
+          getValues.modifyStaffId = Util.getStaffId();
+        } else {
+          //新增
+          type = 'paperPlan/savePaperPlan'
+          getValues.createStaffId = Util.getStaffId();
+        }
+
+        console.log(getValues);
+
         dispatch({
-          type: 'paperPlan/savePaperPlan',
+          type:type,
           payload: {
             ...getValues
           },
+        }).then (res => {
+          const {  form,pageSize } = this.props;
+          const value = form.getFieldsValue();
+          const { planName } = value;
+
+          dispatch({
+            type: 'paperPlan/listPage',
+            payload: {
+              page: {
+                pageNum:1,
+                pageSize,
+              },
+            },
+          });
         });
       }
     })
@@ -186,13 +155,14 @@ class NewPlan extends React.Component {
         sortField:'paperVO.createStaffName',
       },
       {
-        title: '时长',
+        title: '时长（分钟）',
         dataIndex: 'duration',
         render:(text,record,index)=>
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].duration`, {
                 initialValue: record.duration,
+                rules: [{ required: true, message: '请输入时长！' }],
               })(
                 <Input/>
               )}
@@ -206,9 +176,12 @@ class NewPlan extends React.Component {
           <span>
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].effDate`,
-                {initialValue:startValue[index]?moment(startValue[index]):null}
+                {
+                  initialValue:startValue[index]?moment(startValue[index]):null,
+                  rules: [{ required: true, message: '请输入计划开始时间！' }],
+                }
               )(
-                <DatePicker defaultValue={moment(startValue[index], "YYYY-MM-DD HH:MM:ss")} showTime format="YYYY-MM-DD HH:MM:ss" />,
+                <DatePicker  showTime format="YYYY-MM-DD HH:MM:ss" />,
               )}
             </Form.Item>
           </span>
@@ -221,6 +194,7 @@ class NewPlan extends React.Component {
             <Form.Item label="">
               {getFieldDecorator(`paperPlanListSaves[${index}].reviewStaffId`, {
                 initialValue: record.reviewStaffId,
+                rules: [{ required: true, message: '请选择批卷教师！' }],
               })(
                 <AutoComplete
                   filterOption={(inputValue, option) =>
@@ -295,7 +269,7 @@ class NewPlan extends React.Component {
                       initialValue:planDetail?planDetail.planName:'' ,
                       rules: [{ required: true, message: '请输入计划名称！' }],
                     })(
-                      <Input style={{ width: '200px' }}/>
+                      <Input style={{ width: '400px' }}/>
                     )}
                   </Form.Item>
 
@@ -309,7 +283,7 @@ class NewPlan extends React.Component {
                   <TreeSelect
                     showSearch
                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    style={{ width: '200px' }}
+                    style={{ width: '300px' }}
                     allowClear
                     onChange={this.treeChange}
                   >

@@ -24,6 +24,14 @@ class PaperReviewDetail extends React.Component {
         ...query
       }
     });
+
+    dispatch({
+      type: 'paperReviewDetail/save',
+      payload: {
+        cursorExamIndex: 1,
+      }
+    })
+
   }
 
   handleSubmmit = (exam, maxCount, step) => {
