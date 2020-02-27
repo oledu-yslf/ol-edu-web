@@ -67,7 +67,7 @@ class NewPlan extends React.Component {
 
         for (let i = 0; i < paperPlanListVOList.length; i++) {
           getValues.paperPlanListSaves[i].paperId = paperPlanListVOList[i].paperId
-          getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:MM:ss')).getTime()
+          getValues.paperPlanListSaves[i].effDate = new Date(getValues.paperPlanListSaves[i].effDate.format('YYYY-MM-DD HH:mm:ss')).getTime()
         }
 
         if (!getValues.paperPlanListSaves){
@@ -143,7 +143,7 @@ class NewPlan extends React.Component {
       {
         title: '创建时间',
         dataIndex: 'createDate',
-        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss') :'-'}</span>,
+        render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss') :'-'}</span>,
       },
       {
         title: '分数',
@@ -181,7 +181,7 @@ class NewPlan extends React.Component {
                   rules: [{ required: true, message: '请输入计划开始时间！' }],
                 }
               )(
-                <DatePicker  showTime format="YYYY-MM-DD HH:MM:ss" />,
+                <DatePicker  showTime format="YYYY-MM-DD HH:mm:ss" />,
               )}
             </Form.Item>
           </span>

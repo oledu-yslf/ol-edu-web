@@ -193,7 +193,7 @@ const ExamListModal = Form.create({
         {
           title: '创建时间',
           dataIndex: 'createDate',
-          render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss') :'-'}</span>,
+          render: text => <span>{text ?moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss') :'-'}</span>,
         },
         {
           title: '及格分数',

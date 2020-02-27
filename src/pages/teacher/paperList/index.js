@@ -148,7 +148,7 @@ class PaperList extends React.Component {
         title: '创建时间',
         dataIndex: 'createDate',
         key: 'createDate',
-        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:MM:ss')}</span>,
+        render: text => <span>{moment(parseInt(text)).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '及格分数',
