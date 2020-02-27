@@ -117,12 +117,12 @@ class HomeworkForStudent extends React.Component {
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            {record.state >= 2 && (
+            {record.effDate <= Date.parse(new Date()) && record.state >= 2 && (
               <Button type="link" onClick={e => this.queryPaper(record, e)}>
                 查看
               </Button>
             )}
-            {record.state < 2 && (
+            {record.effDate <= Date.parse(new Date()) && record.state < 2 && (
               <Button type="link" onClick={e => this.PaperReview(record, e)}>
                 开始
               </Button>

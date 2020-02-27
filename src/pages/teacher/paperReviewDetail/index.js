@@ -175,7 +175,7 @@ class PaperReviewDetail extends React.Component {
       <Row>
         <div className={this.initStudentClassRed(exam)} style={{width: '100%'}}>
           <div className="pullleft">学生答案：</div>
-          <div className="pullleft" dangerouslySetInnerHTML={{__html: exam.studentExamResult.result}}/>
+          <div className="pullleft" dangerouslySetInnerHTML={{__html: exam.studentExamResult?exam.studentExamResult.result:''}}/>
         </div>
       </Row>
       <Row>
@@ -271,7 +271,7 @@ class PaperReviewDetail extends React.Component {
       }
       //有正确答案,才需要判断
       if (exam.examType === 1 || exam.examType === 3) {
-        if (exam.result.toUpperCase() === exam.result.toUpperCase()) {
+        if (exam.result.toUpperCase() === exam.studentExamResult.result.toUpperCase()) {
           //学生提交了答案，并且答案是正确的才返回正确。
           return true;
         } else {
