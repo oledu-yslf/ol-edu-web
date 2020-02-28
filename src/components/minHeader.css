@@ -5,14 +5,14 @@
 }
 
 .logo{
-  width: 160px;
+  width: auto;
   height: 48px;
   margin-right:58px;
   float: left;
 }
 
 .image{
-  width: 100%;
+  width: auto;
   height: auto;
   max-height: 48px;
 }

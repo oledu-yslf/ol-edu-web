@@ -5,14 +5,14 @@
 }
 
 .left{
-  width: 120px;
+  width: auto;
   height: 48px;
   background: rgb(192, 96, 96);
   margin: 5px 24px;
 }
 
 .image{
-  width: 100%;
+  width: auto;
   height: auto;
   max-height: 48px;
 }
