@@ -71,7 +71,7 @@ class OMinHeader extends React.Component{
     return (
       <div className={[styles.box, 'clearfix'].join(' ')} style={{width: '1200px', margin: '0 auto',marginTop:'20px'}}>
         <div className={styles.logo}>
-          <img src={imageUrl} alt="avatar" style={{width: '96px', height: '48px'}}/>
+          <img src={imageUrl} alt="avatar" className={styles.image}/>
         </div>
         {roleInfo ? (
           <div className={styles.pullright}>

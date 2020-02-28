@@ -6,10 +6,15 @@
 }
 
 .logo{
-  width: 96px;
+  width: 160px;
   height: 48px;
-  margin-right:96px;
+  margin-right:58px;
   float: left;
+}
+.image{
+  width: 100%;
+  height: auto;
+  max-height: 48px;
 }
 
 .menu{

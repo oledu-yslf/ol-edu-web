@@ -6,9 +6,15 @@
 
 .left{
   width: 120px;
-  height: 30px;
+  height: 48px;
   background: rgb(192, 96, 96);
   margin: 5px 24px;
+}
+
+.image{
+  width: 100%;
+  height: auto;
+  max-height: 48px;
 }
 
 .right{
@@ -16,9 +22,9 @@
 }
 
 .logo{
-  width: 96px;
+  width: 160px;
   height: 48px;
-  margin-right:96px;
+  margin-right:58px;
   float: left;
 }
 
