@@ -1,8 +1,8 @@
 import React from 'react';
-import { connect } from 'dva';
+import {connect} from 'dva';
 import styles from './index.less';
 import ReactPlayer from 'react-player';
-import { Rate } from 'antd';
+import {Rate, Row, Col} from 'antd';
 import router from 'umi/router';
 
 const checkToken = () => {
@@ -11,20 +11,20 @@ const checkToken = () => {
   return token;
 };
 const computerTime = dur => {
-    var h = parseInt(dur / 3600);
-    var m = parseInt((dur - h * 3600) / 60);
-    var s = parseInt(dur % 60);
+  var h = parseInt(dur / 3600);
+  var m = parseInt((dur - h * 3600) / 60);
+  var s = parseInt(dur % 60);
 
-    h = (Array(2).join(0) + parseInt(h)).slice(-2);
-    m = (Array(2).join(0) + parseInt(m)).slice(-2);
-    s = (Array(2).join(0) + parseInt(s)).slice(-2);
+  h = (Array(2).join(0) + parseInt(h)).slice(-2);
+  m = (Array(2).join(0) + parseInt(m)).slice(-2);
+  s = (Array(2).join(0) + parseInt(s)).slice(-2);
 
-    return `${h}:${m}:${s}`;
+  return `${h}:${m}:${s}`;
 };
 
 class coursePlay extends React.Component {
   handleClick = (item, e) => {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     let roleInfo;
     if (!sessionStorage.getItem('roleInfo')) {
       router.push('/login');
@@ -54,7 +54,7 @@ class coursePlay extends React.Component {
   //   window.open(`/api${item.attachFileInfo.url}/${item.videoFileInfo.fileName}`)
   // }
   handleFavorite = () => {
-    const { dispatch, courseId,courseDetail } = this.props;
+    const {dispatch, courseId, courseDetail} = this.props;
     let roleInfo;
     if (sessionStorage.getItem('roleInfo')) {
       roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
@@ -63,9 +63,9 @@ class coursePlay extends React.Component {
       return;
     }
 
-    const { favorites } = courseDetail;
+    const {favorites} = courseDetail;
 
-    const type = favorites ? 'coursePlay/favoriteDelete':'coursePlay/favoriteSave';
+    const type = favorites ? 'coursePlay/favoriteDelete' : 'coursePlay/favoriteSave';
     dispatch({
       type: type,
       payload: {
@@ -84,23 +84,23 @@ class coursePlay extends React.Component {
     });
   };
 
-    handleDownLoad = (item, e) => {
-        let roleInfo;
-        if (sessionStorage.getItem('roleInfo')) {
-            roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
-        } else {
-            router.push('/login');
-            return;
-        }
-        const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
-        const access_token = jwToken.access_token;
+  handleDownLoad = (item, e) => {
+    let roleInfo;
+    if (sessionStorage.getItem('roleInfo')) {
+      roleInfo = JSON.parse(sessionStorage.getItem('roleInfo'));
+    } else {
+      router.push('/login');
+      return;
+    }
+    const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
+    const access_token = jwToken.access_token;
 
-        window.open(`/api` + item.attachFileInfo.url +`/` + item.attachFileInfo.fileName + `?access_token=` + access_token);
-    };
+    window.open(`/api` + item.attachFileInfo.url + `/` + item.attachFileInfo.fileName + `?access_token=` + access_token);
+  };
 
   render() {
-    const { courseDetail, url, countStudy } = this.props;
-    const { courseName, chapterVOList, logoFile, favorites } = courseDetail;
+    const {courseDetail, url, countStudy} = this.props;
+    const {courseName, chapterVOList, logoFile, favorites} = courseDetail;
     const star = favorites ? 1 : 0;
     const chapterNode = item => {
       return (
@@ -116,36 +116,40 @@ class coursePlay extends React.Component {
     };
     const periodNode = item => {
       return (
-        <div
+        <Row
           key={item.periodId}
-          style={{ paddingLeft: '30px', height: '30px' }}
+          style={{paddingLeft: '30px', height: '30px'}}
           className="clearfix"
         >
-          <div className={styles.pullleft}>
+          <Col span={12} offset={0} className={styles.pullleft}>
             <span
               onClick={e => this.handleClick(item, e)}
-              style={{ color: '#1890ff', cursor: 'pointer',width:'150px',display:'inline-block'}}
+              style={{color: '#1890ff', cursor: 'pointer', width: 'auto', display: 'inline-block'}}
             >
               {item.periodName}
             </span>
-            <span style={{ marginLeft: '20px' }}>
+          </Col>
+          <Col span={3} offset={0}>
+            <span style={{marginLeft: '20px'}}>
               {item.videoFileInfo ? `时长:${computerTime(item.videoFileInfo.duration)}` : ''}
             </span>
-          </div>
-          <div className={styles.pullright} onClick={e => this.handleDownLoad(item, e)}>
-            {item.attachFileInfo ? (
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <a
-                download
-                style={{ color: '#1890ff', cursor: 'pointer' }}
-              >
-                {item.attachFileInfo.fileName}
-              </a>
-            ) : (
-              ''
-            )}
-          </div>
-        </div>
+          </Col>
+          <Col  className={styles.pullright}>
+            <div onClick={e => this.handleDownLoad(item, e)}>
+              {item.attachFileInfo ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                <a
+                  download
+                  style={{color: '#1890ff', cursor: 'pointer'}}
+                >
+                  {item.attachFileInfo.fileName}
+                </a>
+              ) : (
+                ''
+              )}
+            </div>
+          </Col>
+        </Row>
       );
     };
     return (
@@ -155,9 +159,9 @@ class coursePlay extends React.Component {
             <span>课程名称：{courseName}</span>
           </div>
           <div className={styles.pullright}>
-            <span style={{ fontSize: '16px', marginRight: '20px' }}>学习人数:{countStudy}</span>
-            <span style={{ fontSize: '16px' }}>
-              收藏: <Rate allowHalf={false} count={1} value={star} onChange={this.handleFavorite} />
+            <span style={{fontSize: '16px', marginRight: '20px'}}>学习人数:{countStudy}</span>
+            <span style={{fontSize: '16px'}}>
+              收藏: <Rate allowHalf={false} count={1} value={star} onChange={this.handleFavorite}/>
             </span>
           </div>
         </div>
@@ -175,7 +179,7 @@ class coursePlay extends React.Component {
                   hlsOptions: {
                     forceHLS: true,
                     debug: false,
-                    xhrSetup: function(xhr) {
+                    xhrSetup: function (xhr) {
                       xhr.setRequestHeader('Authorization', checkToken());
                     },
                   },
@@ -187,7 +191,7 @@ class coursePlay extends React.Component {
           )}
           {!url && logoFile ? (
             <img
-              style={{ width: '1200px' }}
+              style={{width: '1200px'}}
               src={`/api${logoFile.url}/${logoFile.fileName}`}
               alt=""
             ></img>
