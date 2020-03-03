@@ -18,12 +18,13 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "qs": "^6.9.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
     "react-player": "^1.13.0",
     "react-router-breadcrumbs-hoc": "^3.2.4",
     "screenfull": "^5.0.0",
-    "umi-request": "^1.2.8"
+    "umi-request": "^1.2.8",
+    "video-react": "^0.14.1"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",

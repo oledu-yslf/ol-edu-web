@@ -5,10 +5,21 @@ import ReactPlayer from 'react-player';
 import {Rate, Row, Col} from 'antd';
 import router from 'umi/router';
 
+import { Player ,ControlBar,BigPlayButton,PlaybackRateMenuButton ,PlayToggle } from 'video-react';
+import 'video-react/dist/video-react.css';
+
+
 const checkToken = () => {
   const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
   let token = `${jwToken.token_type} ${jwToken.access_token}`;
   return token;
+};
+
+const getToken = () => {
+  const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
+  const access_token = jwToken.access_token;
+  return access_token;
+
 };
 const computerTime = dur => {
   var h = parseInt(dur / 3600);
@@ -152,6 +163,8 @@ class coursePlay extends React.Component {
         </Row>
       );
     };
+
+    let access_token=getToken();
     return (
       <div className={styles.box}>
         <div className={[styles.nav, 'clearfix'].join(' ')}>
@@ -168,6 +181,23 @@ class coursePlay extends React.Component {
 
         <div className={styles.video}>
           {url ? (
+            <div>
+             {/* <Player
+                width="100%"
+                height="540px"
+                onPlay={(e) => {
+                  console.log(e);
+                }}
+                autoPlay={true}
+                poster={`/api${logoFile.url}/${logoFile.fileName}`}
+                src={`${url}`}>
+
+                <BigPlayButton position="center"/>
+                <ControlBar>
+                  <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]}/>
+                  <PlayToggle />
+                </ControlBar>
+              </Player>*/}
             <ReactPlayer
               width="100%"
               height="540px"
@@ -186,6 +216,7 @@ class coursePlay extends React.Component {
                 },
               }}
             />
+            </div>
           ) : (
             ''
           )}
