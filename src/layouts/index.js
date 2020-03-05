@@ -16,11 +16,13 @@ function BasicLayout(props) {
   let styleLayout = styles.noraml;
 
   content = styles['other-content'];
+  header = styles['min-header'];
 
   if (props.location.pathname === '/login'){
     Nav = OLoginHeader;
     styleLayout = styles["login-noraml"];
     content = styles['login-content'];
+    header = styles['login-header'];
   }else {
     if (setMinHeaderPage.has(props.location.pathname) == true){
       Nav = OMinHeader;
@@ -37,7 +39,7 @@ function BasicLayout(props) {
     Nav = OMinLoginHeader;
   }*/
 
-  header = styles['min-header'];
+
 
   return (
     <Layout className={styleLayout}>

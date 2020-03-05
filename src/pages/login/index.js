@@ -57,7 +57,7 @@ class LoginForm extends React.Component {
         <Row >
           <Col span={16} className={styles.loginBox}>
             <div className={styles.loginContent}>
-            <div className={styles.loginTitle}>立即登录</div>
+            <div className={styles.loginTitle}>登录</div>
             <Form onSubmit={this.handleSubmit} className={styles['login-form']}>
               <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
                 {getFieldDecorator('username', {
