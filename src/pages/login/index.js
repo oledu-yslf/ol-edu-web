@@ -53,15 +53,17 @@ class LoginForm extends React.Component {
     const usernameError = isFieldTouched('username') && getFieldError('username');
     const passwordError = isFieldTouched('password') && getFieldError('password');
     return (
-      <div className={styles.box} style={{marginTop:'10%'}}>
-        <Row>
-          <Col offset={9} span={6}>
+      <div className={styles.box} >
+        <Row >
+          <Col offset={2} span={16} className={styles.loginBox}>
             <Form onSubmit={this.handleSubmit} className={styles['login-form']}>
               <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
                 {getFieldDecorator('username', {
                   rules: [{ required: true, message: '请输入你的用户名' }],
                 })(
                   <Input
+                    className={styles['login-form-button']}
+
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="用户名"
                   />,
@@ -72,6 +74,8 @@ class LoginForm extends React.Component {
                   rules: [{ required: true, message: '请输入你的密码!' }],
                 })(
                   <Input
+                    className={styles['login-form-button']}
+
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
                     placeholder="密码"

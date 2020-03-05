@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import OHeader from '@/components/header';
 import OMinHeader from '@/components/minHeader';
 import OLoginHeader from '@/components/loginHeader';
+import OFooter from '@/components/footer';
 import OMinLoginHeader from '@/components/minLoginHeader';
 const { Header, Content } = Layout;
 
@@ -12,11 +13,14 @@ const setMinHeaderPage = new Set([
 
 function BasicLayout(props) {
   let Nav,content,header;
+  let styleLayout = styles.noraml;
 
   content = styles['other-content'];
 
   if (props.location.pathname === '/login'){
     Nav = OLoginHeader;
+    styleLayout = styles["login-noraml"];
+    content = styles['login-content'];
   }else {
     if (setMinHeaderPage.has(props.location.pathname) == true){
       Nav = OMinHeader;
@@ -36,11 +40,12 @@ function BasicLayout(props) {
   header = styles['min-header'];
 
   return (
-    <Layout className={styles.noraml}>
+    <Layout className={styleLayout}>
       <Header className={header}>
         <Nav/>
       </Header>
       <Content className={content}>{props.children}</Content>
+      <OFooter></OFooter>
     </Layout>
   );
 }

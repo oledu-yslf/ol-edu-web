@@ -1,6 +1,8 @@
 .box{
-  width: 1200px;
-  margin:0 auto;
+  width: 400px;
+  margin:100px 0px 100px 200px;
+  background: #fff;
+  min-height: 400px;
 }
 
 .login-form-forgot {
@@ -8,4 +10,7 @@
 }
 .login-form-button {
   width: 100%;
+}
+.loginBox{
+  margin-top: 20px;
 }
