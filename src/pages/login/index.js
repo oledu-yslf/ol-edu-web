@@ -55,7 +55,9 @@ class LoginForm extends React.Component {
     return (
       <div className={styles.box} >
         <Row >
-          <Col offset={2} span={16} className={styles.loginBox}>
+          <Col span={16} className={styles.loginBox}>
+            <div className={styles.loginContent}>
+            <div className={styles.loginTitle}>立即登录</div>
             <Form onSubmit={this.handleSubmit} className={styles['login-form']}>
               <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
                 {getFieldDecorator('username', {
@@ -93,6 +95,7 @@ class LoginForm extends React.Component {
                 </Button>
               </Form.Item>
             </Form>
+            </div>
           </Col>
         </Row>
       </div>

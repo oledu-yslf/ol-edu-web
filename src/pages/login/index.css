@@ -1,8 +1,10 @@
 .box{
-  width: 400px;
+  width: 380px;
   margin:100px 0px 100px 200px;
   background: #fff;
-  min-height: 400px;
+  padding: 30px 30px 40px 30px;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px #333333;
 }
 
 .login-form-forgot {
@@ -11,6 +13,20 @@
 .login-form-button {
   width: 100%;
 }
+.loginTitle{
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  color: #459ad0;
+  padding-bottom: 20px;
+}
 .loginBox{
-  margin-top: 20px;
+  width: 100%;
+}
+.loginContent{
+  width: 100%;
+}
+
+.loginForm{
+  background: #f00;
 }
