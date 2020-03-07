@@ -1,13 +1,13 @@
 import React from 'react';
-import { Menu, Button, Avatar } from 'antd';
+import {Menu, Button, Avatar} from 'antd';
 import router from 'umi/router';
-import { connect } from 'dva';
+import {connect} from 'dva';
 
 import avtor from '@/assets/avtor.jpeg';
 import styles from './header.css';
 import Link from 'umi/link';
 
-const { SubMenu } = Menu;
+const {SubMenu} = Menu;
 
 class OHeader extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class OHeader extends React.Component {
       roleInfo: '',
     };
   }
+
   handleClick = e => {
     const {dispatch} = this.props;
     dispatch({
@@ -42,6 +43,7 @@ class OHeader extends React.Component {
       roleInfo: '',
     });
   };
+
   componentWillMount() {
     let roleInfo = '';
     if (sessionStorage.getItem('roleInfo')) {
@@ -63,18 +65,18 @@ class OHeader extends React.Component {
   }
 
   renderMenu = (menusList) => {
-    if (menusList){
-      return menusList.map( (item)  => {
-        if (item.childMenuVOList){
-          return <SubMenu key={item.menuId}
-                          title={
-                            <span>{item.menuName}</span>
-                          }
-          >{this.renderMenu(item.childMenuVOList)}</SubMenu>
-        }else {
-          return <Menu.Item key={item.menuUrl}>{item.menuName}</Menu.Item>
+    if (menusList) {
+      return menusList.map((item) => {
+          if (item.childMenuVOList) {
+            return <SubMenu key={item.menuId}
+                            title={
+                              <span>{item.menuName}</span>
+                            }
+            >{this.renderMenu(item.childMenuVOList)}</SubMenu>
+          } else {
+            return <Menu.Item key={item.menuUrl}>{item.menuName}</Menu.Item>
+          }
         }
-      }
       )
     }
 
@@ -82,8 +84,8 @@ class OHeader extends React.Component {
   }
 
   render() {
-    const { roleInfo } = this.state;
-    const { selectedMenu,logoFileInfo } = this.props;
+    const {roleInfo} = this.state;
+    const {selectedMenu, logoFileInfo} = this.props;
 
     let menusList = roleInfo.showMenuList;
 
@@ -110,18 +112,19 @@ class OHeader extends React.Component {
         </Menu>
         {roleInfo ? (
           <div className={styles.pullright}>
-            <span style={{ marginRight: '10px' }}>Hi,{roleInfo.staffName}</span>
-            <a  onClick={this.handleLogoutClick}>退出</a>
+            <span style={{marginRight: '10px'}}>Hi,{roleInfo.staffName}</span>
+            <a onClick={this.handleLogoutClick}>退出</a>
           </div>
         ) : (
           <div className={styles.pullright}>
-            <a href="/login" >登录</a>
+            <a href="/login">登录</a>
           </div>
         )}
+        <div className={styles.headerBlue}></div>
       </div>
     );
   }
 }
 
 
-export default connect(state => ({ ...state.global }))(OHeader);
+export default connect(state => ({...state.global}))(OHeader);

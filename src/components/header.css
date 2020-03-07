@@ -18,14 +18,25 @@
 }
 
 .menu{
+  float: left;
   line-height: 40px;
   float: left;
-  margin-top:20px;
-  background: #f0f2f5;
+  margin-top:15px;
+  background: #fff;
 }
 
 
 .pullright{
   float: right;
   margin-left: 20px;
+}
+
+.headerBlue{
+  margin-top:80px;
+  height: 8px;
+  background-image: linear-gradient(to right,#023793,#0075C2);
+  /*background: url('@/assets/image/黄灰渐变.jpg') no-repeat;*/
+  background-size:100% 100%;
+  opacity:0.8;
+  width: 100%;
 }

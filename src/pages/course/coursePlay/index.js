@@ -17,8 +17,11 @@ const checkToken = () => {
 
 const getToken = () => {
   const jwToken = JSON.parse(sessionStorage.getItem('jwToken'));
-  const access_token = jwToken.access_token;
-  return access_token;
+  if (jwToken){
+    return jwToken.access_token;
+  } else{
+    return '';
+  }
 
 };
 const computerTime = dur => {
