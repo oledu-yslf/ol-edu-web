@@ -1,6 +1,6 @@
 .box{
   width:100%;
-  line-height: 40px;
+  line-height: 48px;
   min-width: 1200px;
 }
 
@@ -26,4 +26,13 @@
 .pullright{
   float: right;
   margin-left: 20px;
+}
+.headerBlue{
+  margin-top:64px;
+  height: 8px;
+  background-image: linear-gradient(to right,#023793,#0075C2);
+  /*background: url('@/assets/image/黄灰渐变.jpg') no-repeat;*/
+  background-size:100% 100%;
+  opacity:0.8;
+  width: 100%;
 }

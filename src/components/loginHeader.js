@@ -57,7 +57,7 @@ class OLoginHeader  extends React.Component{
     }
 
     return (
-      <div className={[styles.box, 'clearfix'].join(' ')} style={{width: '1200px', margin: '0 auto',marginTop:'20px'}}>
+      <div className={[styles.box, 'clearfix'].join(' ')} style={{width: '1218px', margin: '0 auto',marginTop:'16px'}}>
         <div className={styles.logo}>
           <img src={imageUrl} alt="avatar" className={styles.image}/>
         </div>

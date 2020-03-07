@@ -38,14 +38,16 @@ function BasicLayout(props) {
   }else{
     Nav = OMinLoginHeader;
   }*/
-
-
-
+  let leftLineShow = false;
+    if(props.location.pathname !== '/login'){
+      leftLineShow = true
+    }
   return (
     <Layout className={styleLayout}>
       <Header className={header}>
         <Nav/>
       </Header>
+      <div className={leftLineShow?styles.leftLine:''}></div>
       <Content className={content}>{props.children}</Content>
       <OFooter></OFooter>
     </Layout>

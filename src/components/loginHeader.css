@@ -1,7 +1,7 @@
 .box{
   width:100%;
-  line-height: 40px;
-  min-width: 1200px;
+  line-height: 48px;
+  min-width: 1218px;
 }
 
 .left{
@@ -33,12 +33,3 @@
   margin-left: 20px;
 }
 
-.headerBlue{
-  align-content: center;
-  float:left;
-  margin-top:60px;
-  height: 8px;
-  background-image: linear-gradient(to right,#023793,#0075C2);
-  opacity:0.8;
-  width: 40%;
-}

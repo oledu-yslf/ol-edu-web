@@ -73,3 +73,13 @@
   min-height: 590px;
 }
 
+.leftLine{
+  background-image: linear-gradient(to right, rgb(2, 55, 147), rgb(0, 117, 194));
+  height: 360px;
+  width: 25px;
+  z-index: 100;
+  position: fixed;
+  left: calc(((100% - 1218px)/2) - 34px);
+  top: 15px;
+}
+
