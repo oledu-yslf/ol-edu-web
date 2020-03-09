@@ -16,12 +16,12 @@ class OFooter extends React.Component {
           <Col span={12} offset={5}>
             <Descriptions colum="4" className={styles.footerDesc}>
               <Descriptions.Item label="地址" span={4}>
-                <label>北京朝阳区西大望路甲27号东(安装公司锅炉冷冻公司)5号楼501B室</label>
+                <label>北京市大兴区星光视界中心1A座501室</label>
               </Descriptions.Item>
-              <Descriptions.Item label="电话" span={2}><label>010-59455069</label></Descriptions.Item>
-              <Descriptions.Item label="传真" span={2}><label>010-59455069</label></Descriptions.Item>
-              <Descriptions.Item label="邮箱" span={2}><label>1309892206@qq.com</label></Descriptions.Item>
-              <Descriptions.Item label="QQ"  span={2}><label>1309892206</label></Descriptions.Item>
+              <Descriptions.Item label="电话" span={2}><label>010-56455068</label></Descriptions.Item>
+              <Descriptions.Item label="传真" span={2}><label>010-56455068</label></Descriptions.Item>
+              <Descriptions.Item label="邮箱" span={2}><label>296509378@qq.com</label></Descriptions.Item>
+              <Descriptions.Item label="QQ"  span={2}><label>296509378</label></Descriptions.Item>
 
             </Descriptions>
           </Col>
