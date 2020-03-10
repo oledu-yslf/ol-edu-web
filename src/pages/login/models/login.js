@@ -3,6 +3,7 @@ export default {
   namespace: 'login',
   state: {
     prerouter: '',
+    bannerPicData:null,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -22,6 +23,20 @@ export default {
     },
     *loadUserByUserName({ payload }, { call, put }) {
       return yield call(service.loadUserByUserName, payload);
+    },
+    *queryBanner({payload}, {call, put})
+    {
+      const resp = yield call(service.queryBanner, {});
+      console.log(resp);
+
+      if (resp.code == 200){
+        yield put({
+          type: 'save',
+          payload: {
+            bannerPicData:resp.data,
+          },
+        });
+      }
     },
   },
   reducers: {

@@ -3,7 +3,7 @@ import qs from 'qs'
 
 /**
  * 获取token
- * @param {*} params 
+ * @param {*} params
  */
 export async function token (params) {
   return request('/api/oauth/token',{
@@ -24,7 +24,7 @@ export async function token (params) {
 
 /**
  * 获取用户信息
- * @param {*} params 
+ * @param {*} params
  */
 export async function loadUserByUserName (params) {
   return request('/api/sys/loadUserByUserName',{
@@ -32,3 +32,11 @@ export async function loadUserByUserName (params) {
     data: params,
   })
 }
+
+export async function queryBanner () {
+  return request({
+    url:  '/api/sys/loginbanner/query',
+    method: 'post',
+  })
+}
+
