@@ -141,7 +141,7 @@ class OList extends React.Component {
     });
   };
   render() {
-    const { list, optionCourseName, putawayVisible, deleteCourseVisible, loading } = this.props;
+    const { list,total, optionCourseName, putawayVisible, deleteCourseVisible, loading } = this.props;
     return (
       <div>
         <OSearchBar onSearch={this.searchCourse} />
@@ -149,8 +149,10 @@ class OList extends React.Component {
         <List
           dataSource={list}
           pagination={{
-            onChange: page => {
-              this.pageChange(page);
+            total,
+            pageSize: pageSize,
+            onChange: (page, pageSize) => {
+              this.pageChange(page, pageSize);
             },
           }}
           renderItem={item => (

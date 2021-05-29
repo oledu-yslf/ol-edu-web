@@ -44,6 +44,7 @@ function course(props) {
       },
     });
   };
+
   const handleClick = (item, e) => {
     window.open(`/course/coursePlay?courseId=${item.courseId}`);
   };
@@ -56,10 +57,13 @@ function course(props) {
         grid={{gutter:16, column: 4}}
         dataSource={list}
         pagination={{
-          onChange: page => {
-            pageChange(page);
-          }}
-        }
+          total,
+          pageSize: pageSize,
+          onChange: (page, pageSize) => {
+            pageChange(page, pageSize);
+          },
+        }}
+
         renderItem={item => (
           <List.Item>
             <Card

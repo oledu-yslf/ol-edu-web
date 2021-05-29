@@ -132,7 +132,7 @@ class coursePlay extends React.Component {
       return (
         <Row
           key={item.periodId}
-          style={{paddingLeft: '30px', height: '30px'}}
+          style={{paddingLeft: '30px'}}
           className="clearfix"
         >
           <Col span={12} offset={0} className={styles.pullleft}>
@@ -148,7 +148,7 @@ class coursePlay extends React.Component {
               {item.videoFileInfo ? `时长:${computerTime(item.videoFileInfo.duration)}` : ''}
             </span>
           </Col>
-          <Col  className={styles.pullright}>
+          <Col  span={9} className={styles.pullright}>
             <div onClick={e => this.handleDownLoad(item, e)}>
               {item.attachFileInfo ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
